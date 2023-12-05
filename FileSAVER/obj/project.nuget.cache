@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Q+3YorFqpJx+7f7N6X7XpOKQmvp6ZpxomZs2RKRVLPnU/2Dt6CgiLMdcua+jrIHn2fDKuPv0arqHGm4+MOvfhQ==",
+  "dgSpecHash": "Do1DF8clnHxUWO0NmYxWD9rr9OyYbAzgF778kg2nPFgHiXtadOVmPIcNQI/X5o8HTMKP392dgR9uDpSVAOYVQA==",
   "success": true,
   "projectFilePath": "C:\\Users\\robot\\source\\repos\\FileSAVER\\FileSAVER\\FileSAVER.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\robot\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\robot\\.nuget\\packages\\google.protobuf\\3.21.9\\google.protobuf.3.21.9.nupkg.sha512",
     "C:\\Users\\robot\\.nuget\\packages\\k4os.compression.lz4\\1.3.5\\k4os.compression.lz4.1.3.5.nupkg.sha512",
     "C:\\Users\\robot\\.nuget\\packages\\k4os.compression.lz4.streams\\1.3.5\\k4os.compression.lz4.streams.1.3.5.nupkg.sha512",

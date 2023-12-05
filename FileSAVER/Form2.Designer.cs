@@ -30,6 +30,7 @@ namespace FileSAVER
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
@@ -61,10 +62,13 @@ namespace FileSAVER
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label2.BackColor = Color.Transparent;
+            label2.BorderStyle = BorderStyle.FixedSingle;
+            label2.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label2.ForeColor = SystemColors.ActiveCaptionText;
             label2.Location = new Point(83, 103);
             label2.Name = "label2";
-            label2.Size = new Size(101, 25);
+            label2.Size = new Size(108, 27);
             label2.TabIndex = 1;
             label2.Text = "Username:";
             // 
@@ -207,6 +211,7 @@ namespace FileSAVER
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(595, 544);
             Controls.Add(rdbtn2);
             Controls.Add(rdbtn1);
@@ -224,6 +229,8 @@ namespace FileSAVER
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            MaximumSize = new Size(611, 583);
+            MinimumSize = new Size(611, 583);
             Name = "Form2";
             Text = "Form2";
             FormClosed += Form2_FormClosed;

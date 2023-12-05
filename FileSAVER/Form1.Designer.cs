@@ -119,7 +119,7 @@
             Controls.Add(txt1);
             Controls.Add(label1);
             Controls.Add(button1);
-            MaximumSize = new Size(687, 427);
+            MaximumSize = new Size(585, 373);
             MinimumSize = new Size(585, 373);
             Name = "Form1";
             Text = "Form1";
