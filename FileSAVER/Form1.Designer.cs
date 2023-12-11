@@ -26,8 +26,7 @@
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent()
-        {
+        private void InitializeComponent() {
             button1 = new Button();
             label1 = new Label();
             txt1 = new TextBox();

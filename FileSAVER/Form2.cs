@@ -126,22 +126,19 @@ public partial class Form2 : CustomForm
 
     }
 
-    private void btn1_Click(object sender, EventArgs e)
-    {
+    private void btn1_Click(object sender, EventArgs e) {
 
-        try
-        {
+        try {
 
-            
+
             string usernameToCheck = txt1.Text;
             string checkUsernameQuery = "SELECT * FROM users WHERE username='" + usernameToCheck + "';";
             string[] a = SQLSelectQuery(checkUsernameQuery).Split(',');
-            if (a[0] != null)
-            {
+            if (a[0] != null) {
                 // Username already exists, notify the user.
                 MessageBox.Show("Username already exists. Please choose a different username.");
-            }
-            else {
+                return;
+            } else {
                 // Username don't exist, continue the registration
                 string usernamePattern = "^[a-zA-Z0-9]+$";
                 bool isUsernameValid = Regex.IsMatch(txt1.Text, usernamePattern);
@@ -157,28 +154,19 @@ public partial class Form2 : CustomForm
                 string agePattern = @"^(1[89]|[2-9][0-9]|100)$";
                 bool isAgeValid = Regex.IsMatch(txt5.Text, agePattern);
 
-                if (isUsernameValid == false)
-                {
+                if (isUsernameValid == false) {
                     MessageBox.Show("The username field only allow letters and numbers as input!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                }
-                else if (isPasswordValid == false)
-                {
+                } else if (isPasswordValid == false) {
                     MessageBox.Show("The password should contain at least 8 characters, at least one uppercase character and at least one special symbol!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                }
-                else if (isRepeatPasswordValid == false)
-                {
+                } else if (isRepeatPasswordValid == false) {
                     MessageBox.Show("The password and the repeated password are not the same!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                }
-                else if (isEmailValid == false)
-                {
+                } else if (isEmailValid == false) {
                     MessageBox.Show("The email is not valid!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                }
-                else if (isAgeValid == false)
-                {
+                } else if (isAgeValid == false) {
                     MessageBox.Show("The age should be in this range: 18-100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -188,110 +176,58 @@ public partial class Form2 : CustomForm
             }
 
 
-                    if (rdbtn1.Checked == true)
-                    {
-                            try
-                            {
-                                bool isitInserted = InsertIntoUsers(txt1.Text, txt4.Text, txt5.Text, "admin");
-                                if (isitInserted == false)
-                                {
-                                 MessageBox.Show("Failed to insert the data");
-                                 return;
-                                }
-
-                                string hashedPassword = BCrypt.HashPassword(txt2.Text);
-                                bool isitInserted2 = InsertIntoUserspasswords(hashedPassword, txt1.Text);
-                                if (isitInserted2 == false)
-                                {
-                                    MessageBox.Show("Failed to insert the data");
-                                    return;
-                                }
-
-
-
-
-                   /////////do rdbtn2.Cheked sum stignal 
-                            }
-                            catch (MySqlException ex)
-                            {
-                                Console.WriteLine("Error: " + ex.Message);
-                            }
-                        
-
-                    }
-                    else if (rdbtn2.Checked == true)
-                    {
-                        string connectionString2 = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-                        using (MySqlConnection connection2 = new MySqlConnection(connectionString2))
-                        {
-                            try
-                            {
-                                connection2.Open();
-
-                                string insertQuery = "INSERT INTO users (username, email, age, type) VALUES (@value1, @value2, @value3, @value4)";
-                                MySqlCommand cmd2 = new MySqlCommand(insertQuery, connection2);
-                                cmd2.Parameters.AddWithValue("@value1", txt1.Text);
-                                cmd2.Parameters.AddWithValue("@value2", txt4.Text);
-                                cmd2.Parameters.AddWithValue("@value3", txt5.Text);
-                                cmd2.Parameters.AddWithValue("@value4", "normal user");
-
-
-                                int rowsAffected = cmd2.ExecuteNonQuery();
-                                if (rowsAffected > 0)
-                                {
-                                    Console.WriteLine("Data inserted successfuly");
-                                }
-
-                                string insertQuery1 = "INSERT INTO users_passwords (pass_hash, username) VALUES(@value1, @value2)";
-                                MySqlCommand cmdd = new MySqlCommand(insertQuery1, connection2);
-                                string password = txt2.Text;
-                                string hashpass = BCrypt.HashPassword(password);
-                                cmdd.Parameters.AddWithValue("@value1", hashpass);
-                                cmdd.Parameters.AddWithValue("@value2", txt1.Text);
-
-                                int rowsAffected2 = cmdd.ExecuteNonQuery();
-                                if (rowsAffected > 0)
-                                {
-                                    MessageBox.Show("Data inserted successfuly");
-                                }
-                                connection2.Close();
-                            }
-                            catch (MySqlException ex)
-                            {
-                                Console.WriteLine("Error: " + ex.Message);
-                            }
-                        }
-
+            if (rdbtn1.Checked == true) {
+                try {
+                    bool isitInserted = InsertIntoUsers(txt1.Text, txt4.Text, txt5.Text, "admin");
+                    if (isitInserted == false) {
+                        MessageBox.Show("Failed to insert the data");
+                        return;
                     }
 
+                    string hashedPassword = BCrypt.HashPassword(txt2.Text);
+                    bool isitInserted2 = InsertIntoUserspasswords(hashedPassword, txt1.Text);
+                    if (isitInserted2 == false) {
+                        MessageBox.Show("Failed to insert the data");
+                        return;
+                    }
 
-
+                } catch (MySqlException ex) {
+                    Console.WriteLine("Error: " + ex.Message);
                 }
 
-                connection.Close();
+
+            } else if (rdbtn2.Checked == true) {
+
+                try {
+
+                    bool isitInserted = InsertIntoUsers(txt1.Text, txt4.Text, txt5.Text, "normal user");
+                    if (isitInserted == false) {
+                        MessageBox.Show("Failed to insert the data");
+                        return;
+                    }
+
+                    string hashedPassword = BCrypt.HashPassword(txt2.Text);
+                    bool isitInserted2 = InsertIntoUserspasswords(hashedPassword, txt1.Text);
+                } catch (MySqlException ex) {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+
             }
 
-
-        }
-        catch (ArgumentNullException ex)
-        {
+        } catch (ArgumentNullException ex) {
+            Console.WriteLine("Exception Message: " + ex.Message);
+            Console.WriteLine("Stack Trace:");
+            Console.WriteLine(ex.StackTrace);
+        } catch (NullReferenceException ex) {
             Console.WriteLine("Exception Message: " + ex.Message);
             Console.WriteLine("Stack Trace:");
             Console.WriteLine(ex.StackTrace);
         }
-        catch (NullReferenceException ex)
-        {
-            Console.WriteLine("Exception Message: " + ex.Message);
-            Console.WriteLine("Stack Trace:");
-            Console.WriteLine(ex.StackTrace);
-        }
-
-
-
 
     }
 
-    private void btn2_Click(object sender, EventArgs e)
+
+        private void btn2_Click(object sender, EventArgs e)
     {
         txt1.Text = null;
         txt2.Text = null;

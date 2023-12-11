@@ -29,12 +29,13 @@ namespace FileSAVER
         //Method for recieving data of the last logged in user
         private static UserData GetUserData(string username)
         {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
             string query = "SELECT username, email, age, type FROM users WHERE username = @Username";
-
             MySqlCommand command = new MySqlCommand(query, CurrentConnection);
 
             command.Parameters.AddWithValue("@Username", username);
-            if (!ConnectionErrorHandling()) return null;
             using (MySqlDataReader reader = command.ExecuteReader()) { 
 
                 if (reader.Read() && reader.HasRows)
@@ -51,16 +52,25 @@ namespace FileSAVER
                     return userData;
                 }
                 reader.Close();
+                CurrentConnection.Close();
                 return null;
             }
         }
+
+        /*
+         *CurrentConnectiona moje da bude iztrit ot custom form i da se napishat methodi za zaqvkite izprashtani tuk kato v metoda se deklarira currentonnecion i 
+         *se otvarq i zatvarq v ramkite na metoda (kakto pri form1 i form2)
+         */
+
 
 
 
         //Method for getting Id by username
         private int getUserIdByUsername(string username)
         {
-            if (!ConnectionErrorHandling()) return -1;
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
             string query = "SELECT User_id FROM users WHERE username='" + username + "';";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
 
@@ -74,6 +84,7 @@ namespace FileSAVER
                 return userId;
             }
             reader.Close();
+            CurrentConnection.Close();
 
             return 0;
 
@@ -82,7 +93,9 @@ namespace FileSAVER
 
         private bool checkForExistingUsername(string username)
         {
-            if (!ConnectionErrorHandling()) return false;
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
             string query = "SELECT COUNT(*) FROM users WHERE username='" + username + "';";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -92,12 +105,14 @@ namespace FileSAVER
             if (count > 0)
             {
                 reader.Close();
+                CurrentConnection.Close();
                 return true;
             }
             else
             {
 
                 reader.Close();
+                CurrentConnection.Close();
                 return false;
             }
 
@@ -105,8 +120,10 @@ namespace FileSAVER
 
         private bool checkForExistingEmail(string email)
         {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
             string query = "SELECT COUNT(*) FROM users WHERE email='" + email + "';";
-            if (!ConnectionErrorHandling()) return false;
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -115,14 +132,39 @@ namespace FileSAVER
             if (count > 0)
             {
                 reader.Close();
+                CurrentConnection.Close();
                 return true;
             }
             else
             {
                 reader.Close();
+                CurrentConnection.Close();
                 return false;
             }
             
+        }
+
+        private bool CreateLog(string username, string action) {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "INSERT INTO login_logs (Username, Time, Action) VALUES (@username, @Time, @Action)";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("Username", username);
+            cmd.Parameters.AddWithValue("Time", DateTime.Now);
+            cmd.Parameters.AddWithValue("Action", action);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0) {
+                Console.WriteLine("Data inserted");
+            } else {
+                Console.WriteLine("Failed to insert data");
+                return false;
+            }
+            CurrentConnection.Close();
+            return true;
+
         }
 
 
@@ -131,6 +173,7 @@ namespace FileSAVER
             InitializeComponent();
         }
 
+        //Method which is called whenever the user log out of the account
         private void Logout()
         {
 
@@ -138,40 +181,26 @@ namespace FileSAVER
             Dispose();
             Form1 form1 = new Form1();
             form1.Show();
-            
 
-            if (!ConnectionErrorHandling()) return;
-            string query1 = "INSERT INTO login_logs (Username, Time, Action) VALUES (@username, @Time, @Action);";
-            MySqlCommand cmd1 = new MySqlCommand(query1, CurrentConnection); 
-            cmd1.Parameters.AddWithValue("@username", getCurrentlyLoggedUser().username);
-            cmd1.Parameters.AddWithValue("@Time", DateTime.Now);
-            cmd1.Parameters.AddWithValue("@Action", "Log out");
-
-            int rowsAffected = cmd1.ExecuteNonQuery();
-            if (rowsAffected > 0)
-            {
-                Console.WriteLine("Insert successful");
-
-            }
-            else
-            {
-                Console.WriteLine("Insert failed");
-
+            //Making a log that the user has logged out of his account
+            bool isitlogged = CreateLog(getCurrentlyLoggedUser().username, "Log out");
+            if (isitlogged == false) {
+                MessageBox.Show("Failed to insert data!");
+                return;
             }
             
         }
 
+        //Log out from the StripMenu
         private void logOffToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Dispose();
-            Form1 form1 = new Form1();
-            form1.Show();
+            Logout();
         }
 
 
 
 
-
+        //When user select the option my account
         private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
         {
             panel1.Visible = true;
@@ -190,6 +219,7 @@ namespace FileSAVER
 
         }
 
+        //Clear button
         private void button3_Click(object sender, EventArgs e)
         {
             txt_username.Text = null;
@@ -198,6 +228,7 @@ namespace FileSAVER
             txt_acc_type.Text = null;
         }
 
+        //Exit button
         private void button4_Click(object sender, EventArgs e)
         {
             panel1.Visible = false;
@@ -206,7 +237,6 @@ namespace FileSAVER
         //SAVE CHANGES
         private void button2_Click(object sender, EventArgs e)
         {
-            if (!ConnectionErrorHandling()) return;
             try
             {
                 string lastUsername = getCurrentlyLoggedUser().username;
@@ -269,8 +299,7 @@ namespace FileSAVER
                     
                 }
 
-                
-                if (!ConnectionErrorHandling()) return;
+               
                 int id = getUserIdByUsername(lastUsername);
                 string query1 = "UPDATE users_passwords SET username=@NewUsername WHERE User_id = @user_id";
                 MySqlCommand cmd1 = new MySqlCommand(query1, CurrentConnection);

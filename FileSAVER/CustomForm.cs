@@ -20,7 +20,7 @@ namespace FileSAVER
     public class CustomForm : Form
     {
         protected static CustomUser CurrenltyLoggedUser;
-        protected static MySqlConnection CurrentConnection;
+        //protected static MySqlConnection CurrentConnection;
 
         public void setCurrentlyLoggedUser(CustomUser user) {
             CurrenltyLoggedUser = user;
@@ -34,18 +34,6 @@ namespace FileSAVER
         }
 
 
-        public static bool ConnectionErrorHandling()
-        {
-            if (CurrentConnection.State == ConnectionState.Open)
-            {
-                return true;
-            }
-            else {
-                MessageBox.Show("Connection error!");
-                return false;
-            }
-
-        }
 
     }
 }
