@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FileSAVER")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc1bf9a17ac7fc68fc59141099ca7ff37997fd84")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("FileSAVER")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FileSAVER")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

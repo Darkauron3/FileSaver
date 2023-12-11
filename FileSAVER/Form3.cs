@@ -57,14 +57,6 @@ namespace FileSAVER
             }
         }
 
-        /*
-         *CurrentConnectiona moje da bude iztrit ot custom form i da se napishat methodi za zaqvkite izprashtani tuk kato v metoda se deklarira currentonnecion i 
-         *se otvarq i zatvarq v ramkite na metoda (kakto pri form1 i form2)
-         */
-
-
-
-
         //Method for getting Id by username
         private int getUserIdByUsername(string username)
         {
@@ -166,6 +158,71 @@ namespace FileSAVER
             return true;
 
         }
+        //Update the new user data for the user's account
+        private bool updateUserData(string lastUsername) {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string newUsername = txt_username.Text;
+            string newEmail = txt_email.Text;
+            string newAge = txt_age.Text;
+            string query = "UPDATE users SET username=@NewUsername, email = @NewEmail, age = @NewAge WHERE username = @Username;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@NewUsername", newUsername);
+            cmd.Parameters.AddWithValue("@NewEmail", newEmail);
+            cmd.Parameters.AddWithValue("@NewAge", newAge);
+            cmd.Parameters.AddWithValue("@Username", lastUsername);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Insert successful");
+                panel1.Visible = false;
+                panel1.Visible = true;
+
+                getCurrentlyLoggedUser().username = newUsername;
+                CurrentConnection.Close();
+                return true;
+
+            }
+            else
+            {
+                Console.WriteLine("Insert failed");
+                CurrentConnection.Close();
+                return false;
+            }
+            
+        }
+        //Method for updating user's username in users_passwords table by id
+        private bool updateUsers_passwordData(int id) {
+
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query1 = "UPDATE users_passwords SET username=@NewUsername WHERE User_id = @user_id";
+            MySqlCommand cmd1 = new MySqlCommand(query1, CurrentConnection);
+            cmd1.Parameters.AddWithValue("@NewUsername", txt_username.Text);
+            cmd1.Parameters.AddWithValue("@user_id", id);
+
+            int rowsAffected1 = cmd1.ExecuteNonQuery();
+            if (rowsAffected1 > 0)
+            {
+                Console.WriteLine("Insert successful");
+                panel1.Visible = false;
+                panel1.Visible = true;
+                CurrentConnection.Close();
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Insert failed");
+                CurrentConnection.Close();
+                return false;
+            }
+          
+        }
 
 
         public Form3()
@@ -200,7 +257,7 @@ namespace FileSAVER
 
 
 
-        //When user select the option my account
+        //When user select the option - "my account"
         private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
         {
             panel1.Visible = true;
@@ -258,28 +315,11 @@ namespace FileSAVER
 
                     if (checkForExistingEmail(email) && checkForExistingUsername(username))
                     {
-                        string newUsername = txt_username.Text;
-                        string newEmail = txt_email.Text;
-                        string newAge = txt_age.Text;
-                        string query = "UPDATE users SET username=@NewUsername, email = @NewEmail, age = @NewAge WHERE username = @Username;";
-                        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);  
-                        cmd.Parameters.AddWithValue("@NewUsername", newUsername);
-                        cmd.Parameters.AddWithValue("@NewEmail", newEmail);
-                        cmd.Parameters.AddWithValue("@NewAge", newAge);
-                        cmd.Parameters.AddWithValue("@Username", lastUsername);
-
-                        int rowsAffected = cmd.ExecuteNonQuery();
-                        if (rowsAffected > 0)
+                        bool isUpdated = updateUserData(lastUsername);
+                        if(isUpdated == false)
                         {
-                            Console.WriteLine("Insert successful");
-                            CustomForm form = new CustomForm();
-
-                            getCurrentlyLoggedUser().username = newUsername;
-
-                        }
-                        else
-                        {
-                            Console.WriteLine("Insert failed");
+                            MessageBox.Show("Error occured, new user data wasn't inserted!");
+                            return;
                         }
                     }
                     else
@@ -299,25 +339,8 @@ namespace FileSAVER
                     
                 }
 
+                updateUsers_passwordData(getUserIdByUsername(lastUsername));
                
-                int id = getUserIdByUsername(lastUsername);
-                string query1 = "UPDATE users_passwords SET username=@NewUsername WHERE User_id = @user_id";
-                MySqlCommand cmd1 = new MySqlCommand(query1, CurrentConnection);
-                cmd1.Parameters.AddWithValue("@NewUsername", txt_username.Text);
-                cmd1.Parameters.AddWithValue("@user_id", id);
-
-                int rowsAffected1 = cmd1.ExecuteNonQuery();
-                if (rowsAffected1 > 0)
-                {
-                    Console.WriteLine("Insert successful");
-                }
-                else
-                {
-                    Console.WriteLine("Insert failed");
-                }
-                panel1.Visible = false;
-                panel1.Visible = true;
-                return;
             }
             catch (MySqlException e1)
             {

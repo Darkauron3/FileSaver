@@ -20,7 +20,6 @@ namespace FileSAVER
     public class CustomForm : Form
     {
         protected static CustomUser CurrenltyLoggedUser;
-        //protected static MySqlConnection CurrentConnection;
 
         public void setCurrentlyLoggedUser(CustomUser user) {
             CurrenltyLoggedUser = user;

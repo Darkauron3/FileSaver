@@ -18,8 +18,10 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 public partial class Form2 : CustomForm
 {
+    /*
     private String SQLSelectQuery(String query)
     {
+        
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
@@ -43,13 +45,38 @@ public partial class Form2 : CustomForm
             }
             result += "\n";
         }
-        reader.Close();
-        CurrentConnection.Close();
-
         result = result.Remove(result.Length - 1);
 
+        reader.Close();
+        CurrentConnection.Close();
         return result;
+        
+}
+    */
+
+
+    private bool checkForExistingUsername(String query) {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        MySqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            CurrentConnection.Close();
+            reader.Close();
+            return true;
+        }
+        else {
+            CurrentConnection.Close();
+            reader.Close();
+            return false;
+        }
+
     }
+
 
     //Method for inserting query to table users
     private bool InsertIntoUsers(string username, string email, string age, string type) {
@@ -133,11 +160,13 @@ public partial class Form2 : CustomForm
 
             string usernameToCheck = txt1.Text;
             string checkUsernameQuery = "SELECT * FROM users WHERE username='" + usernameToCheck + "';";
-            string[] a = SQLSelectQuery(checkUsernameQuery).Split(',');
-            if (a[0] != null) {
+            bool isUsernameExists = checkForExistingUsername(checkUsernameQuery);
+
+            if (isUsernameExists) {
                 // Username already exists, notify the user.
                 MessageBox.Show("Username already exists. Please choose a different username.");
                 return;
+
             } else {
                 // Username don't exist, continue the registration
                 string usernamePattern = "^[a-zA-Z0-9]+$";
@@ -171,6 +200,10 @@ public partial class Form2 : CustomForm
                     return;
                 }
 
+                MessageBox.Show("Data inserted!");
+                Close();
+                Form1 formm1 = new Form1();
+                formm1.Show();
 
 
             }
