@@ -25,9 +25,8 @@ DROP TABLE IF EXISTS `users_passwords`;
 CREATE TABLE `users_passwords` (
   `User_id` int NOT NULL AUTO_INCREMENT,
   `pass_hash` varchar(64) NOT NULL,
-  `username` varchar(255) NOT NULL,
   PRIMARY KEY (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +35,7 @@ CREATE TABLE `users_passwords` (
 
 LOCK TABLES `users_passwords` WRITE;
 /*!40000 ALTER TABLE `users_passwords` DISABLE KEYS */;
-INSERT INTO `users_passwords` VALUES (1,'$2a$11$0AfM3N1XvRKglORyaCFIVOC3bCF/3iyLPCz7Tp/YUdXSCtU/MZ7OS','Dark'),(2,'$2a$11$ZbxYg3x8F3Xh0yL2P8OcOOIiRif7mFysHHnvN6urm6KVXOTcBWE9u','ku4ezavur');
+INSERT INTO `users_passwords` VALUES (1,'$2a$11$0AfM3N1XvRKglORyaCFIVOC3bCF/3iyLPCz7Tp/YUdXSCtU/MZ7OS'),(2,'$2a$11$ZbxYg3x8F3Xh0yL2P8OcOOIiRif7mFysHHnvN6urm6KVXOTcBWE9u'),(3,'$2a$11$FH2Xkqh02UleVv7U1H5Mb.lIAE/GoDC9UwHb2UCDkZHiuU8cKXF5O');
 /*!40000 ALTER TABLE `users_passwords` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -49,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-06  1:09:06
+-- Dump completed on 2023-12-20 15:11:00

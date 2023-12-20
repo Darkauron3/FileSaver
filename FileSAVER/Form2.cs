@@ -18,42 +18,6 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 public partial class Form2 : CustomForm
 {
-    /*
-    private String SQLSelectQuery(String query)
-    {
-        
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        MySqlDataReader reader = cmd.ExecuteReader();
-
-        String result = "";
-        int columns = reader.FieldCount;
-        while (reader.Read())
-        {
-            for (int i = 0; i < columns; i++)
-            {
-                String postfix = ",";
-                if (columns == 1 || i == columns - 1)
-                {
-                    postfix = "";
-                }
-
-                result += (reader.GetString(i) + postfix);
-            }
-            result += "\n";
-        }
-        result = result.Remove(result.Length - 1);
-
-        reader.Close();
-        CurrentConnection.Close();
-        return result;
-        
-}
-    */
-
 
     private bool checkForExistingUsername(String query) {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";

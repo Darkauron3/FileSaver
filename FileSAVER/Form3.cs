@@ -1,9 +1,11 @@
 ﻿using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -16,6 +18,26 @@ namespace FileSAVER
 {
     public partial class Form3 : CustomForm
     {
+        //Setting the window to take up the entire screen 
+        public Form3()
+        {
+            InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
+        }
+
+        /*
+         * !!!!!!!! ----------------------------------------------------------------------------
+         * !!!!!!!
+         * !!!!!!                                   -!-
+         * !!!!!  ZA VRUSHTANE NA PANEL1 V DESIGNERA V PROPERTIES V LOCATION NAPISHI (986, 410)
+         * !!!!!
+         * !!!!!!
+         * !!!!!!!------------------------------------------------------------------------------
+         */
+
+
+
+
 
 
         //Constructor for the metod for recieving user data
@@ -36,7 +58,8 @@ namespace FileSAVER
             MySqlCommand command = new MySqlCommand(query, CurrentConnection);
 
             command.Parameters.AddWithValue("@Username", username);
-            using (MySqlDataReader reader = command.ExecuteReader()) { 
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
 
                 if (reader.Read() && reader.HasRows)
                 {
@@ -133,10 +156,11 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return false;
             }
-            
+
         }
 
-        private bool CreateLog(string username, string action) {
+        private bool CreateLog(string username, string action)
+        {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
@@ -148,9 +172,12 @@ namespace FileSAVER
             cmd.Parameters.AddWithValue("Action", action);
 
             int rowsAffected = cmd.ExecuteNonQuery();
-            if (rowsAffected > 0) {
+            if (rowsAffected > 0)
+            {
                 Console.WriteLine("Data inserted");
-            } else {
+            }
+            else
+            {
                 Console.WriteLine("Failed to insert data");
                 return false;
             }
@@ -159,7 +186,8 @@ namespace FileSAVER
 
         }
         //Update the new user data for the user's account
-        private bool updateUserData(string lastUsername) {
+        private bool updateUserData(string lastUsername)
+        {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
@@ -192,10 +220,11 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return false;
             }
-            
+
         }
         //Method for updating user's username in users_passwords table by id
-        private bool updateUsers_passwordData(int id) {
+        private bool updateUsers_passwordData(int id)
+        {
 
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
@@ -221,37 +250,65 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return false;
             }
-          
-        }
 
-
-        public Form3()
-        {
-            InitializeComponent();
         }
 
         //Method which is called whenever the user log out of the account
         private void Logout()
         {
 
-            
+
             Dispose();
             Form1 form1 = new Form1();
             form1.Show();
 
             //Making a log that the user has logged out of his account
             bool isitlogged = CreateLog(getCurrentlyLoggedUser().username, "Log out");
-            if (isitlogged == false) {
+            if (isitlogged == false)
+            {
                 MessageBox.Show("Failed to insert data!");
                 return;
             }
-            
+
         }
 
         //Log out from the StripMenu
         private void logOffToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Logout();
+        }
+
+        //Method turning bytes to its hexidecimal representation
+        static string[] ByteArrayToHexArray(byte[] bytes)
+        {
+            string[] hexArray = new string[bytes.Length];
+
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                hexArray[i] = bytes[i].ToString("X2");
+            }
+
+            return hexArray;
+        }
+
+        //1st part of my encryption algorithm -> shuffle the file with the key 
+        private void firstStepOfEncryption(ArrayList key, ArrayList file)
+        {
+
+            for (int i = 0; i < key.Count; i++)
+            {
+                Debug.WriteLine(key[i]);
+            }
+
+            /*char[] evenIndex;
+            for (int i = 2, i < key.Length; i += 2)
+            {
+                int summary  = key[i] + key[i + 1];
+                if (summary % 2 == 0 ) {
+                   file[file.Length -1] = 
+                }
+                
+            }*/
         }
 
 
@@ -271,7 +328,7 @@ namespace FileSAVER
                 txt_username.Text = userdata.Username;
                 txt_email.Text = userdata.Email;
                 txt_age.Text = userdata.Age.ToString();
-                txt_acc_type.Text = userdata.Type;
+                lbl_acc_type.Text = userdata.Type;
             }
 
         }
@@ -282,7 +339,7 @@ namespace FileSAVER
             txt_username.Text = null;
             txt_email.Text = null;
             txt_age.Text = null;
-            txt_acc_type.Text = null;
+            lbl_acc_type.Text = null;
         }
 
         //Exit button
@@ -307,6 +364,12 @@ namespace FileSAVER
                     string age = userdata.Age.ToString();
                     string type = userdata.Type;
 
+                    if (txt_username.Text == username && txt_email.Text == email && txt_age.Text == age)
+                    {
+                        MessageBox.Show("No changes has been applied! If you want to save new changes you need to edit some value!");
+                        return;
+                    }
+
                     if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(email) && string.IsNullOrEmpty(age) && string.IsNullOrEmpty(type))
                     {
                         MessageBox.Show("Some values are null!");
@@ -316,7 +379,7 @@ namespace FileSAVER
                     if (checkForExistingEmail(email) && checkForExistingUsername(username))
                     {
                         bool isUpdated = updateUserData(lastUsername);
-                        if(isUpdated == false)
+                        if (isUpdated == false)
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
@@ -334,13 +397,13 @@ namespace FileSAVER
                             MessageBox.Show("This email has already been registered!");
                             return;
                         }
-                        
+
                     }
-                    
+
                 }
 
                 updateUsers_passwordData(getUserIdByUsername(lastUsername));
-               
+
             }
             catch (MySqlException e1)
             {
@@ -357,6 +420,47 @@ namespace FileSAVER
         private void Closebutton_clicked(object sender, FormClosedEventArgs e)
         {
             Logout();
+        }
+
+        private void Browse_button_Click(object sender, EventArgs e)
+        {
+            ArrayList key_hexlist = new ArrayList();
+            string key = txt_key_encryption.Text;
+            for(int i = 0; i < key.Length; i++)
+            {
+                char c = key[i];
+                key_hexlist.Add(c);
+
+            }
+
+            OpenFileDialog fd = new OpenFileDialog();
+
+            fd.Filter = "All Files (*.*)|*.*";
+            fd.Multiselect = false;
+
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = fd.FileName;
+
+                try
+                {
+                    byte[] fileBytes = File.ReadAllBytes(filePath);
+                    string[] file_hexArray = ByteArrayToHexArray(fileBytes);
+
+                    ArrayList file_hexlist = new ArrayList();
+                    foreach (string hex in file_hexArray)
+                    {
+                        file_hexlist.Add(hex);
+                    }
+                    firstStepOfEncryption(key_hexlist, file_hexlist);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("error " + ex.Message);
+                }
+            }
+
         }
     }
 }
