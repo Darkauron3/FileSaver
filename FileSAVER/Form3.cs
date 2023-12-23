@@ -49,15 +49,13 @@ namespace FileSAVER
             public string Type { get; set; }
         }
         //Method for recieving data of the last logged in user
-        private static UserData GetUserData(string username)
+        private static UserData GetUserData(int User_id)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-            string query = "SELECT username, email, age, type FROM users WHERE username = @Username";
+            string query = "SELECT username, email, age, type FROM users WHERE User_id='" + User_id + "';";
             MySqlCommand command = new MySqlCommand(query, CurrentConnection);
-
-            command.Parameters.AddWithValue("@Username", username);
             using (MySqlDataReader reader = command.ExecuteReader())
             {
 
@@ -159,15 +157,16 @@ namespace FileSAVER
 
         }
 
-        private bool CreateLog(string username, string action)
+        //Method for making a log in login_logs
+        private bool CreateLog(int User_id, string action)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "INSERT INTO login_logs (Username, Time, Action) VALUES (@username, @Time, @Action)";
+            string query = "INSERT INTO login_logs (User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            cmd.Parameters.AddWithValue("Username", username);
+            cmd.Parameters.AddWithValue("User_id", User_id);
             cmd.Parameters.AddWithValue("Time", DateTime.Now);
             cmd.Parameters.AddWithValue("Action", action);
 
@@ -222,36 +221,6 @@ namespace FileSAVER
             }
 
         }
-        //Method for updating user's username in users_passwords table by id
-        private bool updateUsers_passwordData(int id)
-        {
-
-            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-            CurrentConnection.Open();
-
-            string query1 = "UPDATE users_passwords SET username=@NewUsername WHERE User_id = @user_id";
-            MySqlCommand cmd1 = new MySqlCommand(query1, CurrentConnection);
-            cmd1.Parameters.AddWithValue("@NewUsername", txt_username.Text);
-            cmd1.Parameters.AddWithValue("@user_id", id);
-
-            int rowsAffected1 = cmd1.ExecuteNonQuery();
-            if (rowsAffected1 > 0)
-            {
-                Console.WriteLine("Insert successful");
-                panel1.Visible = false;
-                panel1.Visible = true;
-                CurrentConnection.Close();
-                return true;
-            }
-            else
-            {
-                Console.WriteLine("Insert failed");
-                CurrentConnection.Close();
-                return false;
-            }
-
-        }
 
         //Method which is called whenever the user log out of the account
         private void Logout()
@@ -263,7 +232,7 @@ namespace FileSAVER
             form1.Show();
 
             //Making a log that the user has logged out of his account
-            bool isitlogged = CreateLog(getCurrentlyLoggedUser().username, "Log out");
+            bool isitlogged = CreateLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");
             if (isitlogged == false)
             {
                 MessageBox.Show("Failed to insert data!");
@@ -278,17 +247,34 @@ namespace FileSAVER
             Logout();
         }
 
-        //Method turning bytes to its hexidecimal representation
-        static string[] ByteArrayToHexArray(byte[] bytes)
+        //Method turning bytes array to arraylist with hexidecimal represantation
+        static ArrayList byteArrayToHexArrayList(byte[] bytes)
         {
-            string[] hexArray = new string[bytes.Length];
+            ArrayList hexValues = new ArrayList();
 
-            for (int i = 0; i < bytes.Length; i++)
+            foreach (byte b in bytes)
             {
-                hexArray[i] = bytes[i].ToString("X2");
+                hexValues.Add(b.ToString("X2")); // "X2" formats the byte as a two-digit hexadecimal number
             }
 
-            return hexArray;
+            return hexValues;
+        }
+
+        //Method making a string to arrayList of hexidecimal symbols
+        static ArrayList stringToHexArrayList(string input)
+        {
+            ArrayList hexValues = new ArrayList();
+
+            // Convert the string to an array of bytes
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input);
+
+            // Convert each byte to its hexadecimal representation
+            foreach (byte b in bytes)
+            {
+                hexValues.Add(b.ToString("X2")); // "X2" formats the byte as a two-digit hexadecimal number
+            }
+
+            return hexValues;
         }
 
         //1st part of my encryption algorithm -> shuffle the file with the key 
@@ -299,6 +285,7 @@ namespace FileSAVER
             {
                 Debug.WriteLine(key[i]);
             }
+            
 
             /*char[] evenIndex;
             for (int i = 2, i < key.Length; i += 2)
@@ -323,7 +310,7 @@ namespace FileSAVER
 
             if (!string.IsNullOrEmpty(lastloguser))
             {
-                UserData userdata = GetUserData(lastloguser);
+                UserData userdata = GetUserData(getUserIdByUsername(lastloguser));
 
                 txt_username.Text = userdata.Username;
                 txt_email.Text = userdata.Email;
@@ -357,7 +344,7 @@ namespace FileSAVER
 
                 if (!string.IsNullOrEmpty(lastUsername))
                 {
-                    UserData userdata = GetUserData(lastUsername);
+                    UserData userdata = GetUserData(getUserIdByUsername(lastUsername));
 
                     string username = userdata.Username;
                     string email = userdata.Email;
@@ -402,7 +389,7 @@ namespace FileSAVER
 
                 }
 
-                updateUsers_passwordData(getUserIdByUsername(lastUsername));
+
 
             }
             catch (MySqlException e1)
@@ -424,14 +411,9 @@ namespace FileSAVER
 
         private void Browse_button_Click(object sender, EventArgs e)
         {
-            ArrayList key_hexlist = new ArrayList();
+            
             string key = txt_key_encryption.Text;
-            for(int i = 0; i < key.Length; i++)
-            {
-                char c = key[i];
-                key_hexlist.Add(c);
-
-            }
+            ArrayList key_hexlist = stringToHexArrayList(key);
 
             OpenFileDialog fd = new OpenFileDialog();
 
@@ -445,14 +427,14 @@ namespace FileSAVER
                 try
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
-                    string[] file_hexArray = ByteArrayToHexArray(fileBytes);
+                    ArrayList file_hexlist = byteArrayToHexArrayList(fileBytes);
 
-                    ArrayList file_hexlist = new ArrayList();
-                    foreach (string hex in file_hexArray)
+                    ArrayList modifiedFileHexList = new ArrayList(file_hexlist);
+                    foreach (string hex in file_hexlist)
                     {
-                        file_hexlist.Add(hex);
+                       modifiedFileHexList.Add(hex);
                     }
-                    firstStepOfEncryption(key_hexlist, file_hexlist);
+                    firstStepOfEncryption(key_hexlist, modifiedFileHexList);
 
                 }
                 catch (Exception ex)
@@ -462,5 +444,7 @@ namespace FileSAVER
             }
 
         }
+
+       
     }
 }

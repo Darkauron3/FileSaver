@@ -34,15 +34,15 @@ namespace FileSAVER
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
-            txt1 = new TextBox();
+            txt_username = new TextBox();
             label4 = new Label();
-            txt2 = new MaskedTextBox();
-            txt3 = new MaskedTextBox();
+            txt_password = new MaskedTextBox();
+            txt_password_confirm = new MaskedTextBox();
             linkLabel1 = new LinkLabel();
             label5 = new Label();
-            txt4 = new TextBox();
+            txt_email = new TextBox();
             label6 = new Label();
-            txt5 = new TextBox();
+            txt_age = new TextBox();
             btn1 = new Button();
             btn2 = new Button();
             rdbtn1 = new RadioButton();
@@ -82,13 +82,13 @@ namespace FileSAVER
             label3.TabIndex = 2;
             label3.Text = "Password:";
             // 
-            // txt1
+            // txt_username
             // 
-            txt1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt1.Location = new Point(190, 100);
-            txt1.Name = "txt1";
-            txt1.Size = new Size(263, 33);
-            txt1.TabIndex = 3;
+            txt_username.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_username.Location = new Point(190, 100);
+            txt_username.Name = "txt_username";
+            txt_username.Size = new Size(263, 33);
+            txt_username.TabIndex = 3;
             // 
             // label4
             // 
@@ -100,23 +100,23 @@ namespace FileSAVER
             label4.TabIndex = 4;
             label4.Text = "Repeat password:";
             // 
-            // txt2
+            // txt_password
             // 
-            txt2.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt2.Location = new Point(190, 161);
-            txt2.Name = "txt2";
-            txt2.PasswordChar = '*';
-            txt2.Size = new Size(263, 33);
-            txt2.TabIndex = 7;
+            txt_password.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_password.Location = new Point(190, 161);
+            txt_password.Name = "txt_password";
+            txt_password.PasswordChar = '*';
+            txt_password.Size = new Size(263, 33);
+            txt_password.TabIndex = 7;
             // 
-            // txt3
+            // txt_password_confirm
             // 
-            txt3.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt3.Location = new Point(190, 211);
-            txt3.Name = "txt3";
-            txt3.PasswordChar = '*';
-            txt3.Size = new Size(263, 33);
-            txt3.TabIndex = 8;
+            txt_password_confirm.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_password_confirm.Location = new Point(190, 211);
+            txt_password_confirm.Name = "txt_password_confirm";
+            txt_password_confirm.PasswordChar = '*';
+            txt_password_confirm.Size = new Size(263, 33);
+            txt_password_confirm.TabIndex = 8;
             // 
             // linkLabel1
             // 
@@ -139,13 +139,13 @@ namespace FileSAVER
             label5.TabIndex = 10;
             label5.Text = "Email:";
             // 
-            // txt4
+            // txt_email
             // 
-            txt4.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt4.Location = new Point(190, 272);
-            txt4.Name = "txt4";
-            txt4.Size = new Size(263, 33);
-            txt4.TabIndex = 11;
+            txt_email.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_email.Location = new Point(190, 272);
+            txt_email.Name = "txt_email";
+            txt_email.Size = new Size(263, 33);
+            txt_email.TabIndex = 11;
             // 
             // label6
             // 
@@ -157,13 +157,13 @@ namespace FileSAVER
             label6.TabIndex = 12;
             label6.Text = "Age:";
             // 
-            // txt5
+            // txt_age
             // 
-            txt5.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt5.Location = new Point(190, 331);
-            txt5.Name = "txt5";
-            txt5.Size = new Size(263, 33);
-            txt5.TabIndex = 13;
+            txt_age.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_age.Location = new Point(190, 331);
+            txt_age.Name = "txt_age";
+            txt_age.Size = new Size(263, 33);
+            txt_age.TabIndex = 13;
             // 
             // btn1
             // 
@@ -217,15 +217,15 @@ namespace FileSAVER
             Controls.Add(rdbtn1);
             Controls.Add(btn2);
             Controls.Add(btn1);
-            Controls.Add(txt5);
+            Controls.Add(txt_age);
             Controls.Add(label6);
-            Controls.Add(txt4);
+            Controls.Add(txt_email);
             Controls.Add(label5);
             Controls.Add(linkLabel1);
-            Controls.Add(txt3);
-            Controls.Add(txt2);
+            Controls.Add(txt_password_confirm);
+            Controls.Add(txt_password);
             Controls.Add(label4);
-            Controls.Add(txt1);
+            Controls.Add(txt_username);
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -243,15 +243,15 @@ namespace FileSAVER
         private Label label1;
         private Label label2;
         private Label label3;
-        private TextBox txt1;
+        private TextBox txt_username;
         private Label label4;
-        private MaskedTextBox txt2;
-        private MaskedTextBox txt3;
+        private MaskedTextBox txt_password;
+        private MaskedTextBox txt_password_confirm;
         private LinkLabel linkLabel1;
         private Label label5;
-        private TextBox txt4;
+        private TextBox txt_email;
         private Label label6;
-        private TextBox txt5;
+        private TextBox txt_age;
         private Button btn1;
         private Button btn2;
         private RadioButton rdbtn1;

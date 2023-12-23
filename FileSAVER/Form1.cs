@@ -10,14 +10,14 @@ public partial class Form1 : CustomForm {
 
 
     //Method for entering the data to the user's logs
-    private bool CreateLog(string username, string action) {
+    private bool CreateLog(int User_id, string action) {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO login_logs (Username, Time, Action) VALUES (@username, @Time, @Action)";
+        string query = "INSERT INTO login_logs (User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("Username", username);
+        cmd.Parameters.AddWithValue("User_id", User_id);
         cmd.Parameters.AddWithValue("Time", DateTime.Now);
         cmd.Parameters.AddWithValue("Action", action);
 
@@ -34,34 +34,72 @@ public partial class Form1 : CustomForm {
     }
 
     //Method for sending select queries
-    private String SQLSelectQuery(String query) {
+    private String getPasswordByUserId(int User_id) {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-
+        string query = "SELECT pass_hash FROM users_passwords WHERE User_id='" + User_id + "';";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         MySqlDataReader reader = cmd.ExecuteReader();
+        if(reader.Read()) { 
+            string pass_hash = reader["pass_hash"].ToString();
+            CurrentConnection.Close();
+            reader.Close();
 
-        String result = "";
-        int columns = reader.FieldCount;
-        while (reader.Read()) {
-            for (int i = 0; i < columns; i++) {
-                String postfix = ",";
-                if (columns == 1 || i == columns - 1) {
-                    postfix = "";
-                }
-
-                result += (reader.GetString(i) + postfix);
-            }
-            result += "\n";
+            return pass_hash;
         }
 
         reader.Close();
         CurrentConnection.Close();
 
-        result = result.Remove(result.Length - 1);
+        return null;
+    }
 
-        return result;
+    //Method returning the userId by username
+    private int getUserIdByUsername(string username)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+        string query = "SELECT User_id FROM users WHERE username='" + username + "';";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+
+        MySqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            int userId = Convert.ToInt32(reader["User_id"]);
+            reader.Close();
+
+            return userId;
+        }
+        reader.Close();
+        CurrentConnection.Close();
+
+        return 0;
+    }
+
+
+    private bool checkForExistingUsername(string username)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+        string query = "SELECT User_id FROM users WHERE username='" + username + "';";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+
+        MySqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            reader.Close();
+
+            return true;
+        }
+        reader.Close();
+        CurrentConnection.Close();
+
+        return false;
     }
 
 
@@ -72,35 +110,45 @@ public partial class Form1 : CustomForm {
 
             string UsernameToCheck = txt1.Text;
             string PasswordToCheck = txt2.Text;
-            string query = "SELECT pass_hash, username FROM users_passwords WHERE username='" + UsernameToCheck + "';";
-            string[] a = SQLSelectQuery(query).Split(',');
-            string storedHash = a[0];
+            int userId = getUserIdByUsername(UsernameToCheck);
+            string query = "SELECT pass_hash FROM users_passwords WHERE User_id='" + userId + "';";
+            string storedHash = getPasswordByUserId(userId);
 
-            if (BCrypt.Verify(PasswordToCheck, storedHash)) {
-                bool isitlogged = CreateLog(UsernameToCheck, "Logged in");
-                if (isitlogged == false) {
-                    MessageBox.Show("Failed to insert data!");
+            bool isUsernameValid = checkForExistingUsername(UsernameToCheck);
+            if(isUsernameValid)
+            {
+                if (BCrypt.Verify(PasswordToCheck, storedHash))
+                {
+                    bool isitlogged = CreateLog(userId, "Logged in");
+                    if (isitlogged == false)
+                    {
+                        MessageBox.Show("Failed to insert data!");
+                        return;
+                    }
+
+                    Form3 form3 = new Form3();
+                    CustomUser currentUser = new CustomUser(UsernameToCheck);
+
+
+                    setCurrentlyLoggedUser(currentUser);
+                    Hide();
+                    form3.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Wrong username or password!");
+
+                    bool isitlogged = CreateLog(userId, "Failed to log in");
+                    if (isitlogged == false)
+                    {
+                        MessageBox.Show("Failed to insert data!");
+                        return;
+                    }
+
                     return;
                 }
-
-                Form3 form3 = new Form3();
-                CustomUser currentUser = new CustomUser(UsernameToCheck);
-                
-
-                setCurrentlyLoggedUser(currentUser);
-                Hide();
-                form3.Show();
-            } else {
-                MessageBox.Show("Wrong username or password!");
-
-                bool isitlogged = CreateLog(UsernameToCheck, "Failed to log in");
-                if (isitlogged == false) {
-                    MessageBox.Show("Failed to insert data!");
-                    return;
-                }
-
-                return;
             }
+            
 
         } catch (MySqlException ex) {
             MessageBox.Show(ex.ToString());
