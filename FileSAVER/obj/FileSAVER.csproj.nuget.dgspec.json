@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\robot\\source\\repos\\FileSAVER\\FileSAVER\\FileSAVER.csproj": {}
+    "D:\\diplomna-viki\\FileSaver\\FileSAVER\\FileSAVER.csproj": {}
   },
   "projects": {
-    "C:\\Users\\robot\\source\\repos\\FileSAVER\\FileSAVER\\FileSAVER.csproj": {
+    "D:\\diplomna-viki\\FileSaver\\FileSAVER\\FileSAVER.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\robot\\source\\repos\\FileSAVER\\FileSAVER\\FileSAVER.csproj",
+        "projectUniqueName": "D:\\diplomna-viki\\FileSaver\\FileSAVER\\FileSAVER.csproj",
         "projectName": "FileSAVER",
-        "projectPath": "C:\\Users\\robot\\source\\repos\\FileSAVER\\FileSAVER\\FileSAVER.csproj",
-        "packagesPath": "C:\\Users\\robot\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\robot\\source\\repos\\FileSAVER\\FileSAVER\\obj\\",
+        "projectPath": "D:\\diplomna-viki\\FileSaver\\FileSAVER\\FileSAVER.csproj",
+        "packagesPath": "C:\\Users\\jackr\\.nuget\\packages\\",
+        "outputPath": "D:\\diplomna-viki\\FileSaver\\FileSAVER\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\robot\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\jackr\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -72,7 +68,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
