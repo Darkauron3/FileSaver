@@ -222,6 +222,7 @@ namespace FileSAVER
 
         }
 
+
         //Method which is called whenever the user log out of the account
         private void Logout()
         {
