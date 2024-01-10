@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography;
@@ -24,6 +25,8 @@ namespace FileSAVER
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
+            panel2.Enabled = false;
+            panel2.Visible = false;
         }
 
         /*
@@ -102,7 +105,7 @@ namespace FileSAVER
 
             return 0;
 
-            
+
         }
 
         private bool checkForExistingUsername(string username)
@@ -222,7 +225,115 @@ namespace FileSAVER
             }
 
         }
+        private void getAllLogs()
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
 
+            string query = "SELECT * FROM login_logs";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                richtxt1.Text = reader.GetString(0) + "\n";
+            }
+
+        }
+
+
+
+        //Method for checking if the user is admin
+        private bool checkIfUserIsAdmin(int userId)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "SELECT type FROM users WHERE User_id='" + userId + "';";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read() && reader[0].Equals("admin"))
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                return true;
+
+            }
+            else
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                return false;
+            }
+
+        }
+        //Method for getting username by provided id
+        private string getUsernameById(int id)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "SELECT username FROM users WHERE User_id='" + id + "';";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            string username = null;
+            if (reader.Read())
+            {
+                username = reader[0].ToString();
+            }
+            else
+            {
+                MessageBox.Show("User with this id doesn't exist!");
+                return null;
+            }
+
+            reader.Close();
+            CurrentConnection.Close();
+            return username;
+
+        }
+        //Method for getting the logs from the database so they can be displayed in the richtextbox
+        private List<string> getLogs(List<string> logs)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "SELECT * FROM login_logs";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                int userId = Convert.ToInt32(reader["User_id"]);
+                string username = getUsernameById(userId);
+                string log = $"Username: {username} \n Time at the action: {reader.GetString("Time")}  \n Action: {reader.GetString("Action")}";
+                logs.Add(log);
+            }
+            reader.Close();
+            CurrentConnection.Close();
+            return logs;
+        }
+
+        //Method for writing all usernames to the ComboBox from the database
+        private void writeToComboAllUsernames() {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "SELECT username FROM users;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                combo1.Items.Add(reader["username"]);
+            }
+            reader.Close();
+            CurrentConnection.Close();
+        }
 
         //Method which is called whenever the user log out of the account
         private void Logout()
@@ -283,60 +394,72 @@ namespace FileSAVER
         private void firstStepOfEncryption(List<string> key, List<string> file)
         {
             Debug.Write("Key before encryption:");
-            for (int i = 0; i < key.Count; i++) {
+            for (int i = 0; i < key.Count; i++)
+            {
                 Debug.Write(key[i] + " ");
             }
             Debug.Write("\n");
 
             Debug.Write(" file before encryption:");
-            for (int i = 0; i < file.Count; i++) {
+            for (int i = 0; i < file.Count; i++)
+            {
                 Debug.Write(file[i] + " ");
             }
             Debug.Write("\n");
 
 
 
-            
-            for (int i = 0; i < key.Count; i++) {
+
+            for (int i = 0; i < key.Count; i++)
+            {
                 int number = Convert.ToInt32(key[i]);
                 String onehex = key[i];
                 int edinici = number % 10;
                 int desetici = number / 10;
                 int sum = edinici + desetici;
-                if (sum % 2 == 0) {
+                if (sum % 2 == 0)
+                {
                     file.Add(key[i]);
-                } else{
+                }
+                else
+                {
                     file.Insert(0, key[i]);
                 }
             }
-            
+
 
             Debug.Write("Key after encryption:");
-            for (int i = 0; i < key.Count; i++) {
+            for (int i = 0; i < key.Count; i++)
+            {
                 Debug.Write(key[i] + " ");
             }
             Debug.Write("\n");
 
             Debug.Write(" file after encryption:");
-            for (int i = 0; i < file.Count; i++) {
+            for (int i = 0; i < file.Count; i++)
+            {
                 Debug.Write(file[i] + " ");
             }
 
         }
 
         //second step of my encryption is every 3rd hex number to change position with the element with his's index - 2
-        private void secondStepOfEncryption(List<string> file) {
+        private void secondStepOfEncryption(List<string> file)
+        {
 
-            for (int i = 2; i < file.Count; i+=3) {
-                   string a = file[i-2];
-                    file[i - 2] = file[i];
-                    file[i] = a;
-                }
+            for (int i = 2; i < file.Count; i += 3)
+            {
+                string a = file[i - 2];
+                file[i - 2] = file[i];
+                file[i] = a;
+            }
         }
 
         //4rd step of encryption is shuffle the symbols for every hexidecimal pair if the sum between 2 of the hex is odd or even they trade some of them values
-        private void thirdStepOfEncryption(List<string> file) {
-            for (int i = 0; i < file.Count-1; i++) {
+        private void thirdStepOfEncryption(List<string> file)
+        {
+            for (int i = 0; i < file.Count - 1; i++)
+            {
                 int number, nextnumber;
 
                 number = int.Parse(file[i], System.Globalization.NumberStyles.HexNumber);
@@ -351,15 +474,18 @@ namespace FileSAVER
                 char[] nextNumberValues = file[i + 1].ToCharArray();
                 char firstValueFromNextNumber = nextNumberValues[0];
                 char secondValueFromNextNumber = nextNumberValues[1];
-                
-                if (sum % 2 == 0) {
+
+                if (sum % 2 == 0)
+                {
 
                     string newValueFori = secondValueFromNextNumber.ToString() + secondValueFromFirstNumber.ToString();
                     string newValueForiplusone = firstValueFromNextNumber.ToString() + firstValueFromFirstNumber.ToString();
                     file[i] = newValueFori;
-                    file[i+1] = newValueForiplusone;
+                    file[i + 1] = newValueForiplusone;
 
-                } else {
+                }
+                else
+                {
 
                     string newValueFori = firstValueFromFirstNumber.ToString() + firstValueFromNextNumber.ToString();
                     string newValueForiplusone = secondValueFromFirstNumber.ToString() + secondValueFromNextNumber.ToString();
@@ -367,14 +493,16 @@ namespace FileSAVER
                     file[i + 1] = newValueForiplusone;
 
                 }
-                
-                
+
+
             }
         }
 
         //third step changes every element with even index to change the position of his hex symbols (e5 -> 5e) and position with the element on the right(index+1)
-        private void fourthStepOfEncryption(List<string> file) {
-            for (int i = 0; i < file.Count; i += 2) {
+        private void fourthStepOfEncryption(List<string> file)
+        {
+            for (int i = 0; i < file.Count; i += 2)
+            {
                 //If file.Count is odd the last element can't get replaced because is alone, so it breaks
                 if (i + 1 >= file.Count) break;
                 char[] hex_value = file[i].ToCharArray();
@@ -385,16 +513,18 @@ namespace FileSAVER
 
                 //file[i] = hex_value.ToString();
                 file[i] = "";
-                foreach(char hex_char in hex_value) {
+                foreach (char hex_char in hex_value)
+                {
                     file[i] += hex_char;
                 }
-                
+
                 string element = file[i + 1];
                 file[i + 1] = file[i];
                 file[i] = element;
             }
 
-            if (file.Count % 2 != 0) {
+            if (file.Count % 2 != 0)
+            {
                 string firstEl = file[0];
                 file[0] = file[file.Count - 1];
                 file[file.Count - 1] = firstEl;
@@ -514,7 +644,7 @@ namespace FileSAVER
 
         private void Browse_button_Click(object sender, EventArgs e)
         {
-            
+
             string key = txt_key_encryption.Text;
             List<string> key_hexlist = stringToHexArrayList(key);
 
@@ -538,7 +668,8 @@ namespace FileSAVER
 
                     Debug.WriteLine("");
                     Debug.WriteLine("-----------------------------------------------------------------------------");
-                    for (int y = 0; y < file_hexlist.Count; y++) {
+                    for (int y = 0; y < file_hexlist.Count; y++)
+                    {
                         Debug.Write(file_hexlist[y] + " ");
                     }
                     Debug.WriteLine("-----------------------------------------------------------------------------");
@@ -552,6 +683,29 @@ namespace FileSAVER
 
         }
 
-       
+        private void adminToolsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            string lastUsername = getCurrentlyLoggedUser().username;
+            int userId = getUserIdByUsername(lastUsername);
+            if (checkIfUserIsAdmin(userId))
+            {
+                panel2.Enabled = true;
+                panel2.Visible = true;
+                List<string> logs = new List<string>();
+                getLogs(logs);
+                string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
+                richtxt1.Text = allLogs;
+                writeToComboAllUsernames();
+
+
+            }
+            else
+            {
+                MessageBox.Show("You are not admin user, so you can't use admin tools!");
+                return;
+            }
+
+        }
     }
 }

@@ -97,6 +97,27 @@ public partial class Form2 : CustomForm
         CurrentConnection.Close();
         return true;
     }
+    //Method for checking if there is already registered admin
+    private bool checkForExistingAdmin() {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "SELECT COUNT(*) FROM users WHERE type='admin'";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        int userCount = Convert.ToInt32(cmd.ExecuteScalar());
+
+        if (userCount > 0)
+        {
+            CurrentConnection.Close();
+            return true;
+        }
+        else {
+            CurrentConnection.Close();
+            return false;
+        }
+
+    }
 
     //Method returning the userId by username
     private int getUserIdByUsername(string username)
@@ -209,6 +230,11 @@ public partial class Form2 : CustomForm
             {
                 try
                 {
+                    if (checkForExistingAdmin()) {
+                        MessageBox.Show("There is alreadey registered administrator!");
+                        return;
+                    }
+
                     bool isitInserted = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "admin");
                     if (isitInserted == false)
                     {

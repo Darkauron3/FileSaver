@@ -36,6 +36,7 @@
             accountToolStripMenuItem = new ToolStripMenuItem();
             myAccountToolStripMenuItem = new ToolStripMenuItem();
             logOffToolStripMenuItem = new ToolStripMenuItem();
+            adminToolsToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
             lbl_acc_type = new Label();
             button4 = new Button();
@@ -52,8 +53,15 @@
             Browse_button = new Button();
             txt_key_encryption = new MaskedTextBox();
             label7 = new Label();
+            panel2 = new Panel();
+            label8 = new Label();
+            richtxt1 = new RichTextBox();
+            button5 = new Button();
+            label9 = new Label();
+            combo1 = new ComboBox();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
+            panel2.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -78,12 +86,12 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, settingsToolStripMenuItem, accountToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, settingsToolStripMenuItem, accountToolStripMenuItem, adminToolsToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(1904, 24);
             menuStrip1.TabIndex = 2;
-            menuStrip1.Text = "menuStrip1";
+            menuStrip1.Text = "Admin Tools";
             // 
             // fileToolStripMenuItem
             // 
@@ -156,9 +164,16 @@
             logOffToolStripMenuItem.Text = "Log off";
             logOffToolStripMenuItem.Click += logOffToolStripMenuItem_Click;
             // 
+            // adminToolsToolStripMenuItem
+            // 
+            adminToolsToolStripMenuItem.Name = "adminToolsToolStripMenuItem";
+            adminToolsToolStripMenuItem.Size = new Size(85, 20);
+            adminToolsToolStripMenuItem.Text = "Admin Tools";
+            adminToolsToolStripMenuItem.Click += adminToolsToolStripMenuItem_Click;
+            // 
             // panel1
             // 
-            panel1.BackColor = Color.Transparent;
+            panel1.BackColor = SystemColors.ActiveCaptionText;
             panel1.BackgroundImageLayout = ImageLayout.None;
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(lbl_acc_type);
@@ -174,7 +189,7 @@
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label2);
             panel1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            panel1.Location = new Point(2986, 2410);
+            panel1.Location = new Point(1038, 90);
             panel1.Name = "panel1";
             panel1.Size = new Size(729, 412);
             panel1.TabIndex = 3;
@@ -302,7 +317,7 @@
             // 
             // Browse_button
             // 
-            Browse_button.Location = new Point(1004, 336);
+            Browse_button.Location = new Point(1408, 523);
             Browse_button.Name = "Browse_button";
             Browse_button.Size = new Size(144, 69);
             Browse_button.TabIndex = 4;
@@ -313,7 +328,7 @@
             // txt_key_encryption
             // 
             txt_key_encryption.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_key_encryption.Location = new Point(745, 366);
+            txt_key_encryption.Location = new Point(1156, 553);
             txt_key_encryption.Name = "txt_key_encryption";
             txt_key_encryption.Size = new Size(187, 39);
             txt_key_encryption.TabIndex = 5;
@@ -321,11 +336,74 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(707, 346);
+            label7.Location = new Point(1108, 535);
             label7.Name = "label7";
             label7.Size = new Size(257, 15);
             label7.TabIndex = 6;
             label7.Text = "Enter a password for encryption and decryption";
+            // 
+            // panel2
+            // 
+            panel2.BackColor = Color.Black;
+            panel2.Controls.Add(combo1);
+            panel2.Controls.Add(label9);
+            panel2.Controls.Add(button5);
+            panel2.Controls.Add(label8);
+            panel2.Controls.Add(richtxt1);
+            panel2.Location = new Point(111, 93);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(897, 874);
+            panel2.TabIndex = 7;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label8.ForeColor = SystemColors.ControlLightLight;
+            label8.Location = new Point(636, 40);
+            label8.Name = "label8";
+            label8.Size = new Size(154, 40);
+            label8.TabIndex = 1;
+            label8.Text = "Users Logs";
+            // 
+            // richtxt1
+            // 
+            richtxt1.BackColor = Color.Black;
+            richtxt1.BorderStyle = BorderStyle.FixedSingle;
+            richtxt1.ForeColor = SystemColors.Info;
+            richtxt1.Location = new Point(534, 98);
+            richtxt1.Name = "richtxt1";
+            richtxt1.Size = new Size(337, 723);
+            richtxt1.TabIndex = 0;
+            richtxt1.Text = "";
+            // 
+            // button5
+            // 
+            button5.Location = new Point(204, 171);
+            button5.Name = "button5";
+            button5.Size = new Size(112, 28);
+            button5.TabIndex = 2;
+            button5.Text = "button5";
+            button5.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label9.ForeColor = SystemColors.ControlLightLight;
+            label9.Location = new Point(96, 21);
+            label9.Name = "label9";
+            label9.Size = new Size(203, 30);
+            label9.TabIndex = 3;
+            label9.Text = "Edit specific account";
+            // 
+            // combo1
+            // 
+            combo1.FormattingEnabled = true;
+            combo1.Location = new Point(164, 94);
+            combo1.Name = "combo1";
+            combo1.Size = new Size(121, 23);
+            combo1.TabIndex = 4;
             // 
             // Form3
             // 
@@ -333,6 +411,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1904, 1041);
+            Controls.Add(panel2);
             Controls.Add(label7);
             Controls.Add(txt_key_encryption);
             Controls.Add(Browse_button);
@@ -348,6 +427,8 @@
             menuStrip1.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -384,5 +465,12 @@
         private Button Browse_button;
         private MaskedTextBox txt_key_encryption;
         private Label label7;
+        private Panel panel2;
+        private RichTextBox richtxt1;
+        private Label label8;
+        private ToolStripMenuItem adminToolsToolStripMenuItem;
+        private Label label9;
+        private Button button5;
+        private ComboBox combo1;
     }
 }
