@@ -108,6 +108,7 @@ public partial class Form1 : CustomForm {
     private void button1_Click(object sender, EventArgs e) {
         try {
 
+
             string UsernameToCheck = txt1.Text;
             string PasswordToCheck = txt2.Text;
             int userId = getUserIdByUsername(UsernameToCheck);

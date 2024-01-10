@@ -8,6 +8,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -101,7 +102,7 @@ namespace FileSAVER
 
             return 0;
 
-
+            
         }
 
         private bool checkForExistingUsername(string username)
@@ -249,9 +250,9 @@ namespace FileSAVER
         }
 
         //Method turning bytes array to arraylist with hexidecimal represantation
-        static ArrayList byteArrayToHexArrayList(byte[] bytes)
+        static List<string> byteArrayToHexList(byte[] bytes)
         {
-            ArrayList hexValues = new ArrayList();
+            List<string> hexValues = new List<string>();
 
             foreach (byte b in bytes)
             {
@@ -262,9 +263,9 @@ namespace FileSAVER
         }
 
         //Method making a string to arrayList of hexidecimal symbols
-        static ArrayList stringToHexArrayList(string input)
+        static List<string> stringToHexArrayList(string input)
         {
-            ArrayList hexValues = new ArrayList();
+            List<string> hexValues = new List<string>();
 
             // Convert the string to an array of bytes
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(input);
@@ -279,26 +280,127 @@ namespace FileSAVER
         }
 
         //1st part of my encryption algorithm -> shuffle the file with the key 
-        private void firstStepOfEncryption(ArrayList key, ArrayList file)
+        private void firstStepOfEncryption(List<string> key, List<string> file)
         {
+            Debug.Write("Key before encryption:");
+            for (int i = 0; i < key.Count; i++) {
+                Debug.Write(key[i] + " ");
+            }
+            Debug.Write("\n");
 
-            for (int i = 0; i < key.Count; i++)
-            {
-                Debug.WriteLine(key[i]);
+            Debug.Write(" file before encryption:");
+            for (int i = 0; i < file.Count; i++) {
+                Debug.Write(file[i] + " ");
+            }
+            Debug.Write("\n");
+
+
+
+            
+            for (int i = 0; i < key.Count; i++) {
+                int number = Convert.ToInt32(key[i]);
+                String onehex = key[i];
+                int edinici = number % 10;
+                int desetici = number / 10;
+                int sum = edinici + desetici;
+                if (sum % 2 == 0) {
+                    file.Add(key[i]);
+                } else{
+                    file.Insert(0, key[i]);
+                }
             }
             
 
-            /*char[] evenIndex;
-            for (int i = 2, i < key.Length; i += 2)
-            {
-                int summary  = key[i] + key[i + 1];
-                if (summary % 2 == 0 ) {
-                   file[file.Length -1] = 
-                }
-                
-            }*/
+            Debug.Write("Key after encryption:");
+            for (int i = 0; i < key.Count; i++) {
+                Debug.Write(key[i] + " ");
+            }
+            Debug.Write("\n");
+
+            Debug.Write(" file after encryption:");
+            for (int i = 0; i < file.Count; i++) {
+                Debug.Write(file[i] + " ");
+            }
+
         }
 
+        //second step of my encryption is every 3rd hex number to change position with the element with his's index - 2
+        private void secondStepOfEncryption(List<string> file) {
+
+            for (int i = 2; i < file.Count; i+=3) {
+                   string a = file[i-2];
+                    file[i - 2] = file[i];
+                    file[i] = a;
+                }
+        }
+
+        //4rd step of encryption is shuffle the symbols for every hexidecimal pair if the sum between 2 of the hex is odd or even they trade some of them values
+        private void thirdStepOfEncryption(List<string> file) {
+            for (int i = 0; i < file.Count-1; i++) {
+                int number, nextnumber;
+
+                number = int.Parse(file[i], System.Globalization.NumberStyles.HexNumber);
+                nextnumber = int.Parse(file[i + 1], System.Globalization.NumberStyles.HexNumber);
+
+                int sum = number + nextnumber;
+
+                char[] firstNumberValues = file[i].ToCharArray();
+                char firstValueFromFirstNumber = firstNumberValues[0];
+                char secondValueFromFirstNumber = firstNumberValues[1];
+
+                char[] nextNumberValues = file[i + 1].ToCharArray();
+                char firstValueFromNextNumber = nextNumberValues[0];
+                char secondValueFromNextNumber = nextNumberValues[1];
+                
+                if (sum % 2 == 0) {
+
+                    string newValueFori = secondValueFromNextNumber.ToString() + secondValueFromFirstNumber.ToString();
+                    string newValueForiplusone = firstValueFromNextNumber.ToString() + firstValueFromFirstNumber.ToString();
+                    file[i] = newValueFori;
+                    file[i+1] = newValueForiplusone;
+
+                } else {
+
+                    string newValueFori = firstValueFromFirstNumber.ToString() + firstValueFromNextNumber.ToString();
+                    string newValueForiplusone = secondValueFromFirstNumber.ToString() + secondValueFromNextNumber.ToString();
+                    file[i] = newValueFori;
+                    file[i + 1] = newValueForiplusone;
+
+                }
+                
+                
+            }
+        }
+
+        //third step changes every element with even index to change the position of his hex symbols (e5 -> 5e) and position with the element on the right(index+1)
+        private void fourthStepOfEncryption(List<string> file) {
+            for (int i = 0; i < file.Count; i += 2) {
+                //If file.Count is odd the last element can't get replaced because is alone, so it breaks
+                if (i + 1 >= file.Count) break;
+                char[] hex_value = file[i].ToCharArray();
+
+                char first_hex_value = hex_value[0];
+                hex_value[0] = hex_value[1];
+                hex_value[1] = first_hex_value;
+
+                //file[i] = hex_value.ToString();
+                file[i] = "";
+                foreach(char hex_char in hex_value) {
+                    file[i] += hex_char;
+                }
+                
+                string element = file[i + 1];
+                file[i + 1] = file[i];
+                file[i] = element;
+            }
+
+            if (file.Count % 2 != 0) {
+                string firstEl = file[0];
+                file[0] = file[file.Count - 1];
+                file[file.Count - 1] = firstEl;
+            }
+
+        }
 
 
 
@@ -414,7 +516,7 @@ namespace FileSAVER
         {
             
             string key = txt_key_encryption.Text;
-            ArrayList key_hexlist = stringToHexArrayList(key);
+            List<string> key_hexlist = stringToHexArrayList(key);
 
             OpenFileDialog fd = new OpenFileDialog();
 
@@ -428,14 +530,18 @@ namespace FileSAVER
                 try
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
-                    ArrayList file_hexlist = byteArrayToHexArrayList(fileBytes);
+                    List<string> file_hexlist = byteArrayToHexList(fileBytes);
+                    firstStepOfEncryption(key_hexlist, file_hexlist);
+                    secondStepOfEncryption(file_hexlist);
+                    thirdStepOfEncryption(file_hexlist);
+                    fourthStepOfEncryption(file_hexlist);
 
-                    ArrayList modifiedFileHexList = new ArrayList(file_hexlist);
-                    foreach (string hex in file_hexlist)
-                    {
-                       modifiedFileHexList.Add(hex);
+                    Debug.WriteLine("");
+                    Debug.WriteLine("-----------------------------------------------------------------------------");
+                    for (int y = 0; y < file_hexlist.Count; y++) {
+                        Debug.Write(file_hexlist[y] + " ");
                     }
-                    firstStepOfEncryption(key_hexlist, modifiedFileHexList);
+                    Debug.WriteLine("-----------------------------------------------------------------------------");
 
                 }
                 catch (Exception ex)
