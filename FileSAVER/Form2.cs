@@ -51,12 +51,13 @@ public partial class Form2 : CustomForm
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO users (username, email, age, type) VALUES (@value1, @value2, @value3, @value4);";
+        string query = "INSERT INTO users (username, email, age, type, deleted) VALUES (@value1, @value2, @value3, @value4, @value5);";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@value1", username);
         cmd.Parameters.AddWithValue("@value2", email);
         cmd.Parameters.AddWithValue("@value3", age);
         cmd.Parameters.AddWithValue("@value4", type);
+        cmd.Parameters.AddWithValue("@value5", 0);
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)

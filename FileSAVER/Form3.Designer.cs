@@ -54,14 +54,29 @@
             txt_key_encryption = new MaskedTextBox();
             label7 = new Label();
             panel2 = new Panel();
+            combo2 = new ComboBox();
+            label12 = new Label();
+            panel3 = new Panel();
+            button5 = new Button();
+            button6 = new Button();
+            lbl_realtype = new Label();
+            lbl_type = new Label();
+            txtAge = new TextBox();
+            label11 = new Label();
+            txtEmail = new TextBox();
+            lbl_email = new Label();
+            lbl_username = new Label();
+            txtUsername = new TextBox();
+            btn_save_changes = new Button();
+            label10 = new Label();
+            combo1 = new ComboBox();
+            label9 = new Label();
             label8 = new Label();
             richtxt1 = new RichTextBox();
-            button5 = new Button();
-            label9 = new Label();
-            combo1 = new ComboBox();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
+            panel3.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -208,11 +223,11 @@
             // 
             // button4
             // 
-            button4.Location = new Point(227, 328);
+            button4.Image = (Image)resources.GetObject("button4.Image");
+            button4.Location = new Point(684, 3);
             button4.Name = "button4";
-            button4.Size = new Size(348, 47);
+            button4.Size = new Size(40, 38);
             button4.TabIndex = 11;
-            button4.Text = "Exit";
             button4.UseVisualStyleBackColor = true;
             button4.Click += button4_Click;
             // 
@@ -345,22 +360,203 @@
             // panel2
             // 
             panel2.BackColor = Color.Black;
+            panel2.Controls.Add(combo2);
+            panel2.Controls.Add(label12);
+            panel2.Controls.Add(panel3);
+            panel2.Controls.Add(label10);
             panel2.Controls.Add(combo1);
             panel2.Controls.Add(label9);
-            panel2.Controls.Add(button5);
             panel2.Controls.Add(label8);
             panel2.Controls.Add(richtxt1);
-            panel2.Location = new Point(111, 93);
+            panel2.Location = new Point(30, 93);
             panel2.Name = "panel2";
-            panel2.Size = new Size(897, 874);
+            panel2.Size = new Size(978, 874);
             panel2.TabIndex = 7;
+            // 
+            // combo2
+            // 
+            combo2.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            combo2.FormattingEnabled = true;
+            combo2.Location = new Point(225, 442);
+            combo2.Name = "combo2";
+            combo2.Size = new Size(159, 28);
+            combo2.TabIndex = 16;
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label12.ForeColor = Color.White;
+            label12.Location = new Point(173, 405);
+            label12.Name = "label12";
+            label12.Size = new Size(275, 20);
+            label12.TabIndex = 15;
+            label12.Text = "Select which account you want to delete";
+            // 
+            // panel3
+            // 
+            panel3.Controls.Add(button5);
+            panel3.Controls.Add(button6);
+            panel3.Controls.Add(lbl_realtype);
+            panel3.Controls.Add(lbl_type);
+            panel3.Controls.Add(txtAge);
+            panel3.Controls.Add(label11);
+            panel3.Controls.Add(txtEmail);
+            panel3.Controls.Add(lbl_email);
+            panel3.Controls.Add(lbl_username);
+            panel3.Controls.Add(txtUsername);
+            panel3.Controls.Add(btn_save_changes);
+            panel3.Location = new Point(31, 134);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(546, 239);
+            panel3.TabIndex = 14;
+            // 
+            // button5
+            // 
+            button5.Image = (Image)resources.GetObject("button5.Image");
+            button5.Location = new Point(515, 0);
+            button5.Name = "button5";
+            button5.Size = new Size(28, 29);
+            button5.TabIndex = 15;
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
+            // button6
+            // 
+            button6.Location = new Point(116, 192);
+            button6.Name = "button6";
+            button6.Size = new Size(98, 28);
+            button6.TabIndex = 14;
+            button6.Text = "Clear";
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
+            // 
+            // lbl_realtype
+            // 
+            lbl_realtype.AutoSize = true;
+            lbl_realtype.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_realtype.ForeColor = Color.Red;
+            lbl_realtype.Location = new Point(350, 120);
+            lbl_realtype.Name = "lbl_realtype";
+            lbl_realtype.Size = new Size(42, 21);
+            lbl_realtype.TabIndex = 13;
+            lbl_realtype.Text = "Type";
+            // 
+            // lbl_type
+            // 
+            lbl_type.AutoSize = true;
+            lbl_type.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_type.ForeColor = SystemColors.Control;
+            lbl_type.Location = new Point(261, 117);
+            lbl_type.Name = "lbl_type";
+            lbl_type.Size = new Size(45, 21);
+            lbl_type.TabIndex = 12;
+            lbl_type.Text = "Type:";
+            // 
+            // txtAge
+            // 
+            txtAge.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            txtAge.Location = new Point(91, 117);
+            txtAge.Name = "txtAge";
+            txtAge.Size = new Size(123, 29);
+            txtAge.TabIndex = 11;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            label11.ForeColor = SystemColors.Control;
+            label11.Location = new Point(45, 117);
+            label11.Name = "label11";
+            label11.Size = new Size(40, 21);
+            label11.TabIndex = 10;
+            label11.Text = "Age:";
+            // 
+            // txtEmail
+            // 
+            txtEmail.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            txtEmail.Location = new Point(318, 45);
+            txtEmail.Name = "txtEmail";
+            txtEmail.Size = new Size(198, 29);
+            txtEmail.TabIndex = 9;
+            // 
+            // lbl_email
+            // 
+            lbl_email.AutoSize = true;
+            lbl_email.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_email.ForeColor = SystemColors.Control;
+            lbl_email.Location = new Point(255, 48);
+            lbl_email.Name = "lbl_email";
+            lbl_email.Size = new Size(51, 21);
+            lbl_email.TabIndex = 8;
+            lbl_email.Text = "Email:";
+            // 
+            // lbl_username
+            // 
+            lbl_username.AutoSize = true;
+            lbl_username.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_username.ForeColor = SystemColors.Control;
+            lbl_username.Location = new Point(3, 50);
+            lbl_username.Name = "lbl_username";
+            lbl_username.Size = new Size(84, 21);
+            lbl_username.TabIndex = 7;
+            lbl_username.Text = "Username:";
+            // 
+            // txtUsername
+            // 
+            txtUsername.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            txtUsername.Location = new Point(91, 50);
+            txtUsername.Name = "txtUsername";
+            txtUsername.Size = new Size(123, 29);
+            txtUsername.TabIndex = 6;
+            // 
+            // btn_save_changes
+            // 
+            btn_save_changes.Location = new Point(318, 192);
+            btn_save_changes.Name = "btn_save_changes";
+            btn_save_changes.Size = new Size(98, 28);
+            btn_save_changes.TabIndex = 2;
+            btn_save_changes.Text = "Save changes";
+            btn_save_changes.UseVisualStyleBackColor = true;
+            btn_save_changes.Click += btn_save_changes_Click;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label10.ForeColor = Color.White;
+            label10.Location = new Point(173, 74);
+            label10.Name = "label10";
+            label10.Size = new Size(250, 20);
+            label10.TabIndex = 5;
+            label10.Text = "Select which user's data you will edit";
+            // 
+            // combo1
+            // 
+            combo1.FormattingEnabled = true;
+            combo1.Location = new Point(213, 97);
+            combo1.Name = "combo1";
+            combo1.Size = new Size(158, 23);
+            combo1.TabIndex = 4;
+            combo1.SelectedIndexChanged += combo1_SelectedIndexChanged;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 15.75F, FontStyle.Underline, GraphicsUnit.Point);
+            label9.ForeColor = SystemColors.ControlLightLight;
+            label9.Location = new Point(193, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(203, 30);
+            label9.TabIndex = 3;
+            label9.Text = "Edit specific account";
             // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new Font("Segoe UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label8.Font = new Font("Segoe UI", 21.75F, FontStyle.Underline, GraphicsUnit.Point);
             label8.ForeColor = SystemColors.ControlLightLight;
-            label8.Location = new Point(636, 40);
+            label8.Location = new Point(702, 21);
             label8.Name = "label8";
             label8.Size = new Size(154, 40);
             label8.TabIndex = 1;
@@ -371,39 +567,11 @@
             richtxt1.BackColor = Color.Black;
             richtxt1.BorderStyle = BorderStyle.FixedSingle;
             richtxt1.ForeColor = SystemColors.Info;
-            richtxt1.Location = new Point(534, 98);
+            richtxt1.Location = new Point(604, 98);
             richtxt1.Name = "richtxt1";
             richtxt1.Size = new Size(337, 723);
             richtxt1.TabIndex = 0;
             richtxt1.Text = "";
-            // 
-            // button5
-            // 
-            button5.Location = new Point(204, 171);
-            button5.Name = "button5";
-            button5.Size = new Size(112, 28);
-            button5.TabIndex = 2;
-            button5.Text = "button5";
-            button5.UseVisualStyleBackColor = true;
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Font = new Font("Segoe UI", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label9.ForeColor = SystemColors.ControlLightLight;
-            label9.Location = new Point(96, 21);
-            label9.Name = "label9";
-            label9.Size = new Size(203, 30);
-            label9.TabIndex = 3;
-            label9.Text = "Edit specific account";
-            // 
-            // combo1
-            // 
-            combo1.FormattingEnabled = true;
-            combo1.Location = new Point(164, 94);
-            combo1.Name = "combo1";
-            combo1.Size = new Size(121, 23);
-            combo1.TabIndex = 4;
             // 
             // Form3
             // 
@@ -429,6 +597,8 @@
             panel1.PerformLayout();
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
+            panel3.ResumeLayout(false);
+            panel3.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -470,7 +640,21 @@
         private Label label8;
         private ToolStripMenuItem adminToolsToolStripMenuItem;
         private Label label9;
-        private Button button5;
+        private Button btn_save_changes;
         private ComboBox combo1;
+        private Label label10;
+        private TextBox txtUsername;
+        private TextBox txtEmail;
+        private Label lbl_email;
+        private Label lbl_username;
+        private Panel panel3;
+        private Button button6;
+        private Label lbl_realtype;
+        private Label lbl_type;
+        private TextBox txtAge;
+        private Label label11;
+        private Button button5;
+        private ComboBox combo2;
+        private Label label12;
     }
 }

@@ -116,7 +116,7 @@ public partial class Form1 : CustomForm {
             string storedHash = getPasswordByUserId(userId);
 
             bool isUsernameValid = checkForExistingUsername(UsernameToCheck);
-            if(isUsernameValid)
+            if (isUsernameValid)
             {
                 if (BCrypt.Verify(PasswordToCheck, storedHash))
                 {
@@ -148,6 +148,10 @@ public partial class Form1 : CustomForm {
 
                     return;
                 }
+            }
+            else {
+                MessageBox.Show("Wrong username or password!");
+                return;
             }
             
 

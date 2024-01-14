@@ -25,8 +25,13 @@ namespace FileSAVER
         {
             InitializeComponent();
             this.WindowState = FormWindowState.Maximized;
+            panel1.Enabled = false;
+            panel1.Visible = false;
             panel2.Enabled = false;
             panel2.Visible = false;
+            panel3.Enabled = false;
+            panel3.Visible = false;
+
         }
 
         /*
@@ -115,20 +120,16 @@ namespace FileSAVER
             CurrentConnection.Open();
             string query = "SELECT COUNT(*) FROM users WHERE username='" + username + "';";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            MySqlDataReader reader = cmd.ExecuteReader();
 
             int count = Convert.ToInt32(cmd.ExecuteScalar());
 
             if (count > 0)
             {
-                reader.Close();
                 CurrentConnection.Close();
                 return true;
             }
             else
             {
-
-                reader.Close();
                 CurrentConnection.Close();
                 return false;
             }
@@ -142,19 +143,16 @@ namespace FileSAVER
             CurrentConnection.Open();
             string query = "SELECT COUNT(*) FROM users WHERE email='" + email + "';";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            MySqlDataReader reader = cmd.ExecuteReader();
 
             int count = Convert.ToInt32(cmd.ExecuteScalar());
 
             if (count > 0)
             {
-                reader.Close();
                 CurrentConnection.Close();
                 return true;
             }
             else
             {
-                reader.Close();
                 CurrentConnection.Close();
                 return false;
             }
@@ -188,8 +186,8 @@ namespace FileSAVER
             return true;
 
         }
-        //Update the new user data for the user's account
-        private bool updateUserData(string lastUsername)
+        //Update the new user data for the user's account for panel1
+        private bool updateUserDataPanel1(string lastUsername)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
@@ -198,11 +196,13 @@ namespace FileSAVER
             string newUsername = txt_username.Text;
             string newEmail = txt_email.Text;
             string newAge = txt_age.Text;
-            string query = "UPDATE users SET username=@NewUsername, email = @NewEmail, age = @NewAge WHERE username = @Username;";
+            int newDeletedValue = 0;
+            string query = "UPDATE users SET username=@NewUsername, email = @NewEmail, age = @NewAge, deleted = @NewDeleted WHERE username = @Username;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             cmd.Parameters.AddWithValue("@NewUsername", newUsername);
             cmd.Parameters.AddWithValue("@NewEmail", newEmail);
             cmd.Parameters.AddWithValue("@NewAge", newAge);
+            cmd.Parameters.AddWithValue("@NewDeleted", newDeletedValue);
             cmd.Parameters.AddWithValue("@Username", lastUsername);
 
             int rowsAffected = cmd.ExecuteNonQuery();
@@ -225,6 +225,45 @@ namespace FileSAVER
             }
 
         }
+
+        //Update the new user data for the user's account for panel2
+        private bool updateUserDataPanel3(string lastUsername)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string newUsername = txtUsername.Text;
+            string newEmail = txtEmail.Text;
+            string newAge = txtAge.Text;
+            int newDeletedValue = 0;
+            string query = "UPDATE users SET username=@NewUsername, email = @NewEmail, age = @NewAge, deleted = @NewDeleted WHERE username = @Username;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@NewUsername", newUsername);
+            cmd.Parameters.AddWithValue("@NewEmail", newEmail);
+            cmd.Parameters.AddWithValue("@NewAge", newAge);
+            cmd.Parameters.AddWithValue("@NewDeleted", newDeletedValue);
+            cmd.Parameters.AddWithValue("@Username", lastUsername);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Insert successful");
+
+                CurrentConnection.Close();
+                return true;
+
+            }
+            else
+            {
+                Console.WriteLine("Insert failed");
+                CurrentConnection.Close();
+                return false;
+            }
+
+        }
+
+
         private void getAllLogs()
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
@@ -319,7 +358,8 @@ namespace FileSAVER
         }
 
         //Method for writing all usernames to the ComboBox from the database
-        private void writeToComboAllUsernames() {
+        private void writeToComboAllUsernames()
+        {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
@@ -538,6 +578,7 @@ namespace FileSAVER
         private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
         {
             panel1.Visible = true;
+            panel1.Enabled = true;
             string lastloguser = getCurrentlyLoggedUser().username;
 
 
@@ -566,6 +607,7 @@ namespace FileSAVER
         private void button4_Click(object sender, EventArgs e)
         {
             panel1.Visible = false;
+            panel1.Enabled = false;
         }
 
         //SAVE CHANGES
@@ -584,46 +626,153 @@ namespace FileSAVER
                     string age = userdata.Age.ToString();
                     string type = userdata.Type;
 
-                    if (txt_username.Text == username && txt_email.Text == email && txt_age.Text == age)
-                    {
-                        MessageBox.Show("No changes has been applied! If you want to save new changes you need to edit some value!");
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(username) && string.IsNullOrEmpty(email) && string.IsNullOrEmpty(age) && string.IsNullOrEmpty(type))
+                    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(age) || string.IsNullOrEmpty(type))
                     {
                         MessageBox.Show("Some values are null!");
                         return;
                     }
 
-                    if (checkForExistingEmail(email) && checkForExistingUsername(username))
+                    if (txt_username.Text == username && txt_email.Text == email && txt_age.Text == age)
                     {
-                        bool isUpdated = updateUserData(lastUsername);
+                        MessageBox.Show("No changes has been applied! If you want to save new changes you need to edit some value!");
+                        return;
+                    }
+                    if (txt_username.Text != username && txt_email.Text == email && txt_age.Text == age)
+                    {
+                        if (checkForExistingUsername(txt_username.Text))
+                        {
+                            MessageBox.Show("This username you choose has already been registered");
+                            return;
+                        }
+                        else
+                        {
+                            bool isUpdated = updateUserDataPanel1(lastUsername);
+                            if (isUpdated == false)
+                            {
+                                MessageBox.Show("Error occured, new user data wasn't inserted!");
+                                return;
+                            }
+                            else
+                            {
+                                MessageBox.Show("User edited successfully!");
+                                return;
+                            }
+                        }
+
+                    }
+                    else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
+                    {
+                        if (checkForExistingEmail(txt_email.Text))
+                        {
+                            MessageBox.Show("This email you choose has already been registered");
+                            return;
+                        }
+                        else
+                        {
+                            bool isUpdated = updateUserDataPanel1(lastUsername);
+                            if (isUpdated == false)
+                            {
+                                MessageBox.Show("Error occured, new user data wasn't inserted!");
+                                return;
+                            }
+                            else
+                            {
+                                MessageBox.Show("User edited successfully!");
+                                return;
+                            }
+                        }
+                    }
+                    else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
+                    {
+                        if (Convert.ToInt32(txt_age.Text) < 18)
+                        {
+                            MessageBox.Show("The age must be 18 or over!");
+                            return;
+                        }
+                        bool isUpdated = updateUserDataPanel1(lastUsername);
                         if (isUpdated == false)
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
                         }
+                        else
+                        {
+                            MessageBox.Show("User edited successfully!");
+                            return;
+                        }
                     }
-                    else
+                    else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
                     {
-                        if (checkForExistingUsername(username) == false)
+                        bool isUpdated = updateUserDataPanel1(lastUsername);
+                        if (isUpdated == false)
                         {
-                            MessageBox.Show("This username has already been registered!");
+                            MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
                         }
-                        else if (checkForExistingEmail(email) == false)
+                        else
                         {
-                            MessageBox.Show("This email has already been registered!");
+                            MessageBox.Show("User edited successfully!");
                             return;
                         }
-
+                    }
+                    else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
+                    {
+                        if (Convert.ToInt32(txt_age.Text) < 18)
+                        {
+                            MessageBox.Show("The age must be 18 or over!");
+                            return;
+                        }
+                        bool isUpdated = updateUserDataPanel1(lastUsername);
+                        if (isUpdated == false)
+                        {
+                            MessageBox.Show("Error occured, new user data wasn't inserted!");
+                            return;
+                        }
+                        else
+                        {
+                            MessageBox.Show("User edited successfully!");
+                            return;
+                        }
+                    }
+                    else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
+                    {
+                        if (Convert.ToInt32(txt_age.Text) < 18)
+                        {
+                            MessageBox.Show("The age must be 18 or over!");
+                            return;
+                        }
+                        bool isUpdated = updateUserDataPanel1(lastUsername);
+                        if (isUpdated == false)
+                        {
+                            MessageBox.Show("Error occured, new user data wasn't inserted!");
+                            return;
+                        }
+                        else
+                        {
+                            MessageBox.Show("User edited successfully!");
+                            return;
+                        }
+                    }
+                    else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age) {
+                        if (Convert.ToInt32(txt_age.Text) < 18)
+                        {
+                            MessageBox.Show("The age must be 18 or over!");
+                            return;
+                        }
+                        bool isUpdated = updateUserDataPanel1(lastUsername);
+                        if (isUpdated == false)
+                        {
+                            MessageBox.Show("Error occured, new user data wasn't inserted!");
+                            return;
+                        }
+                        else
+                        {
+                            MessageBox.Show("User edited successfully!");
+                            return;
+                        }
                     }
 
                 }
-
-
-
             }
             catch (MySqlException e1)
             {
@@ -706,6 +855,144 @@ namespace FileSAVER
                 return;
             }
 
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            txtUsername.Text = null;
+            txtEmail.Text = null;
+            txtAge.Text = null;
+        }
+
+        private void combo1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string choosenUser = combo1.SelectedItem.ToString();
+            int id = getUserIdByUsername(choosenUser);
+
+            UserData userdata = GetUserData(id);
+
+            string username = userdata.Username;
+            string email = userdata.Email;
+            string age = userdata.Age.ToString();
+            string type = userdata.Type;
+
+            txtUsername.Text = username;
+            txtEmail.Text = email;
+            txtAge.Text = age;
+            lbl_acc_type.Text = type;
+
+
+            panel3.Visible = true;
+            panel3.Enabled = true;
+
+        }
+
+        private void btn_save_changes_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string choosenUser = combo1.SelectedItem.ToString();
+
+                if (!string.IsNullOrEmpty(choosenUser))
+                {
+                    UserData userdata = GetUserData(getUserIdByUsername(choosenUser));
+
+                    string username = userdata.Username;
+                    string email = userdata.Email;
+                    string age = userdata.Age.ToString();
+                    string type = userdata.Type;
+
+                    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(age) || string.IsNullOrEmpty(type))
+                    {
+                        MessageBox.Show("Some values are null!");
+                        return;
+                    }
+                    if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text == age)
+                    {
+                        MessageBox.Show("There are not changes to the user. If you want to edit your account change some value of the following input fields!");
+                        return;
+                    }
+
+
+                    if (txtUsername.Text == username || txtEmail.Text == email || txtAge.Text == age)
+                    {
+                        if (txtUsername.Text != username && txtEmail.Text == email && txtAge.Text == age)
+                        {
+                            if (checkForExistingUsername(txtUsername.Text))
+                            {
+                                MessageBox.Show("This username you choose has already been registered");
+                                return;
+                            }
+                            else
+                            {
+                                bool isUpdated = updateUserDataPanel3(choosenUser);
+                                if (isUpdated == false)
+                                {
+                                    MessageBox.Show("Error occured, new user data wasn't inserted!");
+                                    return;
+                                }
+                                else
+                                {
+                                    MessageBox.Show("User edited successfully!");
+                                    return;
+                                }
+                            }
+
+                        }
+                        else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
+                        {
+                            if (checkForExistingEmail(txtEmail.Text))
+                            {
+                                MessageBox.Show("This email you choose has already been registered");
+                                return;
+                            }
+                            else
+                            {
+                                bool isUpdated = updateUserDataPanel3(choosenUser);
+                                if (isUpdated == false)
+                                {
+                                    MessageBox.Show("Error occured, new user data wasn't inserted!");
+                                    return;
+                                }
+                                else
+                                {
+                                    MessageBox.Show("User edited successfully!");
+                                    return;
+                                }
+                            }
+                        }
+                        else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
+                        {
+                            bool isUpdated = updateUserDataPanel3(choosenUser);
+                            if (isUpdated == false)
+                            {
+                                MessageBox.Show("Error occured, new user data wasn't inserted!");
+                                return;
+                            }
+                            else
+                            {
+                                MessageBox.Show("User edited successfully!");
+                                return;
+                            }
+                        }
+                    }
+
+                }
+
+
+
+            }
+            catch (MySqlException e1)
+            {
+                MessageBox.Show("Error: " + e1.Message);
+            }
+
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            panel3.Enabled = false;
+            panel3.Visible = false;
         }
     }
 }
