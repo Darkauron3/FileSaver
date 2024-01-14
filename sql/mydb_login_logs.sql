@@ -35,6 +35,7 @@ CREATE TABLE `login_logs` (
 
 LOCK TABLES `login_logs` WRITE;
 /*!40000 ALTER TABLE `login_logs` DISABLE KEYS */;
+INSERT INTO `login_logs` VALUES (2,'2024-01-14 15:05:18','Logged in'),(2,'2024-01-14 15:08:04','Logged in'),(2,'2024-01-14 15:16:05','Logged in'),(2,'2024-01-14 15:16:47','Logged in'),(2,'2024-01-14 15:18:56','Logged in'),(2,'2024-01-14 15:20:00','Logged in'),(2,'2024-01-14 15:28:41','Logged in'),(2,'2024-01-14 15:29:31','Logged in'),(2,'2024-01-14 15:33:51','Logged in'),(2,'2024-01-14 15:40:58','Logged in'),(2,'2024-01-14 15:46:12','Logged in'),(2,'2024-01-14 15:47:10','Log out');
 /*!40000 ALTER TABLE `login_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -47,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-20 15:10:59
+-- Dump completed on 2024-01-14 23:46:13
