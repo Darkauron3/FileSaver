@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Google.Protobuf.Reflection;
+using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using System;
 using System.Collections;
@@ -63,9 +64,12 @@ namespace FileSAVER
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-            string query = "SELECT username, email, age, type FROM users WHERE User_id='" + User_id + "';";
-            MySqlCommand command = new MySqlCommand(query, CurrentConnection);
-            using (MySqlDataReader reader = command.ExecuteReader())
+            string query = "SELECT username, email, age, type FROM users WHERE User_id=@userId AND deleted=@Deleted;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@userId", User_id);
+            cmd.Parameters.AddWithValue("@Deleted", 0);
+
+            using (MySqlDataReader reader = cmd.ExecuteReader())
             {
 
                 if (reader.Read() && reader.HasRows)
@@ -93,8 +97,10 @@ namespace FileSAVER
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-            string query = "SELECT User_id FROM users WHERE username='" + username + "';";
+            string query = "SELECT User_id FROM users WHERE username=@Username AND deleted=@Deleted;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@Username", username);
+            cmd.Parameters.AddWithValue("@Deleted", 0);
 
             MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -112,14 +118,16 @@ namespace FileSAVER
 
 
         }
-
+        //Method for check if the username already exists in the database
         private bool checkForExistingUsername(string username)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-            string query = "SELECT COUNT(*) FROM users WHERE username='" + username + "';";
+            string query = "SELECT COUNT(*) FROM users WHERE username=@Username AND deleted=@Deleted";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@Username", username);
+            cmd.Parameters.AddWithValue("@Deleted", 0);
 
             int count = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -127,8 +135,7 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            }
-            else
+            } else
             {
                 CurrentConnection.Close();
                 return false;
@@ -141,8 +148,10 @@ namespace FileSAVER
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-            string query = "SELECT COUNT(*) FROM users WHERE email='" + email + "';";
+            string query = "SELECT COUNT(*) FROM users WHERE email=@Email AND deleted=@Deleted;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@Email", email);
+            cmd.Parameters.AddWithValue("@Deleted", 0);
 
             int count = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -150,8 +159,7 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            }
-            else
+            } else
             {
                 CurrentConnection.Close();
                 return false;
@@ -160,7 +168,7 @@ namespace FileSAVER
         }
 
         //Method for making a log in login_logs
-        private bool CreateLog(int User_id, string action)
+        private bool createLog(int User_id, string action)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
@@ -176,8 +184,7 @@ namespace FileSAVER
             if (rowsAffected > 0)
             {
                 Console.WriteLine("Data inserted");
-            }
-            else
+            } else
             {
                 Console.WriteLine("Failed to insert data");
                 return false;
@@ -216,8 +223,7 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            }
-            else
+            } else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -253,8 +259,7 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            }
-            else
+            } else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -263,25 +268,6 @@ namespace FileSAVER
 
         }
 
-
-        private void getAllLogs()
-        {
-            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-            CurrentConnection.Open();
-
-            string query = "SELECT * FROM login_logs";
-            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                richtxt1.Text = reader.GetString(0) + "\n";
-            }
-
-        }
-
-
-
         //Method for checking if the user is admin
         private bool checkIfUserIsAdmin(int userId)
         {
@@ -289,8 +275,10 @@ namespace FileSAVER
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "SELECT type FROM users WHERE User_id='" + userId + "';";
+            string query = "SELECT type FROM users WHERE User_id=@userId AND deleted=@Deleted;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@userId", userId);
+            cmd.Parameters.AddWithValue("@Deleted", 0);
             MySqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.Read() && reader[0].Equals("admin"))
@@ -299,8 +287,7 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            }
-            else
+            } else
             {
                 reader.Close();
                 CurrentConnection.Close();
@@ -317,14 +304,15 @@ namespace FileSAVER
 
             string query = "SELECT username FROM users WHERE User_id='" + id + "';";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            //cmd.Parameters.AddWithValue("@userId", id);
+            //cmd.Parameters.AddWithValue("@Deleted", 0);
             MySqlDataReader reader = cmd.ExecuteReader();
 
             string username = null;
             if (reader.Read())
             {
                 username = reader[0].ToString();
-            }
-            else
+            } else
             {
                 MessageBox.Show("User with this id doesn't exist!");
                 return null;
@@ -342,7 +330,7 @@ namespace FileSAVER
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "SELECT * FROM login_logs";
+            string query = "SELECT * FROM login_logs;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             MySqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
@@ -357,19 +345,43 @@ namespace FileSAVER
             return logs;
         }
 
+        private bool? checkIfUserIsDeleted(int id) {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+            string query = "SELECT deleted FROM users WHERE User_id=@userId;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@userId", id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                if (Convert.ToInt32(reader["deleted"]) == 1)
+                {
+                    reader.Close();
+                    CurrentConnection.Close();
+                    return true;
+                } else {
+                    reader.Close();
+                    CurrentConnection.Close();
+                    return false;
+                }
+            }
+            return null;
+        }
         //Method for writing all usernames to the ComboBox from the database
-        private void writeToComboAllUsernames()
+        private void writeToComboAllUsernames(ComboBox combo)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "SELECT username FROM users;";
+            string query = "SELECT username FROM users WHERE deleted=@deleted;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@deleted", 0);
             MySqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                combo1.Items.Add(reader["username"]);
+               combo.Items.Add(reader["username"]);
             }
             reader.Close();
             CurrentConnection.Close();
@@ -385,7 +397,7 @@ namespace FileSAVER
             form1.Show();
 
             //Making a log that the user has logged out of his account
-            bool isitlogged = CreateLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");
+            bool isitlogged = createLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");
             if (isitlogged == false)
             {
                 MessageBox.Show("Failed to insert data!");
@@ -429,6 +441,60 @@ namespace FileSAVER
 
             return hexValues;
         }
+        //Method for changing the deleted column for a deleted user in table users 
+        private bool changeDeletedToTrueForUsers(int id) {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "UPDATE users SET deleted=@deleted WHERE User_id=@user_id;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@deleted", 1);
+            cmd.Parameters.AddWithValue("@user_id", id);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Insert successful");
+
+                CurrentConnection.Close();
+                return true;
+
+            } else
+            {
+                Console.WriteLine("Insert failed");
+                CurrentConnection.Close();
+                return false;
+            }
+        }
+
+        //Method for changing the deleted column for a deleted user in table users_passwords
+        private bool changeDeletedToTrueForUsersPasswords(int id)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "UPDATE users_passwords SET deleted=@deleted WHERE User_id=@user_id;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@deleted", 1);
+            cmd.Parameters.AddWithValue("@user_id", id);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Insert successful");
+
+                CurrentConnection.Close();
+                return true;
+
+            } else
+            {
+                Console.WriteLine("Insert failed");
+                CurrentConnection.Close();
+                return false;
+            }
+        }
 
         //1st part of my encryption algorithm -> shuffle the file with the key 
         private void firstStepOfEncryption(List<string> key, List<string> file)
@@ -460,8 +526,7 @@ namespace FileSAVER
                 if (sum % 2 == 0)
                 {
                     file.Add(key[i]);
-                }
-                else
+                } else
                 {
                     file.Insert(0, key[i]);
                 }
@@ -495,7 +560,7 @@ namespace FileSAVER
             }
         }
 
-        //4rd step of encryption is shuffle the symbols for every hexidecimal pair if the sum between 2 of the hex is odd or even they trade some of them values
+        //3rd step of encryption is shuffle the symbols for every hexidecimal pair if the sum between 2 of the hex is odd or even they trade some of them values
         private void thirdStepOfEncryption(List<string> file)
         {
             for (int i = 0; i < file.Count - 1; i++)
@@ -523,8 +588,7 @@ namespace FileSAVER
                     file[i] = newValueFori;
                     file[i + 1] = newValueForiplusone;
 
-                }
-                else
+                } else
                 {
 
                     string newValueFori = firstValueFromFirstNumber.ToString() + firstValueFromNextNumber.ToString();
@@ -538,7 +602,7 @@ namespace FileSAVER
             }
         }
 
-        //third step changes every element with even index to change the position of his hex symbols (e5 -> 5e) and position with the element on the right(index+1)
+        //fourth step changes every element with even index to change the position of his hex symbols (e5 -> 5e) and position with the element on the right(index+1)
         private void fourthStepOfEncryption(List<string> file)
         {
             for (int i = 0; i < file.Count; i += 2)
@@ -643,46 +707,40 @@ namespace FileSAVER
                         {
                             MessageBox.Show("This username you choose has already been registered");
                             return;
-                        }
-                        else
+                        } else
                         {
                             bool isUpdated = updateUserDataPanel1(lastUsername);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
                             }
                         }
 
-                    }
-                    else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
+                    } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
                     {
                         if (checkForExistingEmail(txt_email.Text))
                         {
                             MessageBox.Show("This email you choose has already been registered");
                             return;
-                        }
-                        else
+                        } else
                         {
                             bool isUpdated = updateUserDataPanel1(lastUsername);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
                             }
                         }
-                    }
-                    else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
+                    } else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
                     {
                         if (Convert.ToInt32(txt_age.Text) < 18)
                         {
@@ -694,28 +752,24 @@ namespace FileSAVER
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        }
-                        else
+                        } else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
-                    }
-                    else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
+                    } else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
                     {
                         bool isUpdated = updateUserDataPanel1(lastUsername);
                         if (isUpdated == false)
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        }
-                        else
+                        } else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
-                    }
-                    else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
+                    } else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
                     {
                         if (Convert.ToInt32(txt_age.Text) < 18)
                         {
@@ -727,14 +781,12 @@ namespace FileSAVER
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        }
-                        else
+                        } else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
-                    }
-                    else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
+                    } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
                     {
                         if (Convert.ToInt32(txt_age.Text) < 18)
                         {
@@ -746,14 +798,13 @@ namespace FileSAVER
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        }
-                        else
+                        } else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
-                    }
-                    else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age) {
+                    } else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age)
+                    {
                         if (Convert.ToInt32(txt_age.Text) < 18)
                         {
                             MessageBox.Show("The age must be 18 or over!");
@@ -764,8 +815,7 @@ namespace FileSAVER
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        }
-                        else
+                        } else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
@@ -773,8 +823,7 @@ namespace FileSAVER
                     }
 
                 }
-            }
-            catch (MySqlException e1)
+            } catch (MySqlException e1)
             {
                 MessageBox.Show("Error: " + e1.Message);
             }
@@ -823,8 +872,7 @@ namespace FileSAVER
                     }
                     Debug.WriteLine("-----------------------------------------------------------------------------");
 
-                }
-                catch (Exception ex)
+                } catch (Exception ex)
                 {
                     MessageBox.Show("error " + ex.Message);
                 }
@@ -845,11 +893,11 @@ namespace FileSAVER
                 getLogs(logs);
                 string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
                 richtxt1.Text = allLogs;
-                writeToComboAllUsernames();
+                writeToComboAllUsernames(combo1);
+                writeToComboAllUsernames(combo2);
 
 
-            }
-            else
+            } else
             {
                 MessageBox.Show("You are not admin user, so you can't use admin tools!");
                 return;
@@ -922,54 +970,47 @@ namespace FileSAVER
                             {
                                 MessageBox.Show("This username you choose has already been registered");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 bool isUpdated = updateUserDataPanel3(choosenUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                }
-                                else
+                                } else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
 
-                        }
-                        else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
+                        } else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
                         {
                             if (checkForExistingEmail(txtEmail.Text))
                             {
                                 MessageBox.Show("This email you choose has already been registered");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 bool isUpdated = updateUserDataPanel3(choosenUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                }
-                                else
+                                } else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
-                        }
-                        else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
+                        } else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
                         {
                             bool isUpdated = updateUserDataPanel3(choosenUser);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
@@ -981,8 +1022,7 @@ namespace FileSAVER
 
 
 
-            }
-            catch (MySqlException e1)
+            } catch (MySqlException e1)
             {
                 MessageBox.Show("Error: " + e1.Message);
             }
@@ -993,6 +1033,41 @@ namespace FileSAVER
         {
             panel3.Enabled = false;
             panel3.Visible = false;
+        }
+
+        private void combo2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string choosenUser = combo2.SelectedItem.ToString();
+                DialogResult dialogResult = MessageBox.Show("Are you sure you wanna delete this user?", "Deleting user", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    int id = getUserIdByUsername(choosenUser);
+                    bool isDeletedUsers = changeDeletedToTrueForUsers(id);
+                    bool isDeletedUsersPasswords = changeDeletedToTrueForUsersPasswords(id);
+                    bool isCreatedLog = createLog(id, "Account deleted");
+                    if (isDeletedUsers && isDeletedUsersPasswords && isCreatedLog)
+                    {
+                        combo2.Items.Clear();
+                        List<string> logs = new List<string>();
+                        getLogs(logs);
+                        string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
+                        richtxt1.Text = allLogs;
+                        writeToComboAllUsernames(combo2);
+                        
+                        MessageBox.Show("Successfully deleted user -> " + choosenUser);
+                        //logovete se chupqt neshto inache si vkarvat v tablicata
+                    }
+                } else if (dialogResult == DialogResult.No)
+                {
+                    combo2.Items.Clear();
+                    writeToComboAllUsernames(combo2);
+                }
+
+            } catch (Exception ex) {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mydb
 -- ------------------------------------------------------
--- Server version	8.0.34
+-- Server version	8.0.35
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -56,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-14 23:46:13
+-- Dump completed on 2024-01-17 16:42:20

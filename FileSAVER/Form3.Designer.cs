@@ -73,6 +73,7 @@
             label9 = new Label();
             label8 = new Label();
             richtxt1 = new RichTextBox();
+            label13 = new Label();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -204,7 +205,7 @@
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label2);
             panel1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            panel1.Location = new Point(1038, 90);
+            panel1.Location = new Point(1144, 67);
             panel1.Name = "panel1";
             panel1.Size = new Size(729, 412);
             panel1.TabIndex = 3;
@@ -332,7 +333,7 @@
             // 
             // Browse_button
             // 
-            Browse_button.Location = new Point(1408, 523);
+            Browse_button.Location = new Point(1670, 652);
             Browse_button.Name = "Browse_button";
             Browse_button.Size = new Size(144, 69);
             Browse_button.TabIndex = 4;
@@ -343,7 +344,7 @@
             // txt_key_encryption
             // 
             txt_key_encryption.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_key_encryption.Location = new Point(1156, 553);
+            txt_key_encryption.Location = new Point(1360, 702);
             txt_key_encryption.Name = "txt_key_encryption";
             txt_key_encryption.Size = new Size(187, 39);
             txt_key_encryption.TabIndex = 5;
@@ -351,7 +352,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(1108, 535);
+            label7.Location = new Point(1390, 644);
             label7.Name = "label7";
             label7.Size = new Size(257, 15);
             label7.TabIndex = 6;
@@ -360,6 +361,7 @@
             // panel2
             // 
             panel2.BackColor = Color.Black;
+            panel2.Controls.Add(label13);
             panel2.Controls.Add(combo2);
             panel2.Controls.Add(label12);
             panel2.Controls.Add(panel3);
@@ -370,7 +372,7 @@
             panel2.Controls.Add(richtxt1);
             panel2.Location = new Point(30, 93);
             panel2.Name = "panel2";
-            panel2.Size = new Size(978, 874);
+            panel2.Size = new Size(1093, 874);
             panel2.TabIndex = 7;
             // 
             // combo2
@@ -381,6 +383,7 @@
             combo2.Name = "combo2";
             combo2.Size = new Size(159, 28);
             combo2.TabIndex = 16;
+            combo2.SelectedIndexChanged += combo2_SelectedIndexChanged;
             // 
             // label12
             // 
@@ -556,7 +559,7 @@
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 21.75F, FontStyle.Underline, GraphicsUnit.Point);
             label8.ForeColor = SystemColors.ControlLightLight;
-            label8.Location = new Point(702, 21);
+            label8.Location = new Point(821, 32);
             label8.Name = "label8";
             label8.Size = new Size(154, 40);
             label8.TabIndex = 1;
@@ -567,11 +570,22 @@
             richtxt1.BackColor = Color.Black;
             richtxt1.BorderStyle = BorderStyle.FixedSingle;
             richtxt1.ForeColor = SystemColors.Info;
-            richtxt1.Location = new Point(604, 98);
+            richtxt1.Location = new Point(736, 97);
             richtxt1.Name = "richtxt1";
             richtxt1.Size = new Size(337, 723);
             richtxt1.TabIndex = 0;
             richtxt1.Text = "";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label13.ForeColor = Color.White;
+            label13.Location = new Point(172, 582);
+            label13.Name = "label13";
+            label13.Size = new Size(25, 20);
+            label13.TabIndex = 17;
+            label13.Text = "hh";
             // 
             // Form3
             // 
@@ -656,5 +670,6 @@
         private Button button5;
         private ComboBox combo2;
         private Label label12;
+        private Label label13;
     }
 }

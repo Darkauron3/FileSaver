@@ -19,13 +19,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 public partial class Form2 : CustomForm
 {
 
-    private bool checkForExistingUsername(String query)
+    private bool checkForExistingUsername(string username)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
+        string query = "SELECT * FROM users WHERE username=@Username AND deleted=@Deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@Username", username);
+        cmd.Parameters.AddWithValue("@Deleted", 0);
         MySqlDataReader reader = cmd.ExecuteReader();
 
         if (reader.Read())
@@ -80,10 +83,11 @@ public partial class Form2 : CustomForm
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO users_passwords (User_id,pass_hash) VALUES(@value1, @value2)";
+        string query = "INSERT INTO users_passwords (User_id,pass_hash, deleted) VALUES(@value1, @value2, @value3)";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@value1", User_id);
         cmd.Parameters.AddWithValue("@value2", pass_hash);
+        cmd.Parameters.AddWithValue("@value3", 0);
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)
@@ -104,7 +108,7 @@ public partial class Form2 : CustomForm
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "SELECT COUNT(*) FROM users WHERE type='admin'";
+        string query = "SELECT COUNT(*) FROM users WHERE type='admin' AND deleted='0'";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         int userCount = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -126,8 +130,10 @@ public partial class Form2 : CustomForm
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT User_id FROM users WHERE username='" + username + "';";
+        string query = "SELECT User_id FROM users WHERE username=@Username AND deleted=@Deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@Username", username);
+        cmd.Parameters.AddWithValue("@Deleted", 0);
 
         MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -172,8 +178,7 @@ public partial class Form2 : CustomForm
 
 
             string usernameToCheck = txt_username.Text;
-            string checkUsernameQuery = "SELECT * FROM users WHERE username='" + usernameToCheck + "';";
-            bool isUsernameExists = checkForExistingUsername(checkUsernameQuery);
+            bool isUsernameExists = checkForExistingUsername(usernameToCheck);
 
             if (isUsernameExists)
             {

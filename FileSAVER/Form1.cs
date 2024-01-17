@@ -1,30 +1,35 @@
 namespace FileSAVER;
 using MySql.Data.MySqlClient;
 using BCrypt.Net;
+using System.ComponentModel.Design.Serialization;
 
-
-public partial class Form1 : CustomForm {
-    public Form1() {
+public partial class Form1 : CustomForm
+{
+    public Form1()
+    {
         InitializeComponent();
     }
 
 
     //Method for entering the data to the user's logs
-    private bool CreateLog(int User_id, string action) {
+    private bool CreateLog(int User_id, string action)
+    {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO login_logs (User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
+        string query = "INSERT INTO login_logs (User_id, Time, Action) VALUES (@User_id, @Time, @Action);";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("User_id", User_id);
         cmd.Parameters.AddWithValue("Time", DateTime.Now);
-        cmd.Parameters.AddWithValue("Action", action);
+        cmd.Parameters.AddWithValue("Action", action); ;
 
         int rowsAffected = cmd.ExecuteNonQuery();
-        if (rowsAffected > 0) {
+        if (rowsAffected > 0)
+        {
             Console.WriteLine("Data inserted");
-        } else {
+        } else
+        {
             Console.WriteLine("Failed to insert data");
             return false;
         }
@@ -34,14 +39,18 @@ public partial class Form1 : CustomForm {
     }
 
     //Method for sending select queries
-    private String getPasswordByUserId(int User_id) {
+    private String getPasswordByUserId(int User_id)
+    {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT pass_hash FROM users_passwords WHERE User_id='" + User_id + "';";
+        string query = "SELECT pass_hash FROM users_passwords WHERE User_id=@userId AND deleted=@Deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@userId", User_id);
+        cmd.Parameters.AddWithValue("@Deleted", 0);
         MySqlDataReader reader = cmd.ExecuteReader();
-        if(reader.Read()) { 
+        if (reader.Read())
+        {
             string pass_hash = reader["pass_hash"].ToString();
             CurrentConnection.Close();
             reader.Close();
@@ -61,8 +70,10 @@ public partial class Form1 : CustomForm {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT User_id FROM users WHERE username='" + username + "';";
+        string query = "SELECT User_id FROM users WHERE username=@Username AND deleted=@Deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@Username", username);
+        cmd.Parameters.AddWithValue("@Deleted", 0);
 
         MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -85,8 +96,10 @@ public partial class Form1 : CustomForm {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT User_id FROM users WHERE username='" + username + "';";
+        string query = "SELECT User_id FROM users WHERE username=@Username AND deleted=@Deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@Username", username);
+        cmd.Parameters.AddWithValue("@Deleted", 0);
 
         MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -105,14 +118,15 @@ public partial class Form1 : CustomForm {
 
 
     //CONNECT BUTTON
-    private void button1_Click(object sender, EventArgs e) {
-        try {
+    private void button1_Click(object sender, EventArgs e)
+    {
+        try
+        {
 
 
             string UsernameToCheck = txt1.Text;
             string PasswordToCheck = txt2.Text;
             int userId = getUserIdByUsername(UsernameToCheck);
-            string query = "SELECT pass_hash FROM users_passwords WHERE User_id='" + userId + "';";
             string storedHash = getPasswordByUserId(userId);
 
             bool isUsernameValid = checkForExistingUsername(UsernameToCheck);
@@ -134,8 +148,7 @@ public partial class Form1 : CustomForm {
                     setCurrentlyLoggedUser(currentUser);
                     Hide();
                     form3.Show();
-                }
-                else
+                } else
                 {
                     MessageBox.Show("Wrong username or password!");
 
@@ -148,20 +161,22 @@ public partial class Form1 : CustomForm {
 
                     return;
                 }
-            }
-            else {
+            } else
+            {
                 MessageBox.Show("Wrong username or password!");
                 return;
             }
-            
 
-        } catch (MySqlException ex) {
+
+        } catch (MySqlException ex)
+        {
             MessageBox.Show(ex.ToString());
         }
     }
 
     //Register link
-    private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) {
+    private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
         Form2 form2 = new Form2();
         Hide();
         form2.Show();
@@ -169,5 +184,12 @@ public partial class Form1 : CustomForm {
 
     }
 
+    private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        Form4 form4 = new Form4();
+        Hide();
+        form4.Show();
+
+    }
 }
 

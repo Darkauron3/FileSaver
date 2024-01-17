@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mydb
 -- ------------------------------------------------------
--- Server version	8.0.34
+-- Server version	8.0.35
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,8 +24,8 @@ DROP TABLE IF EXISTS `login_logs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `login_logs` (
   `User_id` int NOT NULL,
-  `Time` datetime DEFAULT NULL,
-  `Action` varchar(255) DEFAULT NULL
+  `Time` datetime NOT NULL,
+  `Action` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -35,7 +35,7 @@ CREATE TABLE `login_logs` (
 
 LOCK TABLES `login_logs` WRITE;
 /*!40000 ALTER TABLE `login_logs` DISABLE KEYS */;
-INSERT INTO `login_logs` VALUES (2,'2024-01-14 15:05:18','Logged in'),(2,'2024-01-14 15:08:04','Logged in'),(2,'2024-01-14 15:16:05','Logged in'),(2,'2024-01-14 15:16:47','Logged in'),(2,'2024-01-14 15:18:56','Logged in'),(2,'2024-01-14 15:20:00','Logged in'),(2,'2024-01-14 15:28:41','Logged in'),(2,'2024-01-14 15:29:31','Logged in'),(2,'2024-01-14 15:33:51','Logged in'),(2,'2024-01-14 15:40:58','Logged in'),(2,'2024-01-14 15:46:12','Logged in'),(2,'2024-01-14 15:47:10','Log out');
+INSERT INTO `login_logs` VALUES (2,'2024-01-16 23:34:02','Logged in'),(2,'2024-01-16 23:34:08','Log out'),(1,'2024-01-16 23:34:17','Logged in'),(2,'2024-01-16 23:34:23','Account deleted'),(3,'2024-01-16 23:38:13','Logged in'),(3,'2024-01-16 23:38:17','Log out'),(1,'2024-01-16 23:38:24','Logged in'),(1,'2024-01-16 23:45:47','Logged in'),(1,'2024-01-17 11:37:28','Logged in'),(1,'2024-01-17 11:43:22','Logged in'),(3,'2024-01-17 11:43:30','Account deleted'),(1,'2024-01-17 11:44:05','Log out'),(4,'2024-01-17 12:28:55','Logged in'),(4,'2024-01-17 12:28:57','Log out');
 /*!40000 ALTER TABLE `login_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -48,4 +48,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-14 23:46:13
+-- Dump completed on 2024-01-17 16:42:20

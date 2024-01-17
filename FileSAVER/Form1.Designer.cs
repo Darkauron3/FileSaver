@@ -26,7 +26,8 @@
         ///  Required method for Designer support - do not modify
         ///  the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
+        private void InitializeComponent()
+        {
             button1 = new Button();
             label1 = new Label();
             txt1 = new TextBox();
@@ -34,6 +35,7 @@
             label3 = new Label();
             txt2 = new TextBox();
             linkLabel1 = new LinkLabel();
+            linkLabel2 = new LinkLabel();
             SuspendLayout();
             // 
             // button1
@@ -106,11 +108,23 @@
             linkLabel1.Text = "No account? Register here!";
             linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
+            // linkLabel2
+            // 
+            linkLabel2.AutoSize = true;
+            linkLabel2.Location = new Point(28, 217);
+            linkLabel2.Name = "linkLabel2";
+            linkLabel2.Size = new Size(96, 15);
+            linkLabel2.TabIndex = 7;
+            linkLabel2.TabStop = true;
+            linkLabel2.Text = "Fogot password?";
+            linkLabel2.LinkClicked += linkLabel2_LinkClicked;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(569, 334);
+            Controls.Add(linkLabel2);
             Controls.Add(linkLabel1);
             Controls.Add(txt2);
             Controls.Add(label3);
@@ -135,5 +149,6 @@
         private Label label3;
         private TextBox txt2;
         private LinkLabel linkLabel1;
+        private LinkLabel linkLabel2;
     }
 }

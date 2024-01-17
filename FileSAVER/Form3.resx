@@ -18,7 +18,7 @@
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
     <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing"">Blue</data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
@@ -124,7 +124,7 @@
   <data name="button4.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DwAACw8BkvkDpQAACF5JREFUeF7t3XvM93Mdx/Er5hxuodsxIslSYdZYjBGrWdiUhCLTlmkTRtZWc8gU
+        DQAACw0B7QfALAAACF5JREFUeF7t3XvM93Mdx/Er5hxuodsxIslSYdZYjBGrWdiUhCLTlmkTRtZWc8gU
         Y5izu0W7M8pwL3OLnDannA8pRnQvTTmko5x5vfCdn8/9vlzX9bu+h8/n+30+tuc/9743973P531fv8P3
         MAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAD03By1jfqmOkbNU1eoG9Xv1D3qbnWb+q36lTpLHaX2UpurZRXQC5uqQ9Qv1SL1Rg29qh5U56v91FoK
@@ -166,7 +166,7 @@
   <data name="button5.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
-        DwAACw8BkvkDpQAACF5JREFUeF7t3XvM93Mdx/Er5hxuodsxIslSYdZYjBGrWdiUhCLTlmkTRtZWc8gU
+        DQAACw0B7QfALAAACF5JREFUeF7t3XvM93Mdx/Er5hxuodsxIslSYdZYjBGrWdiUhCLTlmkTRtZWc8gU
         Y5izu0W7M8pwL3OLnDannA8pRnQvTTmko5x5vfCdn8/9vlzX9bu+h8/n+30+tuc/9743973P531fv8P3
         MAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
         AAD03By1jfqmOkbNU1eoG9Xv1D3qbnWb+q36lTpLHaX2UpurZRXQC5uqQ9Qv1SL1Rg29qh5U56v91FoK
