@@ -75,6 +75,7 @@ namespace FileSAVER
 
         private void btn_check_identity_Click(object sender, EventArgs e)
         {
+            
             string usernameForCheck = txtUsername.Text;
             string emailForCheck = txtEmail.Text;
             int ageForCheck = Convert.ToInt32(txtAge.Text);

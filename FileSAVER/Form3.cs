@@ -610,22 +610,25 @@ namespace FileSAVER
                 //If file.Count is odd the last element can't get replaced because is alone, so it breaks
                 if (i + 1 >= file.Count) break;
                 char[] hex_value = file[i].ToCharArray();
-
+                
+                //Rotating the symbols of an every second elemnet
                 char first_hex_value = hex_value[0];
                 hex_value[0] = hex_value[1];
                 hex_value[1] = first_hex_value;
 
+                //Actualizing the actual file with the edited elements which had roatated their symbols
                 file[i] = "";
                 foreach (char hex_char in hex_value)
                 {
                     file[i] += hex_char;
                 }
-
+                //Every elemnt change position with the elemnt on the right
                 string element = file[i + 1];
                 file[i + 1] = file[i];
                 file[i] = element;
             }
-
+            //When the file count is odd number the last hex number can't change position with number, because is the last number, so the
+            //last hex number after encryption stays the same and in the same position, that's why we change it with the first element
             if (file.Count % 2 != 0)
             {
                 string firstEl = file[0];
@@ -638,16 +641,29 @@ namespace FileSAVER
         private void firstStepOfDecryption(List<string> file)
         {
 
+            //In the encryption step when the count of all of the hex numbers are odd, the last number can change its position because its the last, so the encryption 
+            //changes the last element with the first so here first before other reverse decryption we need to change the first with the last element
+            // !(THIS IS ONLY FOR ODD file.Count)!
+            if (file.Count % 2 != 0)
+            {
+                string firstEl = file[0];
+                file[0] = file[file.Count - 1];
+                file[file.Count - 1] = firstEl; 
+            }
+
+            //First reverse the shuffle make the elements in the right order
             for (int i = 0; i < file.Count; i += 2)
             {
+                if (i + 1 >= file.Count) break;//When the file.Count is odd it has to break so the last elemnt doesn't change or edit 
+                                               //in some way because its changed with the first element look the if above
                 string element = file[i + 1];
                 file[i + 1] = file[i];
                 file[i] = element;
             }
-
+            //Change the rotated symbols on every second element
             for (int i = 0; i < file.Count; i += 2)
             {
-
+                if (i + 1 >= file.Count) break;
                 char[] hex_value = file[i].ToCharArray();
                 char first_hex_value = hex_value[0];
                 hex_value[0] = hex_value[1];
@@ -656,7 +672,9 @@ namespace FileSAVER
                 file[i] = new string(hex_value);
             }
 
+        }
 
+        private void secondStepOfDecryption(List<string> file) { 
             
         }
 
@@ -882,21 +900,33 @@ namespace FileSAVER
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
                     List<string> file_hexlist = byteArrayToHexList(fileBytes);
-                    List<string> test = new List<string> {"21", "e6", "45", "b7"};
+                    List<string> test = new List<string> {"21", "e6", "45", "4f", "29"};
                     //firstStepOfEncryption(key_hexlist, file_hexlist);
                     //secondStepOfEncryption(file_hexlist);
                     //thirdStepOfEncryption(file_hexlist);
                     //fourthStepOfEncryption(file_hexlist);
-                    //firstStepOfDecryption(test);
-                    firstStepOfDecryption(test);
+                    //firstStepOfDecryption(file_hexlist);
+                    fourthStepOfEncryption(test);
 
+                    Debug.WriteLine("Original 21 e6 45 4f 29");
                     Debug.WriteLine("");
-                    Debug.WriteLine("-----------------------------------------------------------------------------");
+                    Debug.WriteLine("--After Encryption------------------------------------------------------------------------");
                     for (int y = 0; y < test.Count; y++)
                     {
                         Debug.Write(test[y] + " ");
                     }
                     Debug.WriteLine("-----------------------------------------------------------------------------");
+
+                    firstStepOfDecryption(test);
+
+                    Debug.WriteLine("");
+                    Debug.WriteLine("--After Decryption-----------------------------------------------------------------------");
+                    for (int y = 0; y < test.Count; y++)
+                    {
+                        Debug.Write(test[y] + " ");
+                    }
+                    Debug.WriteLine("-----------------------------------------------------------------------------");
+
 
                 } catch (Exception ex)
                 {
