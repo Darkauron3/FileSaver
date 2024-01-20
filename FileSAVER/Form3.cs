@@ -615,7 +615,6 @@ namespace FileSAVER
                 hex_value[0] = hex_value[1];
                 hex_value[1] = first_hex_value;
 
-                //file[i] = hex_value.ToString();
                 file[i] = "";
                 foreach (char hex_char in hex_value)
                 {
@@ -636,6 +635,30 @@ namespace FileSAVER
 
         }
 
+        private void firstStepOfDecryption(List<string> file)
+        {
+
+            for (int i = 0; i < file.Count; i += 2)
+            {
+                string element = file[i + 1];
+                file[i + 1] = file[i];
+                file[i] = element;
+            }
+
+            for (int i = 0; i < file.Count; i += 2)
+            {
+
+                char[] hex_value = file[i].ToCharArray();
+                char first_hex_value = hex_value[0];
+                hex_value[0] = hex_value[1];
+                hex_value[1] = first_hex_value;
+
+                file[i] = new string(hex_value);
+            }
+
+
+            
+        }
 
 
         //When user select the option - "my account"
@@ -859,16 +882,19 @@ namespace FileSAVER
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
                     List<string> file_hexlist = byteArrayToHexList(fileBytes);
-                    firstStepOfEncryption(key_hexlist, file_hexlist);
-                    secondStepOfEncryption(file_hexlist);
-                    thirdStepOfEncryption(file_hexlist);
-                    fourthStepOfEncryption(file_hexlist);
+                    List<string> test = new List<string> {"21", "e6", "45", "b7"};
+                    //firstStepOfEncryption(key_hexlist, file_hexlist);
+                    //secondStepOfEncryption(file_hexlist);
+                    //thirdStepOfEncryption(file_hexlist);
+                    //fourthStepOfEncryption(file_hexlist);
+                    //firstStepOfDecryption(test);
+                    firstStepOfDecryption(test);
 
                     Debug.WriteLine("");
                     Debug.WriteLine("-----------------------------------------------------------------------------");
-                    for (int y = 0; y < file_hexlist.Count; y++)
+                    for (int y = 0; y < test.Count; y++)
                     {
-                        Debug.Write(file_hexlist[y] + " ");
+                        Debug.Write(test[y] + " ");
                     }
                     Debug.WriteLine("-----------------------------------------------------------------------------");
 
@@ -1057,7 +1083,7 @@ namespace FileSAVER
                         writeToComboAllUsernames(combo2);
                         
                         MessageBox.Show("Successfully deleted user -> " + choosenUser);
-                        //logovete se chupqt neshto inache si vkarvat v tablicata
+                        
                     }
                 } else if (dialogResult == DialogResult.No)
                 {
