@@ -565,37 +565,39 @@ namespace FileSAVER
         {
             for (int i = 0; i < file.Count - 1; i++)
             {
-                int number, nextnumber;
-
-                number = int.Parse(file[i], System.Globalization.NumberStyles.HexNumber);
-                nextnumber = int.Parse(file[i + 1], System.Globalization.NumberStyles.HexNumber);
-
-                int sum = number + nextnumber;
-
+                
+                //Takes the first hex number for example "16" and separate the symbols -> "1" and "6" and converts them to int
                 char[] firstNumberValues = file[i].ToCharArray();
-                char firstValueFromFirstNumber = firstNumberValues[0];
-                char secondValueFromFirstNumber = firstNumberValues[1];
+                int firstValueFromFirstNumber = int.Parse(firstNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber); 
+                int secondValueFromFirstNumber = int.Parse(firstNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
 
+                //Takes the second hex number for example "13" and separate the symbols -> "1" and "3 and converts them to int
                 char[] nextNumberValues = file[i + 1].ToCharArray();
-                char firstValueFromNextNumber = nextNumberValues[0];
-                char secondValueFromNextNumber = nextNumberValues[1];
+                int firstValueFromNextNumber = int.Parse(nextNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber); 
+                int secondValueFromNextNumber = int.Parse(nextNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber); 
 
+                //Makes the summary of numbers in the hex
+                int sumFirstHex = firstValueFromFirstNumber + secondValueFromFirstNumber;//for example if the first hex is 16 sum = 1 + 6 = 7
+                int sumSecondHex = firstValueFromNextNumber + secondValueFromNextNumber;//for example if the second hex is 13 sum = 1 + 3 = 4
+                int sum = sumFirstHex + sumSecondHex;//Makes the sum of the sums of the hex symbols - > 7 + 4 = 11
+
+                //If the sum is even we change the symbols from the hex -> we change frist symbol from the first hex with the second symbol from the second hex
+                //like this "16" "13" - > "36" "11"
                 if (sum % 2 == 0)
                 {
-
                     string newValueFori = secondValueFromNextNumber.ToString() + secondValueFromFirstNumber.ToString();
                     string newValueForiplusone = firstValueFromNextNumber.ToString() + firstValueFromFirstNumber.ToString();
                     file[i] = newValueFori;
                     file[i + 1] = newValueForiplusone;
 
+                    //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
+                    //like this "16" "13" - > "13" "63"
                 } else
                 {
-
                     string newValueFori = firstValueFromFirstNumber.ToString() + firstValueFromNextNumber.ToString();
                     string newValueForiplusone = secondValueFromFirstNumber.ToString() + secondValueFromNextNumber.ToString();
                     file[i] = newValueFori;
                     file[i + 1] = newValueForiplusone;
-
                 }
 
 
@@ -637,7 +639,7 @@ namespace FileSAVER
             }
 
         }
-
+        //Method for decryption the fourth step of decryption
         private void firstStepOfDecryption(List<string> file)
         {
 
@@ -663,7 +665,8 @@ namespace FileSAVER
             //Change the rotated symbols on every second element
             for (int i = 0; i < file.Count; i += 2)
             {
-                if (i + 1 >= file.Count) break;
+                if (i + 1 >= file.Count) break; //When the file.Count is odd it has to break so the last elemnt doesn't change or edit 
+                                                //in some way because its changed with the first element look the if above
                 char[] hex_value = file[i].ToCharArray();
                 char first_hex_value = hex_value[0];
                 hex_value[0] = hex_value[1];
@@ -673,9 +676,47 @@ namespace FileSAVER
             }
 
         }
+        //Method for decryption of the third step of encryption
+        private void secondStepOfDecryption(List<string> file) {
+            for (int i = file.Count-1; i > 0; i--) {
 
-        private void secondStepOfDecryption(List<string> file) { 
-            
+                //Takes the last hex number for example "16" and separate the symbols -> "1" and "6" and converts them to int
+                char[] rightNumberValues = file[i].ToCharArray();
+                int firstValueFromRightNumber = int.Parse(rightNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
+                int secondValueFromRightNumber = int.Parse(rightNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
+
+                //Takes the hex number before the last hex number for example "13" and separate the symbols -> "1" and "3" and converts them to int
+                char[] leftNumberValues = file[i - 1].ToCharArray();
+                int firstValueFromLeftNumber = int.Parse(leftNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
+                int secondValueFromLeftNumber = int.Parse(leftNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
+
+                //Makes the summary of numbers in the hex
+                int sumRightHex = firstValueFromRightNumber + secondValueFromRightNumber;//for example if the first hex is 16 sum = 1 + 6 = 7
+                int sumLeftHex = firstValueFromLeftNumber + secondValueFromLeftNumber;//for example if the second hex is 13 sum = 1 + 3 = 4
+                int sum = sumLeftHex + sumRightHex;//Makes the sum of the sums of the hex symbols - > 7 + 4 = 11
+
+                //If the sum is even we change the symbols from the hex -> we change frist symbol from the first hex with the second symbol from the second hex
+                //like this "16" "13" - > "36" "11"
+                if (sum % 2 == 0)
+                {
+                    string newRightValues = firstValueFromRightNumber.ToString() + firstValueFromLeftNumber.ToString();
+                    string newLeftValues = secondValueFromRightNumber.ToString() + secondValueFromLeftNumber.ToString();
+                    file[i] = newRightValues;
+                    file[i - 1] = newLeftValues;
+
+                    //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
+                    //like this "16" "13" - > "13" "63"
+                } else
+                {
+                    string newRightValues = secondValueFromLeftNumber.ToString() + secondValueFromRightNumber.ToString();
+                    string newLeftValues = firstValueFromLeftNumber.ToString() + firstValueFromRightNumber.ToString();
+                    file[i] = newRightValues;
+                    file[i-1] = newLeftValues;
+
+                }
+
+
+            }
         }
 
 
@@ -900,15 +941,16 @@ namespace FileSAVER
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
                     List<string> file_hexlist = byteArrayToHexList(fileBytes);
-                    List<string> test = new List<string> {"21", "e6", "45", "4f", "29"};
+                    List<string> test = new List<string> {"84", "21", "51"};
                     //firstStepOfEncryption(key_hexlist, file_hexlist);
                     //secondStepOfEncryption(file_hexlist);
                     //thirdStepOfEncryption(file_hexlist);
                     //fourthStepOfEncryption(file_hexlist);
                     //firstStepOfDecryption(file_hexlist);
-                    fourthStepOfEncryption(test);
 
-                    Debug.WriteLine("Original 21 e6 45 4f 29");
+                    thirdStepOfEncryption(test);
+
+                    Debug.WriteLine("Original 84 21 51");
                     Debug.WriteLine("");
                     Debug.WriteLine("--After Encryption------------------------------------------------------------------------");
                     for (int y = 0; y < test.Count; y++)
@@ -917,15 +959,18 @@ namespace FileSAVER
                     }
                     Debug.WriteLine("-----------------------------------------------------------------------------");
 
-                    firstStepOfDecryption(test);
+
+                    secondStepOfDecryption(test);
+
 
                     Debug.WriteLine("");
-                    Debug.WriteLine("--After Decryption-----------------------------------------------------------------------");
+                    Debug.WriteLine("--After Decryption------------------------------------------------------------------------");
                     for (int y = 0; y < test.Count; y++)
                     {
                         Debug.Write(test[y] + " ");
                     }
                     Debug.WriteLine("-----------------------------------------------------------------------------");
+
 
 
                 } catch (Exception ex)
