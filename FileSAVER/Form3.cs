@@ -551,12 +551,137 @@ namespace FileSAVER
         //second step of my encryption is every 3rd hex number to change position with the element with his's index - 2
         private void secondStepOfEncryption(List<string> file)
         {
-
+            //Change's every third elemnt with the elemnt with his index-2
+            //For example "84" "21" "51" "54" "78" "96" ->  "51" "21" "84" "96" "78" "54" 
             for (int i = 2; i < file.Count; i += 3)
             {
                 string a = file[i - 2];
                 file[i - 2] = file[i];
                 file[i] = a;
+            }
+            //Second scramble which change the unchanged elements from the scramble above, because in this scramble
+            //"84" "21" "51" "54" "78" "96" ->  "51" "21" "84" "96" "78" "54", the numbers "21" and "78" left in the same position
+            //so here we scramble them depending by which of the elemnts from the left and tight of the number is bigger
+            //for example here "51" "21" "84" "96" "78" "54", the number "21" has on the left "51" and on the right "84"
+            //we now that "84" > "51", so we change the postion of "21" with the "84". The first if-else statment devide the cases
+            //of that is the file count odd or even, because if the file.Count is odd if the last number has to change its postion
+            //the element can't compare his left and right, because its the last, so the last elements changes with its left element
+            //For example: "84" "21" "51" "54" "78", after the first scramble transforms like this -> "51" "21" "84" "54" "78", and 
+            //here the last elemnt "78" should change with his right element, but the right elemnt doesn't exists, so he changes with his
+            //left element -> "51" "21" "84" "78" "54" and the algorithm also will change position of the "21" with "84", because
+            //"84" > "51", so after all transformations it should look like that -> "51" "84" "21" "78" "54", so that's a good scramble!
+            for (int i = 1; i < file.Count; i += 3) {
+                if (file.Count % 2 == 0)//Case if the number of elements is even
+                {
+                    //takes the left and the right elemnt from the file[i] element
+                    int leftFromi = int.Parse(file[i - 1].ToString(), System.Globalization.NumberStyles.HexNumber);
+                    int rightFromi = int.Parse(file[i + 1].ToString(), System.Globalization.NumberStyles.HexNumber);
+
+                    //if left element is bigger than the right element file[i] changes postion with his left element
+                    if (leftFromi > rightFromi)
+                    {
+                        string leftFromI = file[i - 1].ToString();
+                        file[i - 1] = file[i];
+                        file[i] = leftFromI;
+                     //if right element is bigger than the left element file[i] changes postion with his left element
+                    } else if (leftFromi < rightFromi)
+                    {
+                        string rightFromI = file[i + 1].ToString();
+                        file[i + 1] = file[i];
+                        file[i] = rightFromI;
+                    //Here are the cases where the left and the right element are the same so we compare which of the numbers in file[i], are bigger
+                    //For example this case "11" "21" "11", here we have to change the position of "21", but we can't compare "11"  with "11", so
+                    //we chech which is the bigger nubmer 2 or 1 in "21" and if the left number is bigger, we change its position with the element
+                    //on the left, if the number on the right is bigger, we change its position to the element on the right.
+                    } else
+                    {
+                        //We take the number of the hex for example the hex "21" and we save in 2 variables the numbers 2 and 1
+                        char[] NumberValues = file[i].ToCharArray();
+                        int firstNumberValue = int.Parse(NumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
+                        int secondNumberValue = int.Parse(NumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
+                        //if the first digit is bigger than the second number, we change the position of file[i] with the element on the left
+                        if (firstNumberValue > secondNumberValue)
+                        {
+                            string leftFromI = file[i - 1].ToString();
+                            file[i - 1] = file[i];
+                            file[i] = leftFromI;
+                        //if the second digit is bigger than the first number, we change the position of file[i] with the element on the right
+                        } else if (firstNumberValue < secondNumberValue)
+                        {
+                            string rightFromI = file[i + 1].ToString();
+                            file[i + 1] = file[i];
+                            file[i] = rightFromI;
+                        
+                        } else
+                        {
+                            //Here are the cases where there are 3 same elements one to another like this "11" "11" "11", so here we can't apply any
+                            //of the scramble before, because we can't compare the element on the left and the right, neither the left number and the right number,
+                            //but in this case doesn't really we need a scramble, i mean everything we do to scramle the element will be the same "11" "11" "11",
+                            //so we here don't do anything an leave the thrio alone :)
+                        }
+                    }
+
+                } else { //Case if the number of elements is odd
+
+                    //takes the left and the right elemnt from the file[i] element
+                    int leftFromi = int.Parse(file[i - 1].ToString(), System.Globalization.NumberStyles.HexNumber);
+                    int rightFromi = int.Parse(file[i + 1].ToString(), System.Globalization.NumberStyles.HexNumber);
+
+                    //if left element is bigger than the right element file[i] changes postion with his left element
+                    if (leftFromi > rightFromi)
+                    {
+                        string leftFromI = file[i - 1].ToString();
+                        file[i - 1] = file[i];
+                        file[i] = leftFromI;
+
+                    //if right element is bigger than the left element file[i] changes postion with his left element
+                    } else if (leftFromi < rightFromi)
+                    {
+                        //Here is the case where the file.Count is odd and the last element, doesn't have element on the right so we change its position with the element on its left
+                        if (i == file.Count - 1) {
+                            string leftFromI = file[i - 1].ToString();
+                            file[i - 1] = file[i];
+                            file[i] = leftFromI;
+                        //For the other element it works fine, because they have an element on the left and on the right
+                        } else
+                        {
+                            string rightFromI = file[i + 1].ToString();
+                            file[i + 1] = file[i];
+                            file[i] = rightFromI;
+                        }
+                    //Here are the cases where the left and the right element are the same so we compare which of the numbers in file[i], are bigger
+                    //For example this case "11" "21" "11", here we have to change the position of "21", but we can't compare "11"  with "11", so
+                    //we chech which is the bigger nubmer 2 or 1 in "21" and if the left number is bigger, we change its position with the element
+                    //on the left, if the number on the right is bigger, we change its position to the element on the right.
+                    } else
+                    {
+                        //We take the number of the hex for example the hex "21" and we save in 2 variables the numbers 2 and 1
+                        char[] NumberValues = file[i].ToCharArray();
+                        int firstNumberValue = int.Parse(NumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
+                        int secondNumberValue = int.Parse(NumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
+                        //if the first digit is bigger than the second number, we change the position of file[i] with the element on the left
+                        if (firstNumberValue > secondNumberValue)
+                        {
+                            string leftFromI = file[i - 1].ToString();
+                            file[i - 1] = file[i];
+                            file[i] = leftFromI;
+                         //if the second digit is bigger than the first number, we change the position of file[i] with the element on the right
+                        } else if (firstNumberValue < secondNumberValue)
+                        {
+                            string rightFromI = file[i + 1].ToString();
+                            file[i + 1] = file[i];
+                            file[i] = rightFromI;
+                        } else
+                        {
+                            //Here are the cases where there are 3 same elements one to another like this "11" "11" "11", so here we can't apply any
+                            //of the scramble before, because we can't compare the element on the left and the right, neither the left number and the right number,
+                            //but in this case doesn't really we need a scramble, i mean everything we do to scramle the element will be the same "11" "11" "11",
+                            //so we here don't do anything an leave the thrio alone :)
+
+                        }
+                    }
+
+                }
             }
         }
 
