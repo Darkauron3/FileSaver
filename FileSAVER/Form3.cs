@@ -1,6 +1,8 @@
-﻿using Google.Protobuf.Reflection;
+﻿using BCrypt.Net;
+using Google.Protobuf.Reflection;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Bcpg.OpenPgp;
+using Org.BouncyCastle.Crypto.Generators;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +19,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Text;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
@@ -138,7 +142,8 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            } else
+            }
+            else
             {
                 CurrentConnection.Close();
                 return false;
@@ -162,7 +167,8 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            } else
+            }
+            else
             {
                 CurrentConnection.Close();
                 return false;
@@ -187,7 +193,8 @@ namespace FileSAVER
             if (rowsAffected > 0)
             {
                 Console.WriteLine("Data inserted");
-            } else
+            }
+            else
             {
                 Console.WriteLine("Failed to insert data");
                 return false;
@@ -226,7 +233,8 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            } else
+            }
+            else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -262,7 +270,8 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            } else
+            }
+            else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -290,7 +299,8 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            } else
+            }
+            else
             {
                 reader.Close();
                 CurrentConnection.Close();
@@ -315,7 +325,8 @@ namespace FileSAVER
             if (reader.Read())
             {
                 username = reader[0].ToString();
-            } else
+            }
+            else
             {
                 MessageBox.Show("User with this id doesn't exist!");
                 return null;
@@ -348,7 +359,8 @@ namespace FileSAVER
             return logs;
         }
 
-        private bool? checkIfUserIsDeleted(int id) {
+        private bool? checkIfUserIsDeleted(int id)
+        {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
@@ -363,7 +375,9 @@ namespace FileSAVER
                     reader.Close();
                     CurrentConnection.Close();
                     return true;
-                } else {
+                }
+                else
+                {
                     reader.Close();
                     CurrentConnection.Close();
                     return false;
@@ -384,7 +398,7 @@ namespace FileSAVER
             MySqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-               combo.Items.Add(reader["username"]);
+                combo.Items.Add(reader["username"]);
             }
             reader.Close();
             CurrentConnection.Close();
@@ -445,7 +459,8 @@ namespace FileSAVER
             return hexValues;
         }
         //Method for changing the deleted column for a deleted user in table users 
-        private bool changeDeletedToTrueForUsers(int id) {
+        private bool changeDeletedToTrueForUsers(int id)
+        {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
@@ -463,13 +478,50 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            } else
+            }
+            else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
                 return false;
             }
         }
+
+        private bool importEncryptionKeys(int user_id, List<string> password, List<string> file)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+            //The password for the file to be encrypted and decrypted, has to be stored in the db in form of a hash
+            string passContent = string.Join(Environment.NewLine, password);
+            string hashedPass = BCrypt.Net.BCrypt.HashPassword(passContent);
+
+            //The file content is save from a List<string> to string variable and then encoded to base 64 and then saved in the db
+            string fileContent = string.Join(Environment.NewLine, file);
+            string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
+
+
+            string query = "INSERT INTO user_files (User_id, key_value, Encrypted_file) VALUES (@User_id, @Pass, @File)";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@User_id", user_id);
+            cmd.Parameters.AddWithValue("@Pass", hashedPass);
+            cmd.Parameters.AddWithValue("@File", base64Encoded);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Data inserted");
+            }
+            else
+            {
+                Console.WriteLine("Failed to insert data");
+                return false;
+            }
+            CurrentConnection.Close();
+            return true;
+        }
+
+
 
         //Method for changing the deleted column for a deleted user in table users_passwords
         private bool changeDeletedToTrueForUsersPasswords(int id)
@@ -491,7 +543,8 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            } else
+            }
+            else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -502,51 +555,26 @@ namespace FileSAVER
         //1st part of my encryption algorithm -> shuffle the file with the key 
         private void firstStepOfEncryption(List<string> key, List<string> file)
         {
-            Debug.Write("Key before encryption:");
+ 
             for (int i = 0; i < key.Count; i++)
             {
-                Debug.Write(key[i] + " ");
-            }
-            Debug.Write("\n");
-
-            Debug.Write(" file before encryption:");
-            for (int i = 0; i < file.Count; i++)
-            {
-                Debug.Write(file[i] + " ");
-            }
-            Debug.Write("\n");
-
-
-
-
-            for (int i = 0; i < key.Count; i++)
-            {
-                int number = Convert.ToInt32(key[i]);
-                String onehex = key[i];
-                int edinici = number % 10;
-                int desetici = number / 10;
+                int keyi = Convert.ToInt32(key[i], 16);
+                int edinici = keyi % 10;
+                int desetici = keyi / 10;
                 int sum = edinici + desetici;
+                if(keyi / 100 >= 1)
+                {
+                    int stotici = keyi / 100;
+                    sum = edinici + desetici + stotici;
+                }
                 if (sum % 2 == 0)
                 {
-                    file.Add(key[i]);
-                } else
-                {
-                    file.Insert(0, key[i]);
+                    file.Add(keyi.ToString("X"));
                 }
-            }
-
-
-            Debug.Write("Key after encryption:");
-            for (int i = 0; i < key.Count; i++)
-            {
-                Debug.Write(key[i] + " ");
-            }
-            Debug.Write("\n");
-
-            Debug.Write(" file after encryption:");
-            for (int i = 0; i < file.Count; i++)
-            {
-                Debug.Write(file[i] + " ");
+                else
+                {
+                    file.Insert(0, keyi.ToString("X"));
+                }
             }
 
         }
@@ -568,20 +596,16 @@ namespace FileSAVER
             //16 50 14 60 32 30 the step over this will change the other numbers so finnaly will look like this 14 50 16 30 32 60 which is well scrambled
             //and it can be easily reversable for decryption.
 
-            for(int i = 1; i < file.Count; i+=3)
+            for (int i = 1; i < file.Count; i += 3)
             {
-                if(i+3 >= file.Count) //if i + 3 doesn't exist we break
+                if (i + 3 >= file.Count) //if i + 3 doesn't exist we break
                 {
                     break;
                 }
                 string element = file[i + 3];
-                file[i+3] = file[i];
+                file[i + 3] = file[i];
                 file[i] = element;
-
-
             }
-            
-
         }
 
         //3rd step of encryption is shuffle the symbols for every hexidecimal pair if the sum between 2 of the hex is odd or even they trade some of them values
@@ -589,16 +613,16 @@ namespace FileSAVER
         {
             for (int i = 0; i < file.Count - 1; i++)
             {
-                
+
                 //Takes the first hex number for example "16" and separate the symbols -> "1" and "6" and converts them to int
                 char[] firstNumberValues = file[i].ToCharArray();
-                int firstValueFromFirstNumber = int.Parse(firstNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber); 
+                int firstValueFromFirstNumber = int.Parse(firstNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
                 int secondValueFromFirstNumber = int.Parse(firstNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
 
                 //Takes the second hex number for example "13" and separate the symbols -> "1" and "3 and converts them to int
                 char[] nextNumberValues = file[i + 1].ToCharArray();
-                int firstValueFromNextNumber = int.Parse(nextNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber); 
-                int secondValueFromNextNumber = int.Parse(nextNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber); 
+                int firstValueFromNextNumber = int.Parse(nextNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
+                int secondValueFromNextNumber = int.Parse(nextNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
 
                 //Makes the summary of numbers in the hex
                 int sumFirstHex = firstValueFromFirstNumber + secondValueFromFirstNumber;//for example if the first hex is 16 sum = 1 + 6 = 7
@@ -609,17 +633,18 @@ namespace FileSAVER
                 //like this "16" "13" - > "36" "11"
                 if (sum % 2 == 0)
                 {
-                    string newValueFori = secondValueFromNextNumber.ToString() + secondValueFromFirstNumber.ToString();
-                    string newValueForiplusone = firstValueFromNextNumber.ToString() + firstValueFromFirstNumber.ToString();
+                    string newValueFori = secondValueFromNextNumber.ToString("X") + secondValueFromFirstNumber.ToString("X");
+                    string newValueForiplusone = firstValueFromNextNumber.ToString("X") + firstValueFromFirstNumber.ToString("X");
                     file[i] = newValueFori;
                     file[i + 1] = newValueForiplusone;
 
                     //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
                     //like this "16" "13" - > "13" "63"
-                } else
+                }
+                else
                 {
-                    string newValueFori = firstValueFromFirstNumber.ToString() + firstValueFromNextNumber.ToString();
-                    string newValueForiplusone = secondValueFromFirstNumber.ToString() + secondValueFromNextNumber.ToString();
+                    string newValueFori = firstValueFromFirstNumber.ToString("X") + firstValueFromNextNumber.ToString("X");
+                    string newValueForiplusone = secondValueFromFirstNumber.ToString("X") + secondValueFromNextNumber.ToString("X");
                     file[i] = newValueFori;
                     file[i + 1] = newValueForiplusone;
                 }
@@ -636,7 +661,7 @@ namespace FileSAVER
                 //If file.Count is odd the last element can't get replaced because is alone, so it breaks
                 if (i + 1 >= file.Count) break;
                 char[] hex_value = file[i].ToCharArray();
-                
+
                 //Rotating the symbols of an every second elemnet
                 char first_hex_value = hex_value[0];
                 hex_value[0] = hex_value[1];
@@ -674,7 +699,7 @@ namespace FileSAVER
             {
                 string firstEl = file[0];
                 file[0] = file[file.Count - 1];
-                file[file.Count - 1] = firstEl; 
+                file[file.Count - 1] = firstEl;
             }
 
             //First reverse the shuffle make the elements in the right order
@@ -701,8 +726,10 @@ namespace FileSAVER
 
         }
         //Method for decryption of the third step of encryption
-        private void secondStepOfDecryption(List<string> file) {
-            for (int i = file.Count-1; i > 0; i--) {
+        private void secondStepOfDecryption(List<string> file)
+        {
+            for (int i = file.Count - 1; i > 0; i--)
+            {
 
                 //Takes the last hex number for example "16" and separate the symbols -> "1" and "6" and converts them to int
                 char[] rightNumberValues = file[i].ToCharArray();
@@ -723,19 +750,20 @@ namespace FileSAVER
                 //like this "16" "13" - > "36" "11"
                 if (sum % 2 == 0)
                 {
-                    string newRightValues = firstValueFromRightNumber.ToString() + firstValueFromLeftNumber.ToString();
-                    string newLeftValues = secondValueFromRightNumber.ToString() + secondValueFromLeftNumber.ToString();
+                    string newRightValues = firstValueFromRightNumber.ToString("X") + firstValueFromLeftNumber.ToString("X");
+                    string newLeftValues = secondValueFromRightNumber.ToString("X") + secondValueFromLeftNumber.ToString("X");
                     file[i] = newRightValues;
                     file[i - 1] = newLeftValues;
 
                     //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
                     //like this "16" "13" - > "13" "63"
-                } else
+                }
+                else
                 {
-                    string newRightValues = secondValueFromLeftNumber.ToString() + secondValueFromRightNumber.ToString();
-                    string newLeftValues = firstValueFromLeftNumber.ToString() + firstValueFromRightNumber.ToString();
+                    string newRightValues = secondValueFromLeftNumber.ToString("X") + secondValueFromRightNumber.ToString("X");
+                    string newLeftValues = firstValueFromLeftNumber.ToString("X") + firstValueFromRightNumber.ToString("X");
                     file[i] = newRightValues;
-                    file[i-1] = newLeftValues;
+                    file[i - 1] = newLeftValues;
 
                 }
 
@@ -769,15 +797,17 @@ namespace FileSAVER
             }
         }
 
-        private void thirdStepOfDeryption(List<string> file)
+        private void fourthStepOfDeryption(List<string> file)
         {
-            
+            string givenKey = txt_key_decryption.Text;
+            List<string> giveKey_hexlist = stringToHexArrayList(givenKey);
 
-            for (int i = 2; i < file.Count; i += 3)
-            {
-                string a = file[i - 2];
-                file[i - 2] = file[i];
-                file[i] = a;
+            for (int i = 0; i < file.Count; i++) {
+                
+                if (giveKey_hexlist[i].Equals(file[i]))
+                {
+
+                }
             }
 
         }
@@ -852,40 +882,46 @@ namespace FileSAVER
                         {
                             MessageBox.Show("This username you choose has already been registered");
                             return;
-                        } else
+                        }
+                        else
                         {
                             bool isUpdated = updateUserDataPanel1(lastUsername);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
                             }
                         }
 
-                    } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
+                    }
+                    else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
                     {
                         if (checkForExistingEmail(txt_email.Text))
                         {
                             MessageBox.Show("This email you choose has already been registered");
                             return;
-                        } else
+                        }
+                        else
                         {
                             bool isUpdated = updateUserDataPanel1(lastUsername);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
                             }
                         }
-                    } else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
+                    }
+                    else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
                     {
                         if (Convert.ToInt32(txt_age.Text) < 18)
                         {
@@ -897,41 +933,28 @@ namespace FileSAVER
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
-                    } else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
+                    }
+                    else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
                     {
                         bool isUpdated = updateUserDataPanel1(lastUsername);
                         if (isUpdated == false)
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
-                    } else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
-                    {
-                        if (Convert.ToInt32(txt_age.Text) < 18)
-                        {
-                            MessageBox.Show("The age must be 18 or over!");
-                            return;
-                        }
-                        bool isUpdated = updateUserDataPanel1(lastUsername);
-                        if (isUpdated == false)
-                        {
-                            MessageBox.Show("Error occured, new user data wasn't inserted!");
-                            return;
-                        } else
-                        {
-                            MessageBox.Show("User edited successfully!");
-                            return;
-                        }
-                    } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
+                    }
+                    else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
                     {
                         if (Convert.ToInt32(txt_age.Text) < 18)
                         {
@@ -943,12 +966,14 @@ namespace FileSAVER
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
-                    } else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age)
+                    }
+                    else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
                     {
                         if (Convert.ToInt32(txt_age.Text) < 18)
                         {
@@ -960,7 +985,27 @@ namespace FileSAVER
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        } else
+                        }
+                        else
+                        {
+                            MessageBox.Show("User edited successfully!");
+                            return;
+                        }
+                    }
+                    else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age)
+                    {
+                        if (Convert.ToInt32(txt_age.Text) < 18)
+                        {
+                            MessageBox.Show("The age must be 18 or over!");
+                            return;
+                        }
+                        bool isUpdated = updateUserDataPanel1(lastUsername);
+                        if (isUpdated == false)
+                        {
+                            MessageBox.Show("Error occured, new user data wasn't inserted!");
+                            return;
+                        }
+                        else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
@@ -968,7 +1013,8 @@ namespace FileSAVER
                     }
 
                 }
-            } catch (MySqlException e1)
+            }
+            catch (MySqlException e1)
             {
                 MessageBox.Show("Error: " + e1.Message);
             }
@@ -1004,36 +1050,46 @@ namespace FileSAVER
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
                     List<string> file_hexlist = byteArrayToHexList(fileBytes);
-                    List<string> test = new List<string> { "16", "32", "14","60", "50", "30"};
+                    List<string> test = new List<string> { "e3", "9d", "5f", "73", "8b", "9e" };
+
+                    Debug.WriteLine("--Original file ------------------------------------------------------------------------");
+                    for (int y = 0; y < file_hexlist.Count; y++)
+                    {
+                        Debug.Write(file_hexlist[y] + " ");
+                    }
+                    Debug.WriteLine("-----------------------------------------------------------------------------");
+
+                    firstStepOfEncryption(key_hexlist, file_hexlist);
+                    secondStepOfEncryption(file_hexlist);
+                    thirdStepOfEncryption(file_hexlist);
+                    fourthStepOfEncryption(file_hexlist);
+
+                    Debug.WriteLine("--After encryption file ------------------------------------------------------------------------");
+                    for (int y = 0; y < file_hexlist.Count; y++)
+                    {
+                        Debug.Write(file_hexlist[y] + " ");
+                    }
+                    Debug.WriteLine("-----------------------------------------------------------------------------");
+
                     //firstStepOfEncryption(key_hexlist, file_hexlist);
                     //secondStepOfEncryption(file_hexlist);
                     //thirdStepOfEncryption(file_hexlist);
                     //fourthStepOfEncryption(file_hexlist);
+
+                    //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
+                    //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
+
+                    string username = CurrenltyLoggedUser.username;
+                    int userId = getUserIdByUsername(username);
+                    importEncryptionKeys(userId, key_hexlist, file_hexlist);
+
                     //firstStepOfDecryption(file_hexlist);
 
-                    secondStepOfEncryption(test);
-
-                    Debug.WriteLine("Original 16 32 14 60 50 30");
-                    Debug.WriteLine("");
-                    Debug.WriteLine("--After Encryption------------------------------------------------------------------------");
-                    for (int y = 0; y < test.Count; y++)
-                    {
-                        Debug.Write(test[y] + " ");
-                    }
-                    Debug.WriteLine("-----------------------------------------------------------------------------");
-
-                    thirdStepOfDecryption(test);
-                    Debug.WriteLine("");
-                    Debug.WriteLine("--After Deryption------------------------------------------------------------------------");
-                    for (int y = 0; y < test.Count; y++)
-                    {
-                        Debug.Write(test[y] + " ");
-                    }
-                    Debug.WriteLine("-----------------------------------------------------------------------------");
+                    //firstStepOfEncryption(key_hexlist, test);
 
 
-
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show("error " + ex.Message);
                 }
@@ -1058,7 +1114,8 @@ namespace FileSAVER
                 writeToComboAllUsernames(combo2);
 
 
-            } else
+            }
+            else
             {
                 MessageBox.Show("You are not admin user, so you can't use admin tools!");
                 return;
@@ -1131,47 +1188,54 @@ namespace FileSAVER
                             {
                                 MessageBox.Show("This username you choose has already been registered");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 bool isUpdated = updateUserDataPanel3(choosenUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                } else
+                                }
+                                else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
 
-                        } else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
+                        }
+                        else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
                         {
                             if (checkForExistingEmail(txtEmail.Text))
                             {
                                 MessageBox.Show("This email you choose has already been registered");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 bool isUpdated = updateUserDataPanel3(choosenUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                } else
+                                }
+                                else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
-                        } else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
+                        }
+                        else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
                         {
                             bool isUpdated = updateUserDataPanel3(choosenUser);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
@@ -1183,7 +1247,8 @@ namespace FileSAVER
 
 
 
-            } catch (MySqlException e1)
+            }
+            catch (MySqlException e1)
             {
                 MessageBox.Show("Error: " + e1.Message);
             }
@@ -1216,17 +1281,20 @@ namespace FileSAVER
                         string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
                         richtxt1.Text = allLogs;
                         writeToComboAllUsernames(combo2);
-                        
+
                         MessageBox.Show("Successfully deleted user -> " + choosenUser);
-                        
+
                     }
-                } else if (dialogResult == DialogResult.No)
+                }
+                else if (dialogResult == DialogResult.No)
                 {
                     combo2.Items.Clear();
                     writeToComboAllUsernames(combo2);
                 }
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show("Error: " + ex.Message);
             }
         }

@@ -54,6 +54,7 @@
             txt_key_encryption = new MaskedTextBox();
             label7 = new Label();
             panel2 = new Panel();
+            label13 = new Label();
             combo2 = new ComboBox();
             label12 = new Label();
             panel3 = new Panel();
@@ -73,7 +74,9 @@
             label9 = new Label();
             label8 = new Label();
             richtxt1 = new RichTextBox();
-            label13 = new Label();
+            txt_key_decryption = new MaskedTextBox();
+            label14 = new Label();
+            button7 = new Button();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -333,7 +336,7 @@
             // 
             // Browse_button
             // 
-            Browse_button.Location = new Point(1670, 652);
+            Browse_button.Location = new Point(1581, 542);
             Browse_button.Name = "Browse_button";
             Browse_button.Size = new Size(144, 69);
             Browse_button.TabIndex = 4;
@@ -344,7 +347,7 @@
             // txt_key_encryption
             // 
             txt_key_encryption.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_key_encryption.Location = new Point(1360, 702);
+            txt_key_encryption.Location = new Point(1203, 572);
             txt_key_encryption.Name = "txt_key_encryption";
             txt_key_encryption.Size = new Size(187, 39);
             txt_key_encryption.TabIndex = 5;
@@ -352,11 +355,11 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(1390, 644);
+            label7.Location = new Point(1213, 542);
             label7.Name = "label7";
-            label7.Size = new Size(257, 15);
+            label7.Size = new Size(177, 15);
             label7.TabIndex = 6;
-            label7.Text = "Enter a password for encryption and decryption";
+            label7.Text = "Enter a password for encryption ";
             // 
             // panel2
             // 
@@ -374,6 +377,17 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(1093, 874);
             panel2.TabIndex = 7;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label13.ForeColor = Color.White;
+            label13.Location = new Point(172, 582);
+            label13.Name = "label13";
+            label13.Size = new Size(25, 20);
+            label13.TabIndex = 17;
+            label13.Text = "hh";
             // 
             // combo2
             // 
@@ -576,16 +590,31 @@
             richtxt1.TabIndex = 0;
             richtxt1.Text = "";
             // 
-            // label13
+            // txt_key_decryption
             // 
-            label13.AutoSize = true;
-            label13.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            label13.ForeColor = Color.White;
-            label13.Location = new Point(172, 582);
-            label13.Name = "label13";
-            label13.Size = new Size(25, 20);
-            label13.TabIndex = 17;
-            label13.Text = "hh";
+            txt_key_decryption.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_key_decryption.Location = new Point(1203, 743);
+            txt_key_decryption.Name = "txt_key_decryption";
+            txt_key_decryption.Size = new Size(187, 39);
+            txt_key_decryption.TabIndex = 8;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(1203, 716);
+            label14.Name = "label14";
+            label14.Size = new Size(177, 15);
+            label14.TabIndex = 9;
+            label14.Text = "Enter a password for decryption ";
+            // 
+            // button7
+            // 
+            button7.Location = new Point(1486, 722);
+            button7.Name = "button7";
+            button7.Size = new Size(144, 66);
+            button7.TabIndex = 10;
+            button7.Text = "Browse File for decryption";
+            button7.UseVisualStyleBackColor = true;
             // 
             // Form3
             // 
@@ -593,6 +622,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1904, 1041);
+            Controls.Add(button7);
+            Controls.Add(label14);
+            Controls.Add(txt_key_decryption);
             Controls.Add(panel2);
             Controls.Add(label7);
             Controls.Add(txt_key_encryption);
@@ -671,5 +703,8 @@
         private ComboBox combo2;
         private Label label12;
         private Label label13;
+        private MaskedTextBox txt_key_decryption;
+        private Label label14;
+        private Button button7;
     }
 }
