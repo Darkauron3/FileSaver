@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mydb
 -- ------------------------------------------------------
--- Server version	8.0.35
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -28,7 +28,7 @@ CREATE TABLE `users_passwords` (
   `deleted` tinyint NOT NULL,
   PRIMARY KEY (`User_id`),
   CONSTRAINT `fk_users_passwords_users1` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `users_passwords` (
 
 LOCK TABLES `users_passwords` WRITE;
 /*!40000 ALTER TABLE `users_passwords` DISABLE KEYS */;
-INSERT INTO `users_passwords` VALUES (1,'$2a$11$wLJ/iu9yzGI6uisTxAL37.vHoqXEaLjU7PXEPRdTbBjXCTiVmadHa',0),(2,'$2a$11$gJPNGl6ZfMaDf87pHMNTwufz1WVyF2pdfNuatGHgkK5CKRSemnlyS',1),(3,'$2a$11$8tyGuaEH0uJAbeuWuzoLOuZfW4smUdYUU9YHItFebnW4GAIgLH4lK',1),(4,'$2a$11$R83YqbhVQJG4uPtO3jTv6euSfrrKyH7QRiRhnpVSzOYp6d2ojU16q',0);
+INSERT INTO `users_passwords` VALUES (1,'$2a$11$IBhM1lJvCoL1OAqxA.U3w.nIURimXgb8q6rgdvf0OeTx07onZzRFq',0),(3,'$2a$11$.vYnsxX9gtMhrnTnz054C.yUbVEn2DZwp9upvPBgTINm8YqDcogJG',0);
 /*!40000 ALTER TABLE `users_passwords` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-07 18:11:10
+-- Dump completed on 2024-02-08 23:32:14

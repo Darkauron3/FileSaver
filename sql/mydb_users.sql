@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mydb
 -- ------------------------------------------------------
--- Server version	8.0.35
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -29,8 +29,10 @@ CREATE TABLE `users` (
   `age` int NOT NULL,
   `type` varchar(255) NOT NULL,
   `deleted` tinyint NOT NULL,
-  PRIMARY KEY (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`User_id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +41,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Az','A@A.H',22,'admin',0),(2,'Mark','b@b.c',23,'normal user',1),(3,'ivan','a@qw.ll',22,'normal user',1),(4,'Mark','a@rt.yu',22,'normal user',0);
+INSERT INTO `users` VALUES (1,'Az','ff@qq.kk',22,'admin',0),(3,'Ti','ti@abv.bg',23,'normal user',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-07 18:11:09
+-- Dump completed on 2024-02-08 23:32:14

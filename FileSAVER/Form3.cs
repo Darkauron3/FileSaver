@@ -487,7 +487,7 @@ namespace FileSAVER
             }
         }
 
-        private bool importEncryptionKeys(int user_id, List<string> password, List<string> file)
+        private void importEncryptionKeys(int user_id, List<string> password, List<string> file)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
@@ -515,10 +515,42 @@ namespace FileSAVER
             else
             {
                 Console.WriteLine("Failed to insert data");
-                return false;
+                MessageBox.Show("Failed to insert the data!");
+                return;
+                
             }
             CurrentConnection.Close();
-            return true;
+        }
+
+
+        //Method for inserting inforamtion about encrypted file in the table user_files_info 
+        private void importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype, string uploadDate)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "INSERT INTO user_files_info (User_id, File_name, File_size, File_type, Upload_date) VALUES (@User_id, @filename, @filesize, @filetype, @uploaddate)";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@User_id", user_id);
+            cmd.Parameters.AddWithValue("@filename", filename);
+            cmd.Parameters.AddWithValue("@filesize", filesize);
+            cmd.Parameters.AddWithValue("@filetype", filetype);
+            cmd.Parameters.AddWithValue("uploaddate", uploadDate);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Data inserted");
+            }
+            else
+            {
+                Console.WriteLine("Failed to insert data");
+                MessageBox.Show("Failed to insert the data!");
+                return;
+            }
+            CurrentConnection.Close();
+
         }
 
 
@@ -811,6 +843,20 @@ namespace FileSAVER
             }
 
         }
+        //Method for getting the size of the file string
+        static string GetFileSizeString(long fileSizeBytes)
+        {
+            string[] suffixes = { "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
+            const int byteConversion = 1024;
+            if (fileSizeBytes == 0)
+            {
+                return "0" + suffixes[0];
+            }
+
+            int place = Convert.ToInt32(Math.Floor(Math.Log(fileSizeBytes, byteConversion)));
+            double num = Math.Round(fileSizeBytes / Math.Pow(byteConversion, place), 1);
+            return $"{num}{suffixes[place]}";
+        }
 
 
         //When user select the option - "my account"
@@ -1038,6 +1084,7 @@ namespace FileSAVER
             List<string> key_hexlist = stringToHexArrayList(key);
 
             OpenFileDialog fd = new OpenFileDialog();
+            
 
             fd.Filter = "All Files (*.*)|*.*";
             fd.Multiselect = false;
@@ -1082,6 +1129,20 @@ namespace FileSAVER
                     string username = CurrenltyLoggedUser.username;
                     int userId = getUserIdByUsername(username);
                     importEncryptionKeys(userId, key_hexlist, file_hexlist);
+
+                    string name = fd.FileName;
+                    //gets the file size and format it into MB/GB..
+                    long fileSizeBytes = new FileInfo(fd.FileName).Length;
+                    string fileSizeString = GetFileSizeString(fileSizeBytes);
+                    //Gets the filetyoe if the imported file
+                    string fileType = System.IO.Path.GetExtension(fd.FileName);
+                    // Format the date and time according to MySQL DATETIME format
+                    DateTime currentTime = DateTime.Now;
+                    string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, uploadDate);
+
+
 
                     //firstStepOfDecryption(file_hexlist);
 

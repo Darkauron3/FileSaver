@@ -15,95 +15,122 @@ using BCrypt.Net;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Data.SqlClient;
 
 public partial class Form2 : CustomForm
 {
 
-    private bool checkForExistingUsername(string username)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-
-        string query = "SELECT * FROM users WHERE username=@Username AND deleted=@Deleted;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@Username", username);
-        cmd.Parameters.AddWithValue("@Deleted", 0);
-        MySqlDataReader reader = cmd.ExecuteReader();
-
-        if (reader.Read())
-        {
-            CurrentConnection.Close();
-            reader.Close();
-            return true;
-        }
-        else
-        {
-            CurrentConnection.Close();
-            reader.Close();
-            return false;
-        }
-
-    }
-
-
     //Method for inserting query to table users
     private bool InsertIntoUsers(string username, string email, int age, string type)
     {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-
-        string query = "INSERT INTO users (username, email, age, type, deleted) VALUES (@value1, @value2, @value3, @value4, @value5);";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@value1", username);
-        cmd.Parameters.AddWithValue("@value2", email);
-        cmd.Parameters.AddWithValue("@value3", age);
-        cmd.Parameters.AddWithValue("@value4", type);
-        cmd.Parameters.AddWithValue("@value5", 0);
-
-        int rowsAffected = cmd.ExecuteNonQuery();
-        if (rowsAffected > 0)
+        try
         {
-            Console.WriteLine("Data inserted");
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "INSERT INTO users (username, email, age, type, deleted) VALUES (@value1, @value2, @value3, @value4, @value5);";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@value1", username);
+            cmd.Parameters.AddWithValue("@value2", email);
+            cmd.Parameters.AddWithValue("@value3", age);
+            cmd.Parameters.AddWithValue("@value4", type);
+            cmd.Parameters.AddWithValue("@value5", 0);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Data inserted");
+            }
+            else
+            {
+                MessageBox.Show("Failed to insert data");
+                return false;
+            }
+            CurrentConnection.Close();
+            return true;
         }
-        else
+        catch (MySqlException ex)
         {
-            Console.WriteLine("Failed to insert data");
+            if (ex.Number == 1062) // Unique constraint violation error number
+            {
+                // Handle the exception and notify the user
+                string errorMessage = ex.Message.ToLower();
+                if (errorMessage.Contains("username"))
+                {
+                    MessageBox.Show("Error: The username you're trying to use already exists. Please choose a different username.");
+                }
+                else if (errorMessage.Contains("email"))
+                {
+                    MessageBox.Show("Error: The email you're trying to use already exists. Please choose a different email.");
+                }
+                else
+                {
+                    // Handle other constraint violations
+                    MessageBox.Show("Error: The data you're trying to insert violates a unique constraint. Please check your data.");
+                }
+                // Reset the auto-increment value
+                string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+                MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+                CurrentConnection.Open();
+                ResetAutoIncrement("users", "user_id", CurrentConnection);
+                CurrentConnection.Close();
+
+                return false;
+            }
+            else
+            {
+                // Handle other SQL exceptions
+                MessageBox.Show("Error: " + ex.Message);
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle other exceptions
+            MessageBox.Show("Error: " + ex.Message);
             return false;
         }
-        CurrentConnection.Close();
-        return true;
     }
 
     //Mehtod for inserting query to table users_passwords
     private bool InsertIntoUserspasswords(int User_id, string pass_hash)
     {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-
-        string query = "INSERT INTO users_passwords (User_id,pass_hash, deleted) VALUES(@value1, @value2, @value3)";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@value1", User_id);
-        cmd.Parameters.AddWithValue("@value2", pass_hash);
-        cmd.Parameters.AddWithValue("@value3", 0);
-
-        int rowsAffected = cmd.ExecuteNonQuery();
-        if (rowsAffected > 0)
+        try
         {
-            Console.WriteLine("Data inserted");
-        }
-        else
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "INSERT INTO users_passwords (User_id,pass_hash, deleted) VALUES(@value1, @value2, @value3)";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@value1", User_id);
+            cmd.Parameters.AddWithValue("@value2", pass_hash);
+            cmd.Parameters.AddWithValue("@value3", 0);
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+            if (rowsAffected > 0)
+            {
+                Console.WriteLine("Data inserted");
+            }
+            else
+            {
+                MessageBox.Show("Failed to insert data");
+                return false;
+            }
+            CurrentConnection.Close();
+            return true;
+        } catch (Exception ex)
         {
-            Console.WriteLine("Failed to insert data");
+            // Handle other exceptions
+            Console.WriteLine("Error: " + ex.Message);
             return false;
         }
-        CurrentConnection.Close();
-        return true;
+
     }
     //Method for checking if there is already registered admin
-    private bool checkForExistingAdmin() {
+    private bool checkForExistingAdmin()
+    {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
@@ -117,7 +144,8 @@ public partial class Form2 : CustomForm
             CurrentConnection.Close();
             return true;
         }
-        else {
+        else
+        {
             CurrentConnection.Close();
             return false;
         }
@@ -150,6 +178,14 @@ public partial class Form2 : CustomForm
         return 0;
     }
 
+    //Method for reseting the AutoIncrement in mysql so the users have following user_ids
+    private void ResetAutoIncrement(string tableName, string columnName, MySqlConnection connection)
+    {
+        string query = $"ALTER TABLE {tableName} AUTO_INCREMENT = (SELECT MAX({columnName}) + 1 FROM {tableName});";
+        MySqlCommand cmd = new MySqlCommand(query, connection);
+        cmd.ExecuteNonQuery();
+    }
+
 
     public Form2()
     {
@@ -175,87 +211,70 @@ public partial class Form2 : CustomForm
 
         try
         {
-
-
             string usernameToCheck = txt_username.Text;
-            bool isUsernameExists = checkForExistingUsername(usernameToCheck);
 
-            if (isUsernameExists)
+            // Username don't exist, continue the registration
+            string usernamePattern = "^[a-zA-Z0-9]+$";
+            bool isUsernameValid = Regex.IsMatch(txt_username.Text, usernamePattern);
+
+            string passwordPattern = "^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$";
+            bool isPasswordValid = Regex.IsMatch(txt_password.Text, passwordPattern);
+
+            bool isRepeatPasswordValid = txt_password.Text == txt_password_confirm.Text;
+
+            string emailPattern = @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
+            bool isEmailValid = Regex.IsMatch(txt_email.Text, emailPattern);
+
+            string agePattern = @"^(1[89]|[2-9][0-9]|100)$";
+            bool isAgeValid = Regex.IsMatch(txt_age.Text, agePattern);
+
+            if (isUsernameValid == false)
             {
-                // Username already exists, notify the user.
-                MessageBox.Show("Username already exists. Please choose a different username.");
+                MessageBox.Show("The username field only allow letters and numbers as input!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-
             }
-            else
+            else if (isPasswordValid == false)
             {
-                // Username don't exist, continue the registration
-                string usernamePattern = "^[a-zA-Z0-9]+$";
-                bool isUsernameValid = Regex.IsMatch(txt_username.Text, usernamePattern);
-
-                string passwordPattern = "^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$";
-                bool isPasswordValid = Regex.IsMatch(txt_password.Text, passwordPattern);
-
-                bool isRepeatPasswordValid = txt_password.Text == txt_password_confirm.Text;
-
-                string emailPattern = @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
-                bool isEmailValid = Regex.IsMatch(txt_email.Text, emailPattern);
-
-                string agePattern = @"^(1[89]|[2-9][0-9]|100)$";
-                bool isAgeValid = Regex.IsMatch(txt_age.Text, agePattern);
-
-                if (isUsernameValid == false)
-                {
-                    MessageBox.Show("The username field only allow letters and numbers as input!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                else if (isPasswordValid == false)
-                {
-                    MessageBox.Show("The password should contain at least 8 characters, at least one uppercase character and at least one special symbol!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                else if (isRepeatPasswordValid == false)
-                {
-                    MessageBox.Show("The password and the repeated password are not the same!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                else if (isEmailValid == false)
-                {
-                    MessageBox.Show("The email is not valid!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                else if (isAgeValid == false)
-                {
-                    MessageBox.Show("The age should be in this range: 18-100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                MessageBox.Show("The password should contain at least 8 characters, at least one uppercase character and at least one special symbol!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-
+            else if (isRepeatPasswordValid == false)
+            {
+                MessageBox.Show("The password and the repeated password are not the same!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (isEmailValid == false)
+            {
+                MessageBox.Show("The email is not valid!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            else if (isAgeValid == false)
+            {
+                MessageBox.Show("The age should be in this range: 18-100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             if (rdbtn1.Checked == true)
             {
                 try
                 {
-                    if (checkForExistingAdmin()) {
+                    if (checkForExistingAdmin())
+                    {
                         MessageBox.Show("There is alreadey registered administrator!");
                         return;
                     }
-
-                    bool isitInserted = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "admin");
-                    if (isitInserted == false)
-                    {
-                        MessageBox.Show("Failed to insert the data");
-                        return;
-                    }
-
+                    bool isItInsertedUsers = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "admin");                 
                     string hashedPassword = BCrypt.HashPassword(txt_password.Text);
-                    bool isitInserted2 = InsertIntoUserspasswords(getUserIdByUsername(txt_username.Text), hashedPassword);
-                    if (isitInserted2 == false)
+                    bool isItInsertedUserpasswords = InsertIntoUserspasswords(getUserIdByUsername(txt_username.Text), hashedPassword);
+                    
+                    if(isItInsertedUsers == false || isItInsertedUserpasswords == false)
                     {
-                        MessageBox.Show("Failed to insert the data");
                         return;
                     }
-
+                    else if (isItInsertedUsers && isItInsertedUserpasswords)
+                    {
+                        MessageBox.Show("Data inserted successfuly!");
+                    }
                 }
                 catch (MySqlException ex)
                 {
@@ -269,15 +288,16 @@ public partial class Form2 : CustomForm
 
                 try
                 {
-                    bool isitInserted = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "normal user");
-                    if (isitInserted == false)
-                    {
-                        MessageBox.Show("Failed to insert the data");
-                        return;
-                    }
-
+                    bool isItInsertedUsers = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "normal user");
                     string hashedPassword = BCrypt.HashPassword(txt_password.Text);
-                    bool isitInserted2 = InsertIntoUserspasswords(getUserIdByUsername(txt_username.Text), hashedPassword);
+                    bool isItInsertedUserpasswords = InsertIntoUserspasswords(getUserIdByUsername(txt_username.Text), hashedPassword);
+                    if (isItInsertedUsers == false || isItInsertedUserpasswords == false)
+                    {
+                        return;
+                    } else if(isItInsertedUsers && isItInsertedUserpasswords)
+                    {
+                        MessageBox.Show("Data inserted successfuly!");
+                    }
                 }
                 catch (MySqlException ex)
                 {
@@ -288,13 +308,12 @@ public partial class Form2 : CustomForm
                     MessageBox.Show("Error invalid format: " + ex1.Message);
                     return;
                 }
-                catch (System.OverflowException ex2) {
+                catch (System.OverflowException ex2)
+                {
                     MessageBox.Show("Error - Too long input: " + ex2.Message);
                 }
 
             }
-
-            MessageBox.Show("Data inserted!");
             Close();
             Form1 formm1 = new Form1();
             formm1.Show();

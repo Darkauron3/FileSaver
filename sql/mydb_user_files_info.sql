@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mydb
 -- ------------------------------------------------------
--- Server version	8.0.35
+-- Server version	8.0.34
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -23,13 +23,13 @@ DROP TABLE IF EXISTS `user_files_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_files_info` (
-  `File_id` int NOT NULL,
+  `User_id` int NOT NULL,
   `File_name` varchar(255) NOT NULL,
-  `File_type` varchar(45) NOT NULL,
   `File_size` varchar(45) NOT NULL,
+  `File_type` varchar(45) NOT NULL,
   `Upload_date` datetime NOT NULL,
-  PRIMARY KEY (`File_id`),
-  CONSTRAINT `fk_user_files_info_users` FOREIGN KEY (`File_id`) REFERENCES `users` (`User_id`)
+  PRIMARY KEY (`User_id`),
+  CONSTRAINT `fk_user_files_info_users` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -51,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-07 18:11:09
+-- Dump completed on 2024-02-08 23:32:14
