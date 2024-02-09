@@ -351,7 +351,7 @@ namespace FileSAVER
             {
                 int userId = Convert.ToInt32(reader["User_id"]);
                 string username = getUsernameById(userId);
-                string log = $"Username: {username} \n Time at the action: {reader.GetString("Time")}  \n Action: {reader.GetString("Action")}";
+                string log = $"Username: {username} \n Time at the action: {reader.GetDateTime(reader.GetOrdinal("Time"))}  \n Action: {reader.GetString("Action")}";
                 logs.Add(log);
             }
             reader.Close();
@@ -487,7 +487,7 @@ namespace FileSAVER
             }
         }
 
-        private void importEncryptionKeys(int user_id, List<string> password, List<string> file)
+        private bool importEncryptionKeys(int user_id, List<string> password, List<string> file)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
@@ -511,20 +511,21 @@ namespace FileSAVER
             if (rowsAffected > 0)
             {
                 Console.WriteLine("Data inserted");
+                return true;
             }
             else
             {
                 Console.WriteLine("Failed to insert data");
                 MessageBox.Show("Failed to insert the data!");
-                return;
-                
+                return false;
+
             }
             CurrentConnection.Close();
         }
 
 
         //Method for inserting inforamtion about encrypted file in the table user_files_info 
-        private void importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype, string uploadDate)
+        private bool importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype, string uploadDate)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
@@ -542,12 +543,13 @@ namespace FileSAVER
             if (rowsAffected > 0)
             {
                 Console.WriteLine("Data inserted");
+                return true;
             }
             else
             {
                 Console.WriteLine("Failed to insert data");
                 MessageBox.Show("Failed to insert the data!");
-                return;
+                return false;
             }
             CurrentConnection.Close();
 
@@ -587,14 +589,14 @@ namespace FileSAVER
         //1st part of my encryption algorithm -> shuffle the file with the key 
         private void firstStepOfEncryption(List<string> key, List<string> file)
         {
- 
+
             for (int i = 0; i < key.Count; i++)
             {
                 int keyi = Convert.ToInt32(key[i], 16);
                 int edinici = keyi % 10;
                 int desetici = keyi / 10;
                 int sum = edinici + desetici;
-                if(keyi / 100 >= 1)
+                if (keyi / 100 >= 1)
                 {
                     int stotici = keyi / 100;
                     sum = edinici + desetici + stotici;
@@ -834,8 +836,9 @@ namespace FileSAVER
             string givenKey = txt_key_decryption.Text;
             List<string> giveKey_hexlist = stringToHexArrayList(givenKey);
 
-            for (int i = 0; i < file.Count; i++) {
-                
+            for (int i = 0; i < file.Count; i++)
+            {
+
                 if (giveKey_hexlist[i].Equals(file[i]))
                 {
 
@@ -1084,7 +1087,7 @@ namespace FileSAVER
             List<string> key_hexlist = stringToHexArrayList(key);
 
             OpenFileDialog fd = new OpenFileDialog();
-            
+
 
             fd.Filter = "All Files (*.*)|*.*";
             fd.Multiselect = false;
@@ -1128,7 +1131,7 @@ namespace FileSAVER
 
                     string username = CurrenltyLoggedUser.username;
                     int userId = getUserIdByUsername(username);
-                    importEncryptionKeys(userId, key_hexlist, file_hexlist);
+                    bool isItImportedKeys = importEncryptionKeys(userId, key_hexlist, file_hexlist);
 
                     string name = fd.FileName;
                     //gets the file size and format it into MB/GB..
@@ -1140,7 +1143,11 @@ namespace FileSAVER
                     DateTime currentTime = DateTime.Now;
                     string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-                    importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, uploadDate);
+                    bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, uploadDate);
+                    if (isItImportedKeys && isItImportedKeysInfo)
+                    {
+                        MessageBox.Show("Data inserted successfully");
+                    }
 
 
 
@@ -1191,8 +1198,15 @@ namespace FileSAVER
             txtAge.Text = null;
         }
 
+        private void combo1_MouseClicked(object sender, MouseEventArgs e)
+        {
+            combo1.Items.Clear();
+            writeToComboAllUsernames(combo1);
+        }
+
         private void combo1_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             string choosenUser = combo1.SelectedItem.ToString();
             int id = getUserIdByUsername(choosenUser);
 
@@ -1207,8 +1221,6 @@ namespace FileSAVER
             txtEmail.Text = email;
             txtAge.Text = age;
             lbl_acc_type.Text = type;
-
-
             panel3.Visible = true;
             panel3.Enabled = true;
 

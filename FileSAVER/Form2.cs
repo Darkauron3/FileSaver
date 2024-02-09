@@ -29,53 +29,105 @@ public partial class Form2 : CustomForm
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "INSERT INTO users (username, email, age, type, deleted) VALUES (@value1, @value2, @value3, @value4, @value5);";
+            // Check if there are any deleted users
+            string query = "SELECT User_id FROM users WHERE deleted = 1;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            cmd.Parameters.AddWithValue("@value1", username);
-            cmd.Parameters.AddWithValue("@value2", email);
-            cmd.Parameters.AddWithValue("@value3", age);
-            cmd.Parameters.AddWithValue("@value4", type);
-            cmd.Parameters.AddWithValue("@value5", 0);
+            MySqlDataReader reader = cmd.ExecuteReader();
 
-            int rowsAffected = cmd.ExecuteNonQuery();
-            if (rowsAffected > 0)
+            if(reader.HasRows)
             {
-                Console.WriteLine("Data inserted");
+                // If there are deleted users, update the first one found with the new data
+                reader.Read();
+                int deletedUserId = reader.GetInt32(0);
+                reader.Close();
+
+                query = "UPDATE users SET username = @username, email = @email, age = @age, type = @type, deleted = 0 WHERE User_id = @userId;";
+                cmd = new MySqlCommand(query, CurrentConnection);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.Parameters.AddWithValue("@age", age);
+                cmd.Parameters.AddWithValue("@type", type);
+                cmd.Parameters.AddWithValue("@userId", deletedUserId);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data updated for the existing user");
+                    CurrentConnection.Close();
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update data for the existing user");
+                    CurrentConnection.Close();
+                    return false;
+                }
             }
             else
             {
-                MessageBox.Show("Failed to insert data");
-                return false;
+                // If there are no deleted users, insert a new user
+                reader.Close();
+
+                query = "INSERT INTO users (username, email, age, type, deleted) VALUES (@value1, @value2, @value3, @value4, @value5);";
+                cmd = new MySqlCommand(query, CurrentConnection);
+                cmd.Parameters.AddWithValue("@value1", username);
+                cmd.Parameters.AddWithValue("@value2", email);
+                cmd.Parameters.AddWithValue("@value3", age);
+                cmd.Parameters.AddWithValue("@value4", type);
+                cmd.Parameters.AddWithValue("@value5", 0);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data inserted");
+                    CurrentConnection.Close();
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to insert data");
+                    CurrentConnection.Close();
+                    return false;
+                }
             }
-            CurrentConnection.Close();
-            return true;
         }
         catch (MySqlException ex)
         {
             if (ex.Number == 1062) // Unique constraint violation error number
             {
-                // Handle the exception and notify the user
-                string errorMessage = ex.Message.ToLower();
-                if (errorMessage.Contains("username"))
-                {
-                    MessageBox.Show("Error: The username you're trying to use already exists. Please choose a different username.");
-                }
-                else if (errorMessage.Contains("email"))
-                {
-                    MessageBox.Show("Error: The email you're trying to use already exists. Please choose a different email.");
-                }
-                else
-                {
-                    // Handle other constraint violations
-                    MessageBox.Show("Error: The data you're trying to insert violates a unique constraint. Please check your data.");
-                }
-                // Reset the auto-increment value
-                string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-                MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-                CurrentConnection.Open();
-                ResetAutoIncrement("users", "user_id", CurrentConnection);
-                CurrentConnection.Close();
+                string conectionstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+                MySqlConnection Currentconnection = new MySqlConnection(conectionstring);
+                Currentconnection.Open();
 
+                string query = "SELECT COUNT(*) FROM users WHERE (username = @username OR email = @email) AND deleted = 0;";
+                MySqlCommand cmd = new MySqlCommand(query, Currentconnection);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@email", email);
+
+                int userCount = Convert.ToInt32(cmd.ExecuteScalar());
+
+                if (userCount > 0)
+                {
+                    Currentconnection.Close();
+                    // Handle the exception and notify the user
+                    string errorMessage = ex.Message.ToLower();
+                    if (errorMessage.Contains("username"))
+                    {
+                        MessageBox.Show("Error: The username you're trying to use already exists. Please choose a different username.");
+                    }
+                    else if (errorMessage.Contains("email"))
+                    {
+                        MessageBox.Show("Error: The email you're trying to use already exists. Please choose a different email.");
+                    }
+                    else
+                    {
+                        // Handle other constraint violations
+                        MessageBox.Show("Error: The data you're trying to insert violates a unique constraint. Please check your data.");
+                    }
+                    return false;
+                }
                 return false;
             }
             else
@@ -102,24 +154,64 @@ public partial class Form2 : CustomForm
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "INSERT INTO users_passwords (User_id,pass_hash, deleted) VALUES(@value1, @value2, @value3)";
+            // Check if there are any deleted users
+            string query = "SELECT User_id FROM users_passwords WHERE deleted = 1;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            cmd.Parameters.AddWithValue("@value1", User_id);
-            cmd.Parameters.AddWithValue("@value2", pass_hash);
-            cmd.Parameters.AddWithValue("@value3", 0);
+            MySqlDataReader reader = cmd.ExecuteReader();
 
-            int rowsAffected = cmd.ExecuteNonQuery();
-            if (rowsAffected > 0)
+            if (reader.HasRows)
             {
-                Console.WriteLine("Data inserted");
+                // If there are deleted users, update the first one found with the new data
+                reader.Read();
+                int deletedUserId = reader.GetInt32(0);
+                reader.Close();
+
+                query = "UPDATE users_passwords SET pass_hash = @pass_hash, deleted = 0 WHERE User_id = @deletedUserId;";
+                cmd = new MySqlCommand(query, CurrentConnection);
+                cmd.Parameters.AddWithValue("@pass_hash", pass_hash);
+                cmd.Parameters.AddWithValue("@deletedUserId", deletedUserId);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data updated for the existing user password");
+                    CurrentConnection.Close();
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to update data for the existing user password");
+                    CurrentConnection.Close();
+                    return false;
+                }
             }
             else
             {
-                MessageBox.Show("Failed to insert data");
-                return false;
+                // If there are no deleted users, insert a new user password
+                reader.Close();
+
+                query = "INSERT INTO users_passwords (User_id, pass_hash, deleted) VALUES (@value1, @value2, @value3);";
+                cmd = new MySqlCommand(query, CurrentConnection);
+                cmd.Parameters.AddWithValue("@value1", User_id);
+                cmd.Parameters.AddWithValue("@value2", pass_hash);
+                cmd.Parameters.AddWithValue("@value3", 0);
+
+                int rowsAffected = cmd.ExecuteNonQuery();
+
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data inserted");
+                    CurrentConnection.Close();
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Failed to insert data");
+                    CurrentConnection.Close();
+                    return false;
+                }
             }
-            CurrentConnection.Close();
-            return true;
         } catch (Exception ex)
         {
             // Handle other exceptions
@@ -178,13 +270,6 @@ public partial class Form2 : CustomForm
         return 0;
     }
 
-    //Method for reseting the AutoIncrement in mysql so the users have following user_ids
-    private void ResetAutoIncrement(string tableName, string columnName, MySqlConnection connection)
-    {
-        string query = $"ALTER TABLE {tableName} AUTO_INCREMENT = (SELECT MAX({columnName}) + 1 FROM {tableName});";
-        MySqlCommand cmd = new MySqlCommand(query, connection);
-        cmd.ExecuteNonQuery();
-    }
 
 
     public Form2()

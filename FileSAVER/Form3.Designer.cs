@@ -556,6 +556,7 @@
             combo1.Size = new Size(158, 23);
             combo1.TabIndex = 4;
             combo1.SelectedIndexChanged += combo1_SelectedIndexChanged;
+            combo1.MouseClick += combo1_MouseClicked;
             // 
             // label9
             // 
