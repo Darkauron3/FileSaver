@@ -23,13 +23,14 @@ DROP TABLE IF EXISTS `login_logs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `login_logs` (
-  `users_User_id` int NOT NULL AUTO_INCREMENT,
-  `User_id` int NOT NULL,
+  `log_Id` int NOT NULL AUTO_INCREMENT,
+  `users_User_id` int NOT NULL,
   `Time` datetime NOT NULL,
   `Action` varchar(255) NOT NULL,
-  PRIMARY KEY (`users_User_id`),
+  PRIMARY KEY (`log_Id`),
+  KEY `fk_login_logs_users1_idx` (`users_User_id`),
   CONSTRAINT `fk_login_logs_users1` FOREIGN KEY (`users_User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,6 +39,7 @@ CREATE TABLE `login_logs` (
 
 LOCK TABLES `login_logs` WRITE;
 /*!40000 ALTER TABLE `login_logs` DISABLE KEYS */;
+INSERT INTO `login_logs` VALUES (1,3,'2024-02-13 17:21:43','New account registered'),(2,1,'2024-02-13 17:21:58','Logged in'),(3,1,'2024-02-13 17:28:12','Logged in'),(4,1,'2024-02-13 18:05:45','Logged in'),(5,1,'2024-02-13 18:06:18','Logged in'),(6,1,'2024-02-13 18:14:41','Failed to log in'),(7,1,'2024-02-13 18:14:46','Logged in'),(8,2,'2024-02-13 18:32:46','Logged in'),(9,1,'2024-02-13 18:47:46','Logged in'),(10,1,'2024-02-13 18:49:29','Logged in');
 /*!40000 ALTER TABLE `login_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-08 23:32:14
+-- Dump completed on 2024-02-14  1:31:52

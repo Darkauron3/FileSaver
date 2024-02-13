@@ -23,14 +23,16 @@ DROP TABLE IF EXISTS `user_files_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_files_info` (
+  `File_id` int NOT NULL AUTO_INCREMENT,
   `User_id` int NOT NULL,
   `File_name` varchar(255) NOT NULL,
   `File_size` varchar(45) NOT NULL,
   `File_type` varchar(45) NOT NULL,
   `Upload_date` datetime NOT NULL,
-  PRIMARY KEY (`User_id`),
-  CONSTRAINT `fk_user_files_info_users` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`File_id`),
+  KEY `fk_user_files_info_users1_idx` (`User_id`),
+  CONSTRAINT `fk_user_files_info_users1` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,6 +41,7 @@ CREATE TABLE `user_files_info` (
 
 LOCK TABLES `user_files_info` WRITE;
 /*!40000 ALTER TABLE `user_files_info` DISABLE KEYS */;
+INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\test.txt','27B','.txt','2024-02-13 17:22:20'),(2,1,'C:\\Users\\robot\\Desktop\\test.txt','11B','.txt','2024-02-13 17:28:26'),(3,1,'C:\\Users\\robot\\Desktop\\test.txt','24B','.txt','2024-02-13 18:18:25');
 /*!40000 ALTER TABLE `user_files_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-08 23:32:14
+-- Dump completed on 2024-02-14  1:31:52

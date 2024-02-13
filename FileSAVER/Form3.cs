@@ -1,5 +1,4 @@
-﻿using BCrypt.Net;
-using Google.Protobuf.Reflection;
+﻿using Google.Protobuf.Reflection;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Bcpg.OpenPgp;
 using Org.BouncyCastle.Crypto.Generators;
@@ -23,6 +22,7 @@ using System.Collections.Generic;
 using System.Text;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using BCrypt.Net;
 
 namespace FileSAVER
 {
@@ -183,11 +183,12 @@ namespace FileSAVER
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "INSERT INTO login_logs (User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
+            string query = "INSERT INTO login_logs (users_User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            cmd.Parameters.AddWithValue("User_id", User_id);
-            cmd.Parameters.AddWithValue("Time", DateTime.Now);
-            cmd.Parameters.AddWithValue("Action", action);
+
+            cmd.Parameters.AddWithValue("@User_id", User_id);
+            cmd.Parameters.AddWithValue("@Time", DateTime.Now);
+            cmd.Parameters.AddWithValue("@Action", action);
 
             int rowsAffected = cmd.ExecuteNonQuery();
             if (rowsAffected > 0)
@@ -500,7 +501,6 @@ namespace FileSAVER
             string fileContent = string.Join(Environment.NewLine, file);
             string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
 
-
             string query = "INSERT INTO user_files (User_id, key_value, Encrypted_file) VALUES (@User_id, @Pass, @File)";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             cmd.Parameters.AddWithValue("@User_id", user_id);
@@ -555,7 +555,65 @@ namespace FileSAVER
 
         }
 
+        private string getUserPassHash(int user_id, int file_id)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
 
+            string query = "SELECT Key_value FROM user_files WHERE User_id=@userId AND File_id=@fileId;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@userId", user_id);
+            cmd.Parameters.AddWithValue("@fileId", file_id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                string hash = reader.GetString(0);
+                reader.Close();
+                CurrentConnection.Close();
+                return hash;
+            }
+            else
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                Console.WriteLine("Error retrieving user hash!");
+                return null;
+            }
+        }
+
+        private bool checkIfPassMatch(string pass, string database_pass_hash)
+        {
+            bool isMatch = BCrypt.Net.BCrypt.Verify(pass, database_pass_hash);
+            return isMatch;
+        }
+
+        private int getFileIdByFile(string file)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+            string query = "SELECT File_id FROM user_files WHERE Encrypted_file=@file;";
+            MySqlCommand cmd = new MySqlCommand( query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@file", file);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                int file_id = Convert.ToInt32(reader["File_id"]);
+                reader.Close();
+                CurrentConnection.Close();
+                return file_id;
+
+            } else
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                MessageBox.Show("Error gettin FileId!");
+                return 0;
+            }
+
+        }
 
         //Method for changing the deleted column for a deleted user in table users_passwords
         private bool changeDeletedToTrueForUsersPasswords(int id)
@@ -830,20 +888,10 @@ namespace FileSAVER
                 file[i] = a;
             }
         }
-
-        private void fourthStepOfDeryption(List<string> file)
+        //Removes all the symbols from the key so only the original file will be left
+        private void fourthStepOfDeryption(List<string> file, List<string> key)
         {
-            string givenKey = txt_key_decryption.Text;
-            List<string> giveKey_hexlist = stringToHexArrayList(givenKey);
-
-            for (int i = 0; i < file.Count; i++)
-            {
-
-                if (giveKey_hexlist[i].Equals(file[i]))
-                {
-
-                }
-            }
+            file.RemoveAll(item => key.Contains(item));
 
         }
         //Method for getting the size of the file string
@@ -859,6 +907,25 @@ namespace FileSAVER
             int place = Convert.ToInt32(Math.Floor(Math.Log(fileSizeBytes, byteConversion)));
             double num = Math.Round(fileSizeBytes / Math.Pow(byteConversion, place), 1);
             return $"{num}{suffixes[place]}";
+        }
+
+        private byte[] hexListToByteArray(List<string> hexList)
+        {
+            // Create a byte array to store the result
+            byte[] byteArray = new byte[hexList.Count];
+
+            // Convert each hexadecimal string back to bytes and store them in the byte array
+            for (int i = 0; i < hexList.Count; i++)
+            {
+                // Parse the hexadecimal string to a byte
+                byte b = byte.Parse(hexList[i], System.Globalization.NumberStyles.HexNumber);
+
+                // Store the byte in the byte array
+                byteArray[i] = b;
+            }
+
+            // Return the byte array
+            return byteArray;
         }
 
 
@@ -1080,7 +1147,7 @@ namespace FileSAVER
             Logout();
         }
 
-        private void Browse_button_Click(object sender, EventArgs e)
+        private void Encryption_button_Click(object sender, EventArgs e)
         {
 
             string key = txt_key_encryption.Text;
@@ -1100,31 +1167,11 @@ namespace FileSAVER
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
                     List<string> file_hexlist = byteArrayToHexList(fileBytes);
-                    List<string> test = new List<string> { "e3", "9d", "5f", "73", "8b", "9e" };
-
-                    Debug.WriteLine("--Original file ------------------------------------------------------------------------");
-                    for (int y = 0; y < file_hexlist.Count; y++)
-                    {
-                        Debug.Write(file_hexlist[y] + " ");
-                    }
-                    Debug.WriteLine("-----------------------------------------------------------------------------");
 
                     firstStepOfEncryption(key_hexlist, file_hexlist);
                     secondStepOfEncryption(file_hexlist);
                     thirdStepOfEncryption(file_hexlist);
                     fourthStepOfEncryption(file_hexlist);
-
-                    Debug.WriteLine("--After encryption file ------------------------------------------------------------------------");
-                    for (int y = 0; y < file_hexlist.Count; y++)
-                    {
-                        Debug.Write(file_hexlist[y] + " ");
-                    }
-                    Debug.WriteLine("-----------------------------------------------------------------------------");
-
-                    //firstStepOfEncryption(key_hexlist, file_hexlist);
-                    //secondStepOfEncryption(file_hexlist);
-                    //thirdStepOfEncryption(file_hexlist);
-                    //fourthStepOfEncryption(file_hexlist);
 
                     //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
                     //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
@@ -1149,11 +1196,10 @@ namespace FileSAVER
                         MessageBox.Show("Data inserted successfully");
                     }
 
+                    byte[] encryptedBytes = hexListToByteArray(file_hexlist);
 
-
-                    //firstStepOfDecryption(file_hexlist);
-
-                    //firstStepOfEncryption(key_hexlist, test);
+                    // Now, you can save the encryptedBytes array back to the file, replacing the original content
+                    File.WriteAllBytes(filePath, encryptedBytes);
 
 
                 }
@@ -1371,5 +1417,57 @@ namespace FileSAVER
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+
+        private void Decryption_button_Click(object sender, EventArgs e)
+        {
+            string key = txt_key_decryption.Text;
+            List<string> key_hexlist = stringToHexArrayList(key);
+
+            OpenFileDialog fd = new OpenFileDialog();
+
+
+            fd.Filter = "All Files (*.*)|*.*";
+            fd.Multiselect = false;
+
+            if (fd.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = fd.FileName;
+
+                try
+                {
+                    byte[] fileBytes = File.ReadAllBytes(filePath);
+                    List<string> file_hexlist = byteArrayToHexList(fileBytes);
+
+                    string username = getCurrentlyLoggedUser().username;
+                    int id = getUserIdByUsername(username);
+
+                    string fileContent = string.Join(Environment.NewLine, fileBytes);
+                    string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
+                    int file_id = getFileIdByFile(base64Encoded);
+                    //base64 decode
+
+                    string database_pass_hash = getUserPassHash(id, file_id);
+                    string pass = txt_key_decryption.Text;
+                    if (checkIfPassMatch(pass, database_pass_hash))
+                    {
+                        firstStepOfDecryption(file_hexlist);
+                        secondStepOfDecryption(file_hexlist);
+                        thirdStepOfDecryption(file_hexlist);
+                        fourthStepOfDeryption(file_hexlist, key_hexlist);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Wrong password for decryption!");
+                        return;
+                    }
+                    MessageBox.Show("File decrypted succesfully!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+            }
+        }
     }
 }
+

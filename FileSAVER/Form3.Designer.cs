@@ -50,7 +50,7 @@
             label4 = new Label();
             label3 = new Label();
             label2 = new Label();
-            Browse_button = new Button();
+            Encryption_button = new Button();
             txt_key_encryption = new MaskedTextBox();
             label7 = new Label();
             panel2 = new Panel();
@@ -76,7 +76,7 @@
             richtxt1 = new RichTextBox();
             txt_key_decryption = new MaskedTextBox();
             label14 = new Label();
-            button7 = new Button();
+            Decryption_button = new Button();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -334,15 +334,15 @@
             label2.TabIndex = 0;
             label2.Text = "Your account";
             // 
-            // Browse_button
+            // Encryption_button
             // 
-            Browse_button.Location = new Point(1581, 542);
-            Browse_button.Name = "Browse_button";
-            Browse_button.Size = new Size(144, 69);
-            Browse_button.TabIndex = 4;
-            Browse_button.Text = "Browse File For encryption";
-            Browse_button.UseVisualStyleBackColor = true;
-            Browse_button.Click += Browse_button_Click;
+            Encryption_button.Location = new Point(1581, 542);
+            Encryption_button.Name = "Encryption_button";
+            Encryption_button.Size = new Size(144, 69);
+            Encryption_button.TabIndex = 4;
+            Encryption_button.Text = "Browse File For encryption";
+            Encryption_button.UseVisualStyleBackColor = true;
+            Encryption_button.Click += Encryption_button_Click;
             // 
             // txt_key_encryption
             // 
@@ -608,14 +608,15 @@
             label14.TabIndex = 9;
             label14.Text = "Enter a password for decryption ";
             // 
-            // button7
+            // Decryption_button
             // 
-            button7.Location = new Point(1486, 722);
-            button7.Name = "button7";
-            button7.Size = new Size(144, 66);
-            button7.TabIndex = 10;
-            button7.Text = "Browse File for decryption";
-            button7.UseVisualStyleBackColor = true;
+            Decryption_button.Location = new Point(1486, 722);
+            Decryption_button.Name = "Decryption_button";
+            Decryption_button.Size = new Size(144, 66);
+            Decryption_button.TabIndex = 10;
+            Decryption_button.Text = "Browse File for decryption";
+            Decryption_button.UseVisualStyleBackColor = true;
+            Decryption_button.Click += Decryption_button_Click;
             // 
             // Form3
             // 
@@ -623,13 +624,13 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1904, 1041);
-            Controls.Add(button7);
+            Controls.Add(Decryption_button);
             Controls.Add(label14);
             Controls.Add(txt_key_decryption);
             Controls.Add(panel2);
             Controls.Add(label7);
             Controls.Add(txt_key_encryption);
-            Controls.Add(Browse_button);
+            Controls.Add(Encryption_button);
             Controls.Add(panel1);
             Controls.Add(button1);
             Controls.Add(label1);
@@ -679,7 +680,7 @@
         private Button button4;
         private Button button3;
         private Label lbl_acc_type;
-        private Button Browse_button;
+        private Button Encryption_button;
         private MaskedTextBox txt_key_encryption;
         private Label label7;
         private Panel panel2;
@@ -706,6 +707,6 @@
         private Label label13;
         private MaskedTextBox txt_key_decryption;
         private Label label14;
-        private Button button7;
+        private Button Decryption_button;
     }
 }

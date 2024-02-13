@@ -270,6 +270,34 @@ public partial class Form2 : CustomForm
         return 0;
     }
 
+    //Method for making a log in login_logs
+    private bool createLog(int User_id, string action)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "INSERT INTO login_logs (users_User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+
+        cmd.Parameters.AddWithValue("@User_id", User_id);
+        cmd.Parameters.AddWithValue("@Time", DateTime.Now);
+        cmd.Parameters.AddWithValue("@Action", action);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Data inserted");
+        }
+        else
+        {
+            Console.WriteLine("Failed to insert data");
+            return false;
+        }
+        CurrentConnection.Close();
+        return true;
+
+    }
 
 
     public Form2()
@@ -359,6 +387,9 @@ public partial class Form2 : CustomForm
                     else if (isItInsertedUsers && isItInsertedUserpasswords)
                     {
                         MessageBox.Show("Data inserted successfuly!");
+                        string username = txt_username.Text;
+                        int id = getUserIdByUsername(username);
+                        createLog(id, "New account registered");
                     }
                 }
                 catch (MySqlException ex)
@@ -382,6 +413,9 @@ public partial class Form2 : CustomForm
                     } else if(isItInsertedUsers && isItInsertedUserpasswords)
                     {
                         MessageBox.Show("Data inserted successfuly!");
+                        string username = txt_username.Text;
+                        int id = getUserIdByUsername(username);
+                        createLog(id, "New account registered");
                     }
                 }
                 catch (MySqlException ex)

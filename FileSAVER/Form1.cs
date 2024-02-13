@@ -18,11 +18,11 @@ public partial class Form1 : CustomForm
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO login_logs (User_id, Time, Action) VALUES (@User_id, @Time, @Action);";
+        string query = "INSERT INTO login_logs (users_User_id, Time, Action) VALUES (@User_id, @Time, @Action);";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("User_id", User_id);
-        cmd.Parameters.AddWithValue("Time", DateTime.Now);
-        cmd.Parameters.AddWithValue("Action", action); ;
+        cmd.Parameters.AddWithValue("@User_id", User_id);
+        cmd.Parameters.AddWithValue("@Time", DateTime.Now);
+        cmd.Parameters.AddWithValue("@Action", action); 
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)
@@ -123,7 +123,6 @@ public partial class Form1 : CustomForm
         try
         {
 
-
             string UsernameToCheck = txt1.Text;
             string PasswordToCheck = txt2.Text;
             int userId = getUserIdByUsername(UsernameToCheck);
@@ -134,7 +133,7 @@ public partial class Form1 : CustomForm
             {
                 if (BCrypt.Verify(PasswordToCheck, storedHash))
                 {
-                    bool isitlogged = CreateLog(userId, "Logged in");
+                    bool isitlogged = CreateLog(userId,"Logged in");
                     if (isitlogged == false)
                     {
                         MessageBox.Show("Failed to insert data!");
