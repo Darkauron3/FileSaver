@@ -501,7 +501,7 @@ namespace FileSAVER
             string fileContent = string.Join(Environment.NewLine, file);
             string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
 
-            string query = "INSERT INTO user_files (User_id, key_value, Encrypted_file) VALUES (@User_id, @Pass, @File)";
+            string query = "INSERT INTO user_files (User_id, key_value, Encrypted_file) VALUES (@User_id, @Pass, @File);";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             cmd.Parameters.AddWithValue("@User_id", user_id);
             cmd.Parameters.AddWithValue("@Pass", hashedPass);
@@ -583,12 +583,6 @@ namespace FileSAVER
             }
         }
 
-        private bool checkIfPassMatch(string pass, string database_pass_hash)
-        {
-            bool isMatch = BCrypt.Net.BCrypt.Verify(pass, database_pass_hash);
-            return isMatch;
-        }
-
         private int getFileIdByFile(string file)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
@@ -613,6 +607,33 @@ namespace FileSAVER
                 return 0;
             }
 
+        }
+
+        private string getSalt(int user_id, int file_id)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "SELECT Salt FROM user_files WHERE User_id=@Userid AND File_id=@Fileid;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@Userid", user_id);
+            cmd.Parameters.AddWithValue("@Fileid", file_id);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                string salt = reader["Salt"].ToString();
+                reader.Close();
+                CurrentConnection.Close();
+                return salt;
+
+            } else
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                MessageBox.Show("Error gettin FileId!");
+                return null;
+            }
         }
 
         //Method for changing the deleted column for a deleted user in table users_passwords
@@ -1441,14 +1462,15 @@ namespace FileSAVER
                     string username = getCurrentlyLoggedUser().username;
                     int id = getUserIdByUsername(username);
 
-                    string fileContent = string.Join(Environment.NewLine, fileBytes);
+                    string fileContent = string.Join(Environment.NewLine, file_hexlist);
                     string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
                     int file_id = getFileIdByFile(base64Encoded);
-                    //base64 decode
+
 
                     string database_pass_hash = getUserPassHash(id, file_id);
                     string pass = txt_key_decryption.Text;
-                    if (checkIfPassMatch(pass, database_pass_hash))
+
+                    if (BCrypt.Net.BCrypt.Verify(pass, database_pass_hash))
                     {
                         firstStepOfDecryption(file_hexlist);
                         secondStepOfDecryption(file_hexlist);
