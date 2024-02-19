@@ -32,7 +32,7 @@ CREATE TABLE `user_files_info` (
   PRIMARY KEY (`File_id`),
   KEY `fk_user_files_info_users1_idx` (`User_id`),
   CONSTRAINT `fk_user_files_info_users1` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +41,7 @@ CREATE TABLE `user_files_info` (
 
 LOCK TABLES `user_files_info` WRITE;
 /*!40000 ALTER TABLE `user_files_info` DISABLE KEYS */;
-INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\test.txt','27B','.txt','2024-02-13 17:22:20'),(2,1,'C:\\Users\\robot\\Desktop\\test.txt','11B','.txt','2024-02-13 17:28:26'),(3,1,'C:\\Users\\robot\\Desktop\\test.txt','24B','.txt','2024-02-13 18:18:25');
+INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\test.txt','19B','.txt','2024-02-16 19:40:12'),(2,1,'C:\\Users\\robot\\Desktop\\test2.txt','0B','.txt','2024-02-16 19:53:47'),(3,1,'C:\\Users\\robot\\Desktop\\test.txt','15B','.txt','2024-02-16 19:56:35'),(4,1,'C:\\Users\\robot\\Desktop\\test2.txt','19B','.txt','2024-02-18 18:35:27'),(5,1,'C:\\Users\\robot\\Desktop\\test3.txt','20B','.txt','2024-02-18 18:59:23'),(6,1,'C:\\Users\\robot\\Desktop\\opa.txt','24B','.txt','2024-02-18 19:27:14'),(7,1,'C:\\Users\\robot\\Desktop\\opa.txt','13B','.txt','2024-02-18 19:31:27'),(8,1,'C:\\Users\\robot\\Desktop\\opa.txt','17B','.txt','2024-02-18 19:39:14'),(9,1,'C:\\Users\\robot\\Desktop\\opa.txt','26B','.txt','2024-02-18 19:47:10'),(10,1,'C:\\Users\\robot\\Desktop\\opa.txt','15B','.txt','2024-02-18 20:39:40'),(11,1,'C:\\Users\\robot\\Desktop\\opa.txt','17B','.txt','2024-02-19 23:01:11'),(12,1,'C:\\Users\\robot\\Desktop\\opa.txt','18B','.txt','2024-02-19 23:30:39'),(13,1,'C:\\Users\\robot\\Desktop\\opa.txt','17B','.txt','2024-02-19 23:36:17'),(14,1,'C:\\Users\\robot\\Desktop\\proba.txt','17B','.txt','2024-02-19 23:37:31');
 /*!40000 ALTER TABLE `user_files_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-14  1:31:52
+-- Dump completed on 2024-02-20  0:04:56

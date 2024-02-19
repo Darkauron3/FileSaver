@@ -20,12 +20,13 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Text;
+namespace FileSAVER;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using BCrypt.Net;
+using System.Text.RegularExpressions;
 
-namespace FileSAVER
-{
+
     public partial class Form3 : CustomForm
     {
         //Setting the window to take up the entire screen 
@@ -115,6 +116,7 @@ namespace FileSAVER
             {
                 int userId = Convert.ToInt32(reader["User_id"]);
                 reader.Close();
+                CurrentConnection.Close();
 
                 return userId;
             }
@@ -488,14 +490,14 @@ namespace FileSAVER
             }
         }
 
-        private bool importEncryptionKeys(int user_id, List<string> password, List<string> file)
+        private bool importEncryptionKeys(int user_id, string key, List<string> file)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
+
             //The password for the file to be encrypted and decrypted, has to be stored in the db in form of a hash
-            string passContent = string.Join(Environment.NewLine, password);
-            string hashedPass = BCrypt.Net.BCrypt.HashPassword(passContent);
+            string hashedPass = BCrypt.HashPassword(key);
 
             //The file content is save from a List<string> to string variable and then encoded to base 64 and then saved in the db
             string fileContent = string.Join(Environment.NewLine, file);
@@ -506,21 +508,24 @@ namespace FileSAVER
             cmd.Parameters.AddWithValue("@User_id", user_id);
             cmd.Parameters.AddWithValue("@Pass", hashedPass);
             cmd.Parameters.AddWithValue("@File", base64Encoded);
+            
 
             int rowsAffected = cmd.ExecuteNonQuery();
             if (rowsAffected > 0)
             {
                 Console.WriteLine("Data inserted");
+                CurrentConnection.Close();
                 return true;
             }
             else
             {
                 Console.WriteLine("Failed to insert data");
                 MessageBox.Show("Failed to insert the data!");
+                CurrentConnection.Close();
                 return false;
 
             }
-            CurrentConnection.Close();
+            
         }
 
 
@@ -555,42 +560,39 @@ namespace FileSAVER
 
         }
 
-        private string getUserPassHash(int user_id, int file_id)
+        private String getUserPassHash(int user_id, int file_id)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-
-            string query = "SELECT Key_value FROM user_files WHERE User_id=@userId AND File_id=@fileId;";
+            string query = "SELECT Key_value FROM user_files WHERE User_id=@userid AND file_id=@fileid;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            cmd.Parameters.AddWithValue("@userId", user_id);
-            cmd.Parameters.AddWithValue("@fileId", file_id);
+            cmd.Parameters.AddWithValue("@userid", user_id);
+            cmd.Parameters.AddWithValue("@fileid", file_id);
             MySqlDataReader reader = cmd.ExecuteReader();
-
             if (reader.Read())
             {
-                string hash = reader.GetString(0);
-                reader.Close();
+                string pass_hash = reader["Key_value"].ToString();
                 CurrentConnection.Close();
-                return hash;
-            }
-            else
-            {
                 reader.Close();
-                CurrentConnection.Close();
-                Console.WriteLine("Error retrieving user hash!");
-                return null;
-            }
-        }
 
-        private int getFileIdByFile(string file)
+                return pass_hash;
+            }
+
+            reader.Close();
+            CurrentConnection.Close();
+
+            return null;
+    }
+
+        private int getFileIdByForDecryption(string last8symbols)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-            string query = "SELECT File_id FROM user_files WHERE Encrypted_file=@file;";
+            string query = "SELECT file_id FROM user_files WHERE Encrypted_file_code=@file_code;";
             MySqlCommand cmd = new MySqlCommand( query, CurrentConnection);
-            cmd.Parameters.AddWithValue("@file", file);
+            cmd.Parameters.AddWithValue("@file_code", last8symbols);
             MySqlDataReader reader = cmd.ExecuteReader();
             if (reader.Read())
             {
@@ -607,33 +609,6 @@ namespace FileSAVER
                 return 0;
             }
 
-        }
-
-        private string getSalt(int user_id, int file_id)
-        {
-            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-            CurrentConnection.Open();
-
-            string query = "SELECT Salt FROM user_files WHERE User_id=@Userid AND File_id=@Fileid;";
-            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-            cmd.Parameters.AddWithValue("@Userid", user_id);
-            cmd.Parameters.AddWithValue("@Fileid", file_id);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                string salt = reader["Salt"].ToString();
-                reader.Close();
-                CurrentConnection.Close();
-                return salt;
-
-            } else
-            {
-                reader.Close();
-                CurrentConnection.Close();
-                MessageBox.Show("Error gettin FileId!");
-                return null;
-            }
         }
 
         //Method for changing the deleted column for a deleted user in table users_passwords
@@ -888,17 +863,15 @@ namespace FileSAVER
         {
             //Here we change the numbers that are being rotated in the encryption metod, so the number i and i+3 have to be changed
             //and if i+3 doesn't exist we break
-            for (int i = 1; i < file.Count; i += 3)
+            for (int i = file.Count-1; i < file.Count; i -= 3)
             {
-                if (i + 3 >= file.Count)
+                if (i  == 1 || i == 0)
                 {
                     break;
                 }
-                string element = file[i + 3];
-                file[i + 3] = file[i];
+                string element = file[i - 3];
+                file[i - 3] = file[i];
                 file[i] = element;
-
-
             }
             //Change's every third elemnt with the elemnt with his index-2
             //For example "84" "21" "51" "54" "78" "96" ->  "51" "21" "84" "96" "78" "54" 
@@ -912,6 +885,14 @@ namespace FileSAVER
         //Removes all the symbols from the key so only the original file will be left
         private void fourthStepOfDeryption(List<string> file, List<string> key)
         {
+        /*
+         EDIT HERE FOR EXAMPLE WE HAVE FILE MIX WITH KEY 34 21 76 86 73 45, AND THE KEY IS 34 73 45 , SO THIS METHOD NOW IF THE FILE CONTAINS 73 IT CUTS THE FILE AND GET CORRUPTED,
+        SO WE HAVE THE LENGHT OF THE KEY WHICH IS 3, SO PICK FROM LEFT TO RIGHT FIRST NUMBERS WHICH ARE THE SIZE OF THE KEY HERE IS 3 SO TAKE FIRST 3 NUMBERS 34 21 76 AND THEN
+        RUN THE FOLLOWING LINE IF FIND SOME OF THE FIRST THREE NUBMERS IN THE KEY TO REMOVE IT.THE SAME PROCESS IS FOR THE LAST 3 NUMBERS. AND
+        HERE 34 21 76(34 IS IN THE KEY) - > 21 76    
+        HERE 86 73 45(73 and 45 ARE IN THE KEY)-> 86
+        SO THE FILE WITHOUT THE KEY IS -> 21 76 86
+         */
             file.RemoveAll(item => key.Contains(item));
 
         }
@@ -1168,6 +1149,31 @@ namespace FileSAVER
             Logout();
         }
 
+        private int getFileIdForEncryptionBtn()
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+            string query = "SELECT file_id FROM user_files ORDER BY file_id DESC LIMIT 1;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                int fileId = Convert.ToInt32(reader["file_id"]);
+                reader.Close();
+                CurrentConnection.Close();
+                return fileId;
+            } else
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                MessageBox.Show("Error getting the fileid!");
+                return 0;
+            }
+        }
+
+
         private void Encryption_button_Click(object sender, EventArgs e)
         {
 
@@ -1188,18 +1194,64 @@ namespace FileSAVER
                 {
                     byte[] fileBytes = File.ReadAllBytes(filePath);
                     List<string> file_hexlist = byteArrayToHexList(fileBytes);
+                    Debug.WriteLine("");
+                    Debug.WriteLine("--ORIGINAL FILE------------------------------------------------------");
+                    for (int i = 0; i < file_hexlist.Count; i++)
+                    {
+                        Debug.Write(file_hexlist[i] + " ");
+                    }
+                    Debug.WriteLine("--------------------------------------------------------");
 
-                    firstStepOfEncryption(key_hexlist, file_hexlist);
+                    Debug.WriteLine("");
+                    Debug.WriteLine("--ORIGINAL KEY------------------------------------------------------");
+                    for (int i = 0; i < key_hexlist.Count; i++)
+                    {
+                        Debug.Write(key_hexlist[i] + " ");
+                    }
+                    Debug.WriteLine("--------------------------------------------------------");
+
+                firstStepOfEncryption(key_hexlist, file_hexlist);
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--AFTER ENCRYPTION STEP 1------------------------------------------------------");
+                        for (int i = 0; i < file_hexlist.Count; i++)
+                        {
+                            Debug.Write(file_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
+
                     secondStepOfEncryption(file_hexlist);
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--AFTER ENCRYPTION STEP 2------------------------------------------------------");
+                        for (int i = 0; i < file_hexlist.Count; i++)
+                        {
+                            Debug.Write(file_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
                     thirdStepOfEncryption(file_hexlist);
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--AFTER ENCRYPTION STEP 3------------------------------------------------------");
+                        for (int i = 0; i < file_hexlist.Count; i++)
+                        {
+                            Debug.Write(file_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
+
                     fourthStepOfEncryption(file_hexlist);
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--AFTER ENCRYPTION STEP 4------------------------------------------------------");
+                        for (int i = 0; i < file_hexlist.Count; i++)
+                        {
+                            Debug.Write(file_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
 
-                    //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
-                    //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
+                //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
+                //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
 
-                    string username = CurrenltyLoggedUser.username;
+                string username = CurrenltyLoggedUser.username;
+                    string key_Value = txt_key_encryption.Text;
                     int userId = getUserIdByUsername(username);
-                    bool isItImportedKeys = importEncryptionKeys(userId, key_hexlist, file_hexlist);
+                    bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
 
                     string name = fd.FileName;
                     //gets the file size and format it into MB/GB..
@@ -1221,8 +1273,10 @@ namespace FileSAVER
 
                     // Now, you can save the encryptedBytes array back to the file, replacing the original content
                     File.WriteAllBytes(filePath, encryptedBytes);
-
-
+                    int fileid = getFileIdForEncryptionBtn();
+                    string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
+                    File.Move(filePath, newFilePath);
+                    
                 }
                 catch (Exception ex)
                 {
@@ -1401,6 +1455,56 @@ namespace FileSAVER
             panel3.Visible = false;
         }
 
+        private string getOldFileType(int userid,int fileid)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+            string query = "SELECT File_type FROM user_files_info WHERE User_id=@userid AND File_Id=@fileid;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@userid", userid);
+            cmd.Parameters.AddWithValue("@fileid", fileid);
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                string filetype = reader["File_type"].ToString();
+                reader.Close();
+                CurrentConnection.Close();
+
+                return filetype;
+            }
+            reader.Close();
+            CurrentConnection.Close();
+
+            return null;
+
+
+        }
+
+
+        static int ExtractFileId(string filename)
+        {
+            // Define the regular expression pattern to match numbers
+            string pattern = @"\d+$";
+
+            // Use Regex.Match to find the first occurrence of the pattern in the filename
+            Match match = Regex.Match(filename, pattern);
+
+            // Check if a match is found
+            if (match.Success)
+            {
+                // Convert the matched value to an integer and return
+                return int.Parse(match.Value);
+            }
+            else
+            {
+                // Return -1 or throw an exception indicating that no numbers were found
+                throw new InvalidOperationException("No numbers found in the filename.");
+            }
+        }
+
         private void combo2_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -1459,23 +1563,65 @@ namespace FileSAVER
                     byte[] fileBytes = File.ReadAllBytes(filePath);
                     List<string> file_hexlist = byteArrayToHexList(fileBytes);
 
-                    string username = getCurrentlyLoggedUser().username;
+                string username = getCurrentlyLoggedUser().username;
                     int id = getUserIdByUsername(username);
 
                     string fileContent = string.Join(Environment.NewLine, file_hexlist);
                     string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
-                    int file_id = getFileIdByFile(base64Encoded);
 
+                    int file_id = ExtractFileId(fd.FileName);
 
                     string database_pass_hash = getUserPassHash(id, file_id);
                     string pass = txt_key_decryption.Text;
-
-                    if (BCrypt.Net.BCrypt.Verify(pass, database_pass_hash))
-                    {
+                    
+                    if(BCrypt.Verify(pass, database_pass_hash)) {
+                        int fileId = ExtractFileId(fd.FileName);
                         firstStepOfDecryption(file_hexlist);
-                        secondStepOfDecryption(file_hexlist);
-                        thirdStepOfDecryption(file_hexlist);
-                        fourthStepOfDeryption(file_hexlist, key_hexlist);
+                            Debug.WriteLine("");
+                            Debug.WriteLine("--AFTER DECRYPTION STEP 1------------------------------------------------------");
+                            for (int i = 0; i < file_hexlist.Count; i++)
+                            {
+                                Debug.Write(file_hexlist[i] + " ");
+                            }
+                            Debug.WriteLine("--------------------------------------------------------");
+
+                    secondStepOfDecryption(file_hexlist);
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--AFTER DECRYPTION STEP 2------------------------------------------------------");
+                        for (int i = 0; i < file_hexlist.Count; i++)
+                        {
+                            Debug.Write(file_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
+
+                    thirdStepOfDecryption(file_hexlist);
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--AFTER DECRYPTION STEP 3------------------------------------------------------");
+                        for (int i = 0; i < file_hexlist.Count; i++)
+                        {
+                            Debug.Write(file_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
+
+                    fourthStepOfDeryption(file_hexlist, key_hexlist);
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--AFTER DECRYPTION STEP 4------------------------------------------------------");
+                        for (int i = 0; i < file_hexlist.Count; i++)
+                        {
+                            Debug.Write(file_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
+
+                        Debug.WriteLine("");
+                        Debug.WriteLine("--Key_hexlist decry step 4------------------------------------------------------");
+                        for (int i = 0; i < key_hexlist.Count; i++)
+                        {
+                            Debug.Write(key_hexlist[i] + " ");
+                        }
+                        Debug.WriteLine("--------------------------------------------------------");
+                    string oldFiletype = getOldFileType(id, fileId);
+                        string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
+                        File.Move(filePath, newFilePath);
                     }
                     else
                     {
@@ -1491,5 +1637,5 @@ namespace FileSAVER
             }
         }
     }
-}
+
 

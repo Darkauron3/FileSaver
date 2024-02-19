@@ -126,7 +126,7 @@ public partial class Form1 : CustomForm
             string UsernameToCheck = txt1.Text;
             string PasswordToCheck = txt2.Text;
             int userId = getUserIdByUsername(UsernameToCheck);
-            string storedHash = getPasswordByUserId(userId);
+            string storedHash = getPasswordByUserId(userId);     
 
             bool isUsernameValid = checkForExistingUsername(UsernameToCheck);
             if (isUsernameValid)
