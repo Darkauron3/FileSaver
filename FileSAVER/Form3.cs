@@ -646,28 +646,6 @@ public partial class Form3 : CustomForm
         {
             file.Add(key[i]);
         }
-        /*
-        for (int i = 0; i < key.Count; i++)
-        {
-            int keyi = Convert.ToInt32(key[i], 16);
-            int edinici = keyi % 10;
-            int desetici = keyi / 10;
-            int sum = edinici + desetici;
-            if (keyi / 100 >= 1)
-            {
-                int stotici = keyi / 100;
-                sum = edinici + desetici + stotici;
-            }
-            if (sum % 2 == 0)
-            {
-                file.Add(keyi.ToString("X"));
-            }
-            else
-            {
-                file.Insert(0, keyi.ToString("X"));
-            }
-        }
-        */
 
     }
 
@@ -865,9 +843,15 @@ public partial class Form3 : CustomForm
     {
         //Here we change the numbers that are being rotated in the encryption metod, so the number i and i+3 have to be changed
         //and if i+3 doesn't exist we break
-        for (int i = file.Count - 1; i < file.Count; i -= 3)
+        int index = 0;
+        for(int i = 1; i < file.Count; i+=3)
         {
-            if (i == 1 || i == 0)
+            index = i;
+        }
+
+        for (int i = index; i >= 0; i -= 3)
+        {
+            if (i == 1 || i == 0 || i == 2)
             {
                 break;
             }
@@ -887,14 +871,6 @@ public partial class Form3 : CustomForm
     //Removes all the symbols from the key so only the original file will be left
     private void fourthStepOfDeryption(List<string> file, List<string> key)
     {
-        /*
-         EDIT HERE FOR EXAMPLE WE HAVE FILE MIX WITH KEY 34 21 76 86 73 45, AND THE KEY IS 34 73 45 , SO THIS METHOD NOW IF THE FILE CONTAINS 73 IT CUTS THE FILE AND GET CORRUPTED,
-        SO WE HAVE THE LENGHT OF THE KEY WHICH IS 3, SO PICK FROM LEFT TO RIGHT FIRST NUMBERS WHICH ARE THE SIZE OF THE KEY HERE IS 3 SO TAKE FIRST 3 NUMBERS 34 21 76 AND THEN
-        RUN THE FOLLOWING LINE IF FIND SOME OF THE FIRST THREE NUBMERS IN THE KEY TO REMOVE IT.THE SAME PROCESS IS FOR THE LAST 3 NUMBERS. AND
-        HERE 34 21 76(34 IS IN THE KEY) - > 21 76    
-        HERE 86 73 45(73 and 45 ARE IN THE KEY)-> 86
-        SO THE FILE WITHOUT THE KEY IS -> 21 76 86
-         */
         //so we remove the last symbols which represent the key from the file so only the file content to stay
         int br = 0;
         for (int i = file.Count - 1; i >= 0; i--)
@@ -1207,58 +1183,24 @@ public partial class Form3 : CustomForm
 
             try
             {
+               /*
+                * 
+                * 
+                * 
+                *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UT-8 ENCODING 
+                *
+                *
+                *
+                *
+                *
+                */
                 byte[] fileBytes = File.ReadAllBytes(filePath);
                 List<string> file_hexlist = byteArrayToHexList(fileBytes);
-                Debug.WriteLine("");
-                Debug.WriteLine("--ORIGINAL FILE------------------------------------------------------");
-                for (int i = 0; i < file_hexlist.Count; i++)
-                {
-                    Debug.Write(file_hexlist[i] + " ");
-                }
-                Debug.WriteLine("--------------------------------------------------------");
-
-                Debug.WriteLine("");
-                Debug.WriteLine("--ORIGINAL KEY------------------------------------------------------");
-                for (int i = 0; i < key_hexlist.Count; i++)
-                {
-                    Debug.Write(key_hexlist[i] + " ");
-                }
-                Debug.WriteLine("--------------------------------------------------------");
 
                 firstStepOfEncryption(key_hexlist, file_hexlist);
-                Debug.WriteLine("");
-                Debug.WriteLine("--AFTER ENCRYPTION STEP 1------------------------------------------------------");
-                for (int i = 0; i < file_hexlist.Count; i++)
-                {
-                    Debug.Write(file_hexlist[i] + " ");
-                }
-                Debug.WriteLine("--------------------------------------------------------");
-
                 secondStepOfEncryption(file_hexlist);
-                Debug.WriteLine("");
-                Debug.WriteLine("--AFTER ENCRYPTION STEP 2------------------------------------------------------");
-                for (int i = 0; i < file_hexlist.Count; i++)
-                {
-                    Debug.Write(file_hexlist[i] + " ");
-                }
-                Debug.WriteLine("--------------------------------------------------------");
                 thirdStepOfEncryption(file_hexlist);
-                Debug.WriteLine("");
-                Debug.WriteLine("--AFTER ENCRYPTION STEP 3------------------------------------------------------");
-                for (int i = 0; i < file_hexlist.Count; i++)
-                {
-                    Debug.Write(file_hexlist[i] + " ");
-                }
-                Debug.WriteLine("--------------------------------------------------------");
-
                 fourthStepOfEncryption(file_hexlist);
-                Debug.WriteLine("");
-                Debug.WriteLine("--AFTER ENCRYPTION STEP 4------------------------------------------------------");
-                for (int i = 0; i < file_hexlist.Count; i++)
-                {
-                    Debug.Write(file_hexlist[i] + " ");
-                }
-                Debug.WriteLine("--------------------------------------------------------");
 
                 //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
                 //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
@@ -1288,6 +1230,7 @@ public partial class Form3 : CustomForm
 
                 // Now, you can save the encryptedBytes array back to the file, replacing the original content
                 File.WriteAllBytes(filePath, encryptedBytes);
+
                 int fileid = getFileIdForEncryptionBtn();
                 string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
                 File.Move(filePath, newFilePath);
@@ -1585,9 +1528,11 @@ public partial class Form3 : CustomForm
                     fourthStepOfDeryption(file_hexlist, key_hexlist);
 
 
+                    // string fileCont = HexListToUtf8String(file_hexlist);
                     string fileCont = HexListToAsciiString(file_hexlist);
                     byte[] byteArray = Encoding.UTF8.GetBytes(fileCont);
-                    File.WriteAllBytes(filePath, byteArray);
+                    File.WriteAllBytes(fd.FileName, byteArray);
+
                     string oldFiletype = getOldFileType(id, fileId);
                     string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
                     File.Move(filePath, newFilePath);
