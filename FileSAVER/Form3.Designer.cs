@@ -35,6 +35,7 @@
             securityOptionsToolStripMenuItem = new ToolStripMenuItem();
             accountToolStripMenuItem = new ToolStripMenuItem();
             myAccountToolStripMenuItem = new ToolStripMenuItem();
+            changePasswordToolStripMenuItem = new ToolStripMenuItem();
             logOffToolStripMenuItem = new ToolStripMenuItem();
             adminToolsToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
@@ -46,10 +47,10 @@
             txt_email = new TextBox();
             txt_username = new TextBox();
             label6 = new Label();
-            label5 = new Label();
             label4 = new Label();
-            label3 = new Label();
             label2 = new Label();
+            label5 = new Label();
+            label3 = new Label();
             Encryption_button = new Button();
             txt_key_encryption = new MaskedTextBox();
             label7 = new Label();
@@ -77,10 +78,20 @@
             txt_key_decryption = new MaskedTextBox();
             label14 = new Label();
             Decryption_button = new Button();
+            panel4 = new Panel();
+            btn_changepass = new Button();
+            label17 = new Label();
+            label16 = new Label();
+            label15 = new Label();
+            txt_newpass_confirm = new MaskedTextBox();
+            txt_newpass = new MaskedTextBox();
+            txt_oldpass = new MaskedTextBox();
+            button7 = new Button();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
+            panel4.SuspendLayout();
             SuspendLayout();
             // 
             // label1
@@ -164,7 +175,7 @@
             // 
             // accountToolStripMenuItem
             // 
-            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { myAccountToolStripMenuItem, logOffToolStripMenuItem });
+            accountToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { myAccountToolStripMenuItem, changePasswordToolStripMenuItem, logOffToolStripMenuItem });
             accountToolStripMenuItem.Name = "accountToolStripMenuItem";
             accountToolStripMenuItem.Size = new Size(67, 20);
             accountToolStripMenuItem.Text = "Account ";
@@ -172,14 +183,21 @@
             // myAccountToolStripMenuItem
             // 
             myAccountToolStripMenuItem.Name = "myAccountToolStripMenuItem";
-            myAccountToolStripMenuItem.Size = new Size(139, 22);
+            myAccountToolStripMenuItem.Size = new Size(180, 22);
             myAccountToolStripMenuItem.Text = "My Account";
             myAccountToolStripMenuItem.Click += myAccountToolStripMenuItem_Click;
+            // 
+            // changePasswordToolStripMenuItem
+            // 
+            changePasswordToolStripMenuItem.Name = "changePasswordToolStripMenuItem";
+            changePasswordToolStripMenuItem.Size = new Size(180, 22);
+            changePasswordToolStripMenuItem.Text = "Change password";
+            changePasswordToolStripMenuItem.Click += changePasswordToolStripMenuItem_Click;
             // 
             // logOffToolStripMenuItem
             // 
             logOffToolStripMenuItem.Name = "logOffToolStripMenuItem";
-            logOffToolStripMenuItem.Size = new Size(139, 22);
+            logOffToolStripMenuItem.Size = new Size(180, 22);
             logOffToolStripMenuItem.Text = "Log off";
             logOffToolStripMenuItem.Click += logOffToolStripMenuItem_Click;
             // 
@@ -203,14 +221,12 @@
             panel1.Controls.Add(txt_email);
             panel1.Controls.Add(txt_username);
             panel1.Controls.Add(label6);
-            panel1.Controls.Add(label5);
             panel1.Controls.Add(label4);
-            panel1.Controls.Add(label3);
             panel1.Controls.Add(label2);
             panel1.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            panel1.Location = new Point(1144, 67);
+            panel1.Location = new Point(1144, 43);
             panel1.Name = "panel1";
-            panel1.Size = new Size(729, 412);
+            panel1.Size = new Size(729, 468);
             panel1.TabIndex = 3;
             panel1.Visible = false;
             // 
@@ -290,17 +306,6 @@
             label6.TabIndex = 4;
             label6.Text = "Account type: ";
             // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
-            label5.ForeColor = SystemColors.ButtonFace;
-            label5.Location = new Point(58, 190);
-            label5.Name = "label5";
-            label5.Size = new Size(57, 25);
-            label5.TabIndex = 3;
-            label5.Text = "Age: ";
-            // 
             // label4
             // 
             label4.AutoSize = true;
@@ -312,17 +317,6 @@
             label4.TabIndex = 2;
             label4.Text = "Email: ";
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
-            label3.ForeColor = SystemColors.ButtonFace;
-            label3.Location = new Point(30, 132);
-            label3.Name = "label3";
-            label3.Size = new Size(111, 25);
-            label3.TabIndex = 1;
-            label3.Text = "Username: ";
-            // 
             // label2
             // 
             label2.AutoSize = true;
@@ -333,6 +327,28 @@
             label2.Size = new Size(194, 40);
             label2.TabIndex = 0;
             label2.Text = "Your account";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label5.ForeColor = SystemColors.ButtonFace;
+            label5.Location = new Point(31, 166);
+            label5.Name = "label5";
+            label5.Size = new Size(57, 25);
+            label5.TabIndex = 3;
+            label5.Text = "Age: ";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label3.ForeColor = SystemColors.ButtonFace;
+            label3.Location = new Point(3, 108);
+            label3.Name = "label3";
+            label3.Size = new Size(111, 25);
+            label3.TabIndex = 1;
+            label3.Text = "Username: ";
             // 
             // Encryption_button
             // 
@@ -618,12 +634,104 @@
             Decryption_button.UseVisualStyleBackColor = true;
             Decryption_button.Click += Decryption_button_Click;
             // 
+            // panel4
+            // 
+            panel4.Controls.Add(button7);
+            panel4.Controls.Add(btn_changepass);
+            panel4.Controls.Add(label17);
+            panel4.Controls.Add(label16);
+            panel4.Controls.Add(label15);
+            panel4.Controls.Add(txt_newpass_confirm);
+            panel4.Controls.Add(txt_newpass);
+            panel4.Controls.Add(txt_oldpass);
+            panel4.Controls.Add(label5);
+            panel4.Controls.Add(label3);
+            panel4.Location = new Point(152, 57);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(708, 409);
+            panel4.TabIndex = 13;
+            // 
+            // btn_changepass
+            // 
+            btn_changepass.Location = new Point(325, 288);
+            btn_changepass.Name = "btn_changepass";
+            btn_changepass.Size = new Size(238, 44);
+            btn_changepass.TabIndex = 10;
+            btn_changepass.Text = "Change password";
+            btn_changepass.UseVisualStyleBackColor = true;
+            btn_changepass.Click += btn_changepass_Click;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            label17.Location = new Point(71, 202);
+            label17.Name = "label17";
+            label17.Size = new Size(280, 32);
+            label17.TabIndex = 9;
+            label17.Text = "Confirm New Password";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            label16.Location = new Point(120, 130);
+            label16.Name = "label16";
+            label16.Size = new Size(181, 32);
+            label16.TabIndex = 8;
+            label16.Text = "New password";
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point);
+            label15.Location = new Point(132, 66);
+            label15.Name = "label15";
+            label15.Size = new Size(169, 32);
+            label15.TabIndex = 7;
+            label15.Text = "Old Password";
+            // 
+            // txt_newpass_confirm
+            // 
+            txt_newpass_confirm.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_newpass_confirm.Location = new Point(357, 205);
+            txt_newpass_confirm.Name = "txt_newpass_confirm";
+            txt_newpass_confirm.Size = new Size(213, 33);
+            txt_newpass_confirm.TabIndex = 6;
+            // 
+            // txt_newpass
+            // 
+            txt_newpass.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_newpass.Location = new Point(357, 133);
+            txt_newpass.Name = "txt_newpass";
+            txt_newpass.Size = new Size(213, 33);
+            txt_newpass.TabIndex = 5;
+            // 
+            // txt_oldpass
+            // 
+            txt_oldpass.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_oldpass.Location = new Point(357, 68);
+            txt_oldpass.Name = "txt_oldpass";
+            txt_oldpass.Size = new Size(213, 33);
+            txt_oldpass.TabIndex = 4;
+            // 
+            // button7
+            // 
+            button7.Image = (Image)resources.GetObject("button7.Image");
+            button7.Location = new Point(665, 3);
+            button7.Name = "button7";
+            button7.Size = new Size(40, 38);
+            button7.TabIndex = 13;
+            button7.UseVisualStyleBackColor = true;
+            button7.Click += button7_Click;
+            // 
             // Form3
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             ClientSize = new Size(1904, 1041);
+            Controls.Add(panel4);
             Controls.Add(Decryption_button);
             Controls.Add(label14);
             Controls.Add(txt_key_decryption);
@@ -647,6 +755,8 @@
             panel2.PerformLayout();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -708,5 +818,15 @@
         private MaskedTextBox txt_key_decryption;
         private Label label14;
         private Button Decryption_button;
+        private ToolStripMenuItem changePasswordToolStripMenuItem;
+        private Panel panel4;
+        private Label label15;
+        private MaskedTextBox txt_newpass_confirm;
+        private MaskedTextBox txt_newpass;
+        private MaskedTextBox txt_oldpass;
+        private Label label17;
+        private Label label16;
+        private Button btn_changepass;
+        private Button button7;
     }
 }

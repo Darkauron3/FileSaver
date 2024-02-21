@@ -2,6 +2,12 @@ namespace FileSAVER;
 using MySql.Data.MySqlClient;
 using BCrypt.Net;
 using System.ComponentModel.Design.Serialization;
+using System.Text;
+using System.Net.Mail;
+using System.Net;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using Microsoft.VisualBasic;
+using System.Text.RegularExpressions;
 
 public partial class Form1 : CustomForm
 {
@@ -115,7 +121,64 @@ public partial class Form1 : CustomForm
         return false;
     }
 
+    public static string GenerateRandomPassword(int length = 10)
+    {
+        const string validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        var random = new Random();
+        var password = new StringBuilder();
 
+        for (int i = 0; i < length; i++)
+        {
+            password.Append(validChars[random.Next(validChars.Length)]);
+        }
+
+        return password.ToString();
+    }
+
+    // Send email with new password
+    public static void SendEmail(string recipientEmail, string newPassword)
+    {
+        string fromEmail = "FileSaverProjectService@gmail.com";
+        MailMessage mailMessage = new MailMessage(fromEmail, recipientEmail, "Forgot Password", "Log in using this password and if you want change it in the app(Account/change password) ----> " + newPassword);
+        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+        smtpClient.EnableSsl = true;
+        smtpClient.UseDefaultCredentials = false;
+        smtpClient.Credentials = new NetworkCredential(fromEmail, "AgYF6%T&FID#H2g8&G7ihd8qh9&"); 
+
+        try
+        {
+            smtpClient.Send(mailMessage);
+        } catch (Exception ex)
+        {
+            // Handle error
+            MessageBox.Show(ex.Message);
+        }
+    }
+
+    private string getEmailByUserId(int userid)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+        string query = "SELECT email FROM users WHERE User_id=@userid AND deleted=@Deleted;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@userid", userid);
+        cmd.Parameters.AddWithValue("@Deleted", 0);
+
+        MySqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            string email = reader["email"].ToString();
+            reader.Close();
+
+            return email;
+        }
+        reader.Close();
+        CurrentConnection.Close();
+
+        return null;
+    }
 
     //CONNECT BUTTON
     private void button1_Click(object sender, EventArgs e)
@@ -185,9 +248,23 @@ public partial class Form1 : CustomForm
 
     private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        Form4 form4 = new Form4();
-        Hide();
-        form4.Show();
+        string username = Interaction.InputBox("Enter your username", "Forgotten password", "Provide username of the account you forgot the password");
+
+        string usernamePattern = "^[a-zA-Z0-9]+$";
+        bool isUsernameValid = Regex.IsMatch(username, usernamePattern);
+        if (isUsernameValid == false)
+        {
+            MessageBox.Show("The username field only allow letters and numbers as input!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        int userid = getUserIdByUsername(username);
+        string email = getEmailByUserId(userid);
+        
+
+        string new_pass = GenerateRandomPassword();
+        SendEmail(email, new_pass);
+        MessageBox.Show("Email has been sent to you!");
 
     }
 }

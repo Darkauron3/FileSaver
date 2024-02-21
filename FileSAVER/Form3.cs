@@ -40,6 +40,8 @@ public partial class Form3 : CustomForm
         panel2.Visible = false;
         panel3.Enabled = false;
         panel3.Visible = false;
+        panel4.Enabled = false;
+        panel4.Visible = false;
 
     }
 
@@ -203,6 +205,61 @@ public partial class Form3 : CustomForm
         return true;
 
     }
+
+    private bool createEncryptedFileLog(int userid, string filepath)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "INSERT INTO login_logs (users_User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+
+        cmd.Parameters.AddWithValue("@User_id", userid);
+        cmd.Parameters.AddWithValue("@Time", DateTime.Now);
+        cmd.Parameters.AddWithValue("@Action", "File encrypted -> " + filepath);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Data inserted");
+        } else
+        {
+            Console.WriteLine("Failed to insert data");
+            return false;
+        }
+        CurrentConnection.Close();
+        return true;
+
+    }
+
+    private bool createDecryptedFileLog(int userid, string filepath)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "INSERT INTO login_logs (users_User_id, Time, Action) VALUES (@User_id, @Time, @Action)";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+
+        cmd.Parameters.AddWithValue("@User_id", userid);
+        cmd.Parameters.AddWithValue("@Time", DateTime.Now);
+        cmd.Parameters.AddWithValue("@Action", "File decrypted -> " + filepath);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Data inserted");
+        } else
+        {
+            Console.WriteLine("Failed to insert data");
+            return false;
+        }
+        CurrentConnection.Close();
+        return true;
+
+    }
+
     //Update the new user data for the user's account for panel1
     private bool updateUserDataPanel1(string lastUsername)
     {
@@ -345,7 +402,7 @@ public partial class Form3 : CustomForm
         MySqlDataReader reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            int userId = Convert.ToInt32(reader["User_id"]);
+            int userId = Convert.ToInt32(reader["Users_User_id"]);
             string username = getUsernameById(userId);
             string log = $"Username: {username} \n Time at the action: {reader.GetDateTime(reader.GetOrdinal("Time"))}  \n Action: {reader.GetString("Action")}";
             logs.Add(log);
@@ -844,7 +901,7 @@ public partial class Form3 : CustomForm
         //Here we change the numbers that are being rotated in the encryption metod, so the number i and i+3 have to be changed
         //and if i+3 doesn't exist we break
         int index = 0;
-        for(int i = 1; i < file.Count; i+=3)
+        for (int i = 1; i < file.Count; i += 3)
         {
             index = i;
         }
@@ -921,20 +978,13 @@ public partial class Form3 : CustomForm
         return byteArray;
     }
 
-
-    static string HexListToAsciiString(List<string> file)
+    private string hexListToString(List<string> hexList)
     {
         StringBuilder sb = new StringBuilder();
-
-        foreach (string hex in file)
+        foreach (string hex in hexList)
         {
-            // Convert hexadecimal string to byte
-            byte byteValue = Convert.ToByte(hex, 16);
-
-            // Append the ASCII character corresponding to the byte
-            sb.Append((char)byteValue);
+            sb.Append((char)Convert.ToInt32(hex, 16));
         }
-
         return sb.ToString();
     }
 
@@ -1183,17 +1233,17 @@ public partial class Form3 : CustomForm
 
             try
             {
-               /*
-                * 
-                * 
-                * 
-                *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UT-8 ENCODING 
-                *
-                *
-                *
-                *
-                *
-                */
+                /*
+                 * 
+                 * 
+                 * 
+                 *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UTF-8 ENCODING 
+                 *
+                 *
+                 *
+                 *
+                 *
+                 */
                 byte[] fileBytes = File.ReadAllBytes(filePath);
                 List<string> file_hexlist = byteArrayToHexList(fileBytes);
 
@@ -1234,6 +1284,8 @@ public partial class Form3 : CustomForm
                 int fileid = getFileIdForEncryptionBtn();
                 string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
                 File.Move(filePath, newFilePath);
+
+                createEncryptedFileLog(userId, filePath);
 
             } catch (Exception ex)
             {
@@ -1431,6 +1483,72 @@ public partial class Form3 : CustomForm
 
     }
 
+    private string getUserPassByUserId(int userid)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+        string query = "SELECT pass_hash FROM users_passwords WHERE User_Id=@userid AND deleted=@delete";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@userid", userid);
+        cmd.Parameters.AddWithValue("@delete", 0);
+
+        MySqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            string pass = reader["pass_hash"].ToString();
+            reader.Close();
+            CurrentConnection.Close();
+
+            return pass;
+        }
+        reader.Close();
+        CurrentConnection.Close();
+
+        return null;
+
+
+    }
+
+    private byte[] HexStringToByteArray(string hexString)
+    {
+        byte[] bytes = new byte[hexString.Length / 2];
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            bytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+        }
+        return bytes;
+    }
+
+
+    private bool updateUserPassByUserId(int id, string pass_hash)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "UPDATE users_passwords SET pass_hash=@hash WHERE User_id=@userid AND deleted=@delete;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@hash", pass_hash);
+        cmd.Parameters.AddWithValue("@userid", id);
+        cmd.Parameters.AddWithValue("@delete", 0);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Insert successful");
+
+            CurrentConnection.Close();
+            return true;
+
+        } else
+        {
+            Console.WriteLine("Insert failed");
+            CurrentConnection.Close();
+            return false;
+        }
+    }
 
     static int ExtractFileId(string filename)
     {
@@ -1529,13 +1647,15 @@ public partial class Form3 : CustomForm
 
 
                     // string fileCont = HexListToUtf8String(file_hexlist);
-                    string fileCont = HexListToAsciiString(file_hexlist);
+                    string fileCont = hexListToString(file_hexlist);
                     byte[] byteArray = Encoding.UTF8.GetBytes(fileCont);
                     File.WriteAllBytes(fd.FileName, byteArray);
 
                     string oldFiletype = getOldFileType(id, fileId);
                     string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
                     File.Move(filePath, newFilePath);
+
+                    createDecryptedFileLog(id, filePath);
                 } else
                 {
                     MessageBox.Show("Wrong password for decryption!");
@@ -1547,6 +1667,59 @@ public partial class Form3 : CustomForm
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+    }
+
+    private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        panel4.Enabled = true;
+        panel4.Visible = true;
+    }
+
+    private void btn_changepass_Click(object sender, EventArgs e)
+    {
+        string oldpass = txt_oldpass.Text;
+        string newpass = txt_newpass.Text;
+        string confirm_newpass = txt_newpass_confirm.Text;
+
+        string passwordPattern = "^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$";
+        bool isPasswordValid = Regex.IsMatch(newpass, passwordPattern);
+        if (isPasswordValid == false)
+        {
+            MessageBox.Show("The password should contain at least 8 characters, at least one uppercase character and at least one special symbol!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+
+        string username = getCurrentlyLoggedUser().username;
+        int id = getUserIdByUsername(username);
+
+        string database_hash = getUserPassByUserId(id);
+
+        if (BCrypt.Verify(oldpass, database_hash))
+        {
+            if (newpass.Equals(confirm_newpass))
+            {
+                string new_hash = BCrypt.HashPassword(newpass);
+                updateUserPassByUserId(id, new_hash);
+                MessageBox.Show("Passord changed successfuly!");
+            } else
+            {
+                MessageBox.Show("New password and confirm new password are not the same!");
+                return;
+            }
+        } else
+        {
+            MessageBox.Show("Wrong pasword!");
+            return;
+        }
+
+
+    }
+
+    private void button7_Click(object sender, EventArgs e)
+    {
+        panel4.Enabled = false;
+        panel4.Visible = false;
     }
 }
 

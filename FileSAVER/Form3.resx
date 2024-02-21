@@ -18,7 +18,7 @@
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
     <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing"">Blue</data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
@@ -164,6 +164,48 @@
 </value>
   </data>
   <data name="button5.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        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
+        AudVXwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="button7.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
         DAAACwwBP0AiyAAACF5JREFUeF7t3XvM93Mdx/Er5hxuodsxIslSYdZYjBGrWdiUhCLTlmkTRtZWc8gU
