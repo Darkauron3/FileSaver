@@ -146,7 +146,8 @@ public partial class Form3 : CustomForm
         {
             CurrentConnection.Close();
             return true;
-        } else
+        }
+        else
         {
             CurrentConnection.Close();
             return false;
@@ -170,7 +171,8 @@ public partial class Form3 : CustomForm
         {
             CurrentConnection.Close();
             return true;
-        } else
+        }
+        else
         {
             CurrentConnection.Close();
             return false;
@@ -196,7 +198,8 @@ public partial class Form3 : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -223,7 +226,8 @@ public partial class Form3 : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -250,7 +254,8 @@ public partial class Form3 : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -290,7 +295,8 @@ public partial class Form3 : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -326,7 +332,8 @@ public partial class Form3 : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -354,7 +361,8 @@ public partial class Form3 : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -379,7 +387,8 @@ public partial class Form3 : CustomForm
         if (reader.Read())
         {
             username = reader[0].ToString();
-        } else
+        }
+        else
         {
             MessageBox.Show("User with this id doesn't exist!");
             return null;
@@ -428,7 +437,8 @@ public partial class Form3 : CustomForm
                 reader.Close();
                 CurrentConnection.Close();
                 return true;
-            } else
+            }
+            else
             {
                 reader.Close();
                 CurrentConnection.Close();
@@ -530,7 +540,8 @@ public partial class Form3 : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -564,7 +575,8 @@ public partial class Form3 : CustomForm
             Console.WriteLine("Data inserted");
             CurrentConnection.Close();
             return true;
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             MessageBox.Show("Failed to insert the data!");
@@ -596,7 +608,8 @@ public partial class Form3 : CustomForm
         {
             Console.WriteLine("Data inserted");
             return true;
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             MessageBox.Show("Failed to insert the data!");
@@ -647,7 +660,8 @@ public partial class Form3 : CustomForm
             CurrentConnection.Close();
             return file_id;
 
-        } else
+        }
+        else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -677,7 +691,8 @@ public partial class Form3 : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -767,7 +782,8 @@ public partial class Form3 : CustomForm
 
                 //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
                 //like this "16" "13" - > "13" "63"
-            } else
+            }
+            else
             {
                 string newValueFori = firstValueFromFirstNumber.ToString("X") + firstValueFromNextNumber.ToString("X");
                 string newValueForiplusone = secondValueFromFirstNumber.ToString("X") + secondValueFromNextNumber.ToString("X");
@@ -883,7 +899,8 @@ public partial class Form3 : CustomForm
 
                 //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
                 //like this "16" "13" - > "13" "63"
-            } else
+            }
+            else
             {
                 string newRightValues = secondValueFromLeftNumber.ToString("X") + secondValueFromRightNumber.ToString("X");
                 string newLeftValues = firstValueFromLeftNumber.ToString("X") + firstValueFromRightNumber.ToString("X");
@@ -936,7 +953,8 @@ public partial class Form3 : CustomForm
             {
                 file.RemoveAt(i);
                 br++;
-            } else
+            }
+            else
             {
                 return;
             }
@@ -1057,40 +1075,46 @@ public partial class Form3 : CustomForm
                     {
                         MessageBox.Show("This username you choose has already been registered");
                         return;
-                    } else
+                    }
+                    else
                     {
                         bool isUpdated = updateUserDataPanel1(lastUsername);
                         if (isUpdated == false)
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
                     }
 
-                } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
+                }
+                else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
                 {
                     if (checkForExistingEmail(txt_email.Text))
                     {
                         MessageBox.Show("This email you choose has already been registered");
                         return;
-                    } else
+                    }
+                    else
                     {
                         bool isUpdated = updateUserDataPanel1(lastUsername);
                         if (isUpdated == false)
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
                         }
                     }
-                } else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
+                }
+                else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
                 {
                     if (Convert.ToInt32(txt_age.Text) < 18)
                     {
@@ -1102,41 +1126,28 @@ public partial class Form3 : CustomForm
                     {
                         MessageBox.Show("Error occured, new user data wasn't inserted!");
                         return;
-                    } else
+                    }
+                    else
                     {
                         MessageBox.Show("User edited successfully!");
                         return;
                     }
-                } else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
+                }
+                else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
                 {
                     bool isUpdated = updateUserDataPanel1(lastUsername);
                     if (isUpdated == false)
                     {
                         MessageBox.Show("Error occured, new user data wasn't inserted!");
                         return;
-                    } else
+                    }
+                    else
                     {
                         MessageBox.Show("User edited successfully!");
                         return;
                     }
-                } else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
-                {
-                    if (Convert.ToInt32(txt_age.Text) < 18)
-                    {
-                        MessageBox.Show("The age must be 18 or over!");
-                        return;
-                    }
-                    bool isUpdated = updateUserDataPanel1(lastUsername);
-                    if (isUpdated == false)
-                    {
-                        MessageBox.Show("Error occured, new user data wasn't inserted!");
-                        return;
-                    } else
-                    {
-                        MessageBox.Show("User edited successfully!");
-                        return;
-                    }
-                } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
+                }
+                else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
                 {
                     if (Convert.ToInt32(txt_age.Text) < 18)
                     {
@@ -1148,12 +1159,14 @@ public partial class Form3 : CustomForm
                     {
                         MessageBox.Show("Error occured, new user data wasn't inserted!");
                         return;
-                    } else
+                    }
+                    else
                     {
                         MessageBox.Show("User edited successfully!");
                         return;
                     }
-                } else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age)
+                }
+                else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
                 {
                     if (Convert.ToInt32(txt_age.Text) < 18)
                     {
@@ -1165,7 +1178,27 @@ public partial class Form3 : CustomForm
                     {
                         MessageBox.Show("Error occured, new user data wasn't inserted!");
                         return;
-                    } else
+                    }
+                    else
+                    {
+                        MessageBox.Show("User edited successfully!");
+                        return;
+                    }
+                }
+                else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age)
+                {
+                    if (Convert.ToInt32(txt_age.Text) < 18)
+                    {
+                        MessageBox.Show("The age must be 18 or over!");
+                        return;
+                    }
+                    bool isUpdated = updateUserDataPanel1(lastUsername);
+                    if (isUpdated == false)
+                    {
+                        MessageBox.Show("Error occured, new user data wasn't inserted!");
+                        return;
+                    }
+                    else
                     {
                         MessageBox.Show("User edited successfully!");
                         return;
@@ -1173,7 +1206,8 @@ public partial class Form3 : CustomForm
                 }
 
             }
-        } catch (MySqlException e1)
+        }
+        catch (MySqlException e1)
         {
             MessageBox.Show("Error: " + e1.Message);
         }
@@ -1205,7 +1239,8 @@ public partial class Form3 : CustomForm
             reader.Close();
             CurrentConnection.Close();
             return fileId;
-        } else
+        }
+        else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -1287,7 +1322,8 @@ public partial class Form3 : CustomForm
 
                 createEncryptedFileLog(userId, filePath);
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("error " + ex.Message);
             }
@@ -1312,7 +1348,8 @@ public partial class Form3 : CustomForm
             writeToComboAllUsernames(combo2);
 
 
-        } else
+        }
+        else
         {
             MessageBox.Show("You are not admin user, so you can't use admin tools!");
             return;
@@ -1390,47 +1427,54 @@ public partial class Form3 : CustomForm
                         {
                             MessageBox.Show("This username you choose has already been registered");
                             return;
-                        } else
+                        }
+                        else
                         {
                             bool isUpdated = updateUserDataPanel3(choosenUser);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
                             }
                         }
 
-                    } else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
+                    }
+                    else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
                     {
                         if (checkForExistingEmail(txtEmail.Text))
                         {
                             MessageBox.Show("This email you choose has already been registered");
                             return;
-                        } else
+                        }
+                        else
                         {
                             bool isUpdated = updateUserDataPanel3(choosenUser);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
                             }
                         }
-                    } else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
+                    }
+                    else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
                     {
                         bool isUpdated = updateUserDataPanel3(choosenUser);
                         if (isUpdated == false)
                         {
                             MessageBox.Show("Error occured, new user data wasn't inserted!");
                             return;
-                        } else
+                        }
+                        else
                         {
                             MessageBox.Show("User edited successfully!");
                             return;
@@ -1442,7 +1486,8 @@ public partial class Form3 : CustomForm
 
 
 
-        } catch (MySqlException e1)
+        }
+        catch (MySqlException e1)
         {
             MessageBox.Show("Error: " + e1.Message);
         }
@@ -1542,7 +1587,8 @@ public partial class Form3 : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -1563,7 +1609,8 @@ public partial class Form3 : CustomForm
         {
             // Convert the matched value to an integer and return
             return int.Parse(match.Value);
-        } else
+        }
+        else
         {
             // Return -1 or throw an exception indicating that no numbers were found
             throw new InvalidOperationException("No numbers found in the filename.");
@@ -1594,13 +1641,15 @@ public partial class Form3 : CustomForm
                     MessageBox.Show("Successfully deleted user -> " + choosenUser);
 
                 }
-            } else if (dialogResult == DialogResult.No)
+            }
+            else if (dialogResult == DialogResult.No)
             {
                 combo2.Items.Clear();
                 writeToComboAllUsernames(combo2);
             }
 
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             MessageBox.Show("Error: " + ex.Message);
         }
@@ -1656,13 +1705,15 @@ public partial class Form3 : CustomForm
                     File.Move(filePath, newFilePath);
 
                     createDecryptedFileLog(id, filePath);
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Wrong password for decryption!");
                     return;
                 }
                 MessageBox.Show("File decrypted succesfully!");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
@@ -1701,13 +1752,16 @@ public partial class Form3 : CustomForm
             {
                 string new_hash = BCrypt.HashPassword(newpass);
                 updateUserPassByUserId(id, new_hash);
+                createLog(id, "Changed password");
                 MessageBox.Show("Passord changed successfuly!");
-            } else
+            }
+            else
             {
                 MessageBox.Show("New password and confirm new password are not the same!");
                 return;
             }
-        } else
+        }
+        else
         {
             MessageBox.Show("Wrong pasword!");
             return;
@@ -1720,6 +1774,44 @@ public partial class Form3 : CustomForm
     {
         panel4.Enabled = false;
         panel4.Visible = false;
+    }
+
+    private void clearAllLogs()
+    {
+        string connstring = "Server=localhost;Database=mydb;User=adminuser;Password=adminuseradminuser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "TRUNCATE TABLE login_logs;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected >= 0)
+        {
+            Console.WriteLine("Insert successful");
+            CurrentConnection.Close();
+
+        }
+        else
+        {
+            Console.WriteLine("Insert failed");
+            CurrentConnection.Close();
+            MessageBox.Show("Erorr occured cleaning the logs!");
+            return;
+        }
+    }
+
+    private void clearLogs_Click(object sender, EventArgs e)
+    {
+        richtxt1.Clear();
+        clearAllLogs();
+
+    }
+
+    private void button8_Click(object sender, EventArgs e)
+    {
+        panel2.Enabled = false;
+        panel2.Visible = false;
     }
 }
 

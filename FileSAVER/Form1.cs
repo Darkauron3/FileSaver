@@ -8,6 +8,7 @@ using System.Net;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
+using System;
 
 public partial class Form1 : CustomForm
 {
@@ -136,23 +137,31 @@ public partial class Form1 : CustomForm
     }
 
     // Send email with new password
-    public static void SendEmail(string recipientEmail, string newPassword)
+    public static void SendEmail(string recipientEmail, string newPassword, string username)
     {
-        string fromEmail = "FileSaverProjectService@gmail.com";
-        MailMessage mailMessage = new MailMessage(fromEmail, recipientEmail, "Forgot Password", "Log in using this password and if you want change it in the app(Account/change password) ----> " + newPassword);
-        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-        smtpClient.EnableSsl = true;
+        MailMessage mailMessage = new MailMessage();
+        mailMessage.From = new MailAddress("filesaverprojectservice@gmail.com");
+        mailMessage.To.Add(recipientEmail);
+        mailMessage.Subject = "Forgot pasword";
+        mailMessage.Body = "Hello " + username + " here is your new password -> " + newPassword + "\n" + "(Rembeber that if you want you can change it when you log in and go to Account/Change password.)\nHave a nice day :)!";
+
+        SmtpClient smtpClient = new SmtpClient();
+        smtpClient.Host = "smtp.gmail.com";
+        smtpClient.Port = 587;
         smtpClient.UseDefaultCredentials = false;
-        smtpClient.Credentials = new NetworkCredential(fromEmail, "AgYF6%T&FID#H2g8&G7ihd8qh9&"); 
+        smtpClient.Credentials = new NetworkCredential("filesaverprojectservice@gmail.com", "mbry mkne ezic zief");
+        smtpClient.EnableSsl = true;
 
         try
         {
             smtpClient.Send(mailMessage);
-        } catch (Exception ex)
-        {
-            // Handle error
-            MessageBox.Show(ex.Message);
+            
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+        MessageBox.Show("Email has been sent to you!");
     }
 
     private string getEmailByUserId(int userid)
@@ -179,6 +188,30 @@ public partial class Form1 : CustomForm
 
         return null;
     }
+
+    private void changeUserPassByUserId(int userid, string newpass)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+        string query = "UPDATE users_passwords SET pass_hash=@hash WHERE User_id=@userid;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@hash", BCrypt.HashPassword(newpass));
+        cmd.Parameters.AddWithValue("@userid", userid);
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Update successful");
+            CurrentConnection.Close();
+        }
+        else
+        {
+            MessageBox.Show("Erorr updating the new password!");
+            CurrentConnection.Close();
+            return;
+        }
+    }
+
 
     //CONNECT BUTTON
     private void button1_Click(object sender, EventArgs e)
@@ -259,12 +292,17 @@ public partial class Form1 : CustomForm
         }
 
         int userid = getUserIdByUsername(username);
+        if (userid == 0) {
+            MessageBox.Show("There isn't a user with that username!");
+            return;
+        }
         string email = getEmailByUserId(userid);
         
 
         string new_pass = GenerateRandomPassword();
-        SendEmail(email, new_pass);
-        MessageBox.Show("Email has been sent to you!");
+        SendEmail(email, new_pass, username);
+        changeUserPassByUserId(userid, new_pass);
+
 
     }
 }
