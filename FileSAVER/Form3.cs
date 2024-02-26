@@ -25,10 +25,13 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using BCrypt.Net;
 using System.Text.RegularExpressions;
+using System.IO;
 
 
 public partial class Form3 : CustomForm
 {
+
+
     //Setting the window to take up the entire screen 
     public Form3()
     {
@@ -589,18 +592,19 @@ public partial class Form3 : CustomForm
 
 
     //Method for inserting inforamtion about encrypted file in the table user_files_info 
-    private bool importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype, string uploadDate)
+    private bool importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype,string encoding, string uploadDate)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO user_files_info (User_id, File_name, File_size, File_type, Upload_date) VALUES (@User_id, @filename, @filesize, @filetype, @uploaddate)";
+        string query = "INSERT INTO user_files_info (User_id, File_name, File_size, File_type, Encoding, Upload_date) VALUES (@User_id, @filename, @filesize, @filetype, @encoding, @uploaddate)";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@User_id", user_id);
         cmd.Parameters.AddWithValue("@filename", filename);
         cmd.Parameters.AddWithValue("@filesize", filesize);
         cmd.Parameters.AddWithValue("@filetype", filetype);
+        cmd.Parameters.AddWithValue("@encoding", encoding);
         cmd.Parameters.AddWithValue("uploaddate", uploadDate);
 
         int rowsAffected = cmd.ExecuteNonQuery();
@@ -669,6 +673,33 @@ public partial class Form3 : CustomForm
             return 0;
         }
 
+    }
+
+    private string getEncodingType(int userid, int fileid)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+        string query = "SELECT Encoding FROM user_files_info WHERE User_id=@userid AND File_id=@fileid;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@userid", userid);
+        cmd.Parameters.AddWithValue("@fileid", fileid);
+        MySqlDataReader reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            string encoding = reader["Encoding"].ToString();
+            reader.Close();
+            CurrentConnection.Close();
+            return encoding;
+
+        }
+        else
+        {
+            reader.Close();
+            CurrentConnection.Close();
+            MessageBox.Show("Error gettin Encoding type!");
+            return null;
+        }
     }
 
     //Method for changing the deleted column for a deleted user in table users_passwords
@@ -1305,7 +1336,12 @@ public partial class Form3 : CustomForm
                 DateTime currentTime = DateTime.Now;
                 string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-                bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, uploadDate);
+                StreamReader reader = new StreamReader(filePath, detectEncodingFromByteOrderMarks: true);
+                Encoding encoding = reader.CurrentEncoding;
+                string enc = encoding.GetType().Name;
+                reader.Close();
+
+                bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, enc, uploadDate);
                 if (isItImportedKeys && isItImportedKeysInfo)
                 {
                     MessageBox.Show("Data inserted successfully");
@@ -1662,7 +1698,6 @@ public partial class Form3 : CustomForm
 
         OpenFileDialog fd = new OpenFileDialog();
 
-
         fd.Filter = "All Files (*.*)|*.*";
         fd.Multiselect = false;
 
@@ -1678,9 +1713,6 @@ public partial class Form3 : CustomForm
                 string username = getCurrentlyLoggedUser().username;
                 int id = getUserIdByUsername(username);
 
-                string fileContent = string.Join(Environment.NewLine, file_hexlist);
-                string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
-
                 int file_id = ExtractFileId(fd.FileName);
 
                 string database_pass_hash = getUserPassHash(id, file_id);
@@ -1694,11 +1726,8 @@ public partial class Form3 : CustomForm
                     thirdStepOfDecryption(file_hexlist);
                     fourthStepOfDeryption(file_hexlist, key_hexlist);
 
-
-                    // string fileCont = HexListToUtf8String(file_hexlist);
-                    string fileCont = hexListToString(file_hexlist);
-                    byte[] byteArray = Encoding.UTF8.GetBytes(fileCont);
-                    File.WriteAllBytes(fd.FileName, byteArray);
+                    byte[] decryptedBytes = hexListToByteArray(file_hexlist);
+                    File.WriteAllBytes(fd.FileName, decryptedBytes);
 
                     string oldFiletype = getOldFileType(id, fileId);
                     string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
@@ -1711,7 +1740,7 @@ public partial class Form3 : CustomForm
                     MessageBox.Show("Wrong password for decryption!");
                     return;
                 }
-                MessageBox.Show("File decrypted succesfully!");
+                MessageBox.Show("File decrypted successfully!");
             }
             catch (Exception ex)
             {
@@ -1719,6 +1748,8 @@ public partial class Form3 : CustomForm
             }
         }
     }
+
+
 
     private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
     {

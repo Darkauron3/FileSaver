@@ -28,7 +28,7 @@ CREATE TABLE `users_passwords` (
   `deleted` tinyint NOT NULL,
   PRIMARY KEY (`User_id`),
   CONSTRAINT `fk_users_passwords_users1` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `users_passwords` (
 
 LOCK TABLES `users_passwords` WRITE;
 /*!40000 ALTER TABLE `users_passwords` DISABLE KEYS */;
-INSERT INTO `users_passwords` VALUES (1,'$2a$11$31sQw0Ne9KvyobYefXmAie2aSM1jgfhathqcPjGQ3iuurLRNB0cfC',0),(2,'$2a$11$5Q3gAKvzzM57eRyGwKIDk.55tuLQHFD9HD.K6Y3cjlcPeqNGZsTYW',0),(3,'$2a$11$kfaMwS1oMYoqGkho9/tCjuxhGg/zJMXuj6L/73axuQm8vXecDvUqW',0);
+INSERT INTO `users_passwords` VALUES (1,'$2a$11$31sQw0Ne9KvyobYefXmAie2aSM1jgfhathqcPjGQ3iuurLRNB0cfC',0),(2,'$2a$11$5Q3gAKvzzM57eRyGwKIDk.55tuLQHFD9HD.K6Y3cjlcPeqNGZsTYW',0),(3,'$2a$11$kfaMwS1oMYoqGkho9/tCjuxhGg/zJMXuj6L/73axuQm8vXecDvUqW',0),(4,'$2a$11$fBh8hj526Pli0WLwRd5ZLOI2gdtFnyzfKQq8BO60Qsqg3gJ7BuM.W',0);
 /*!40000 ALTER TABLE `users_passwords` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-20  0:04:55
+-- Dump completed on 2024-02-26 18:24:26

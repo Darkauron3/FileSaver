@@ -28,11 +28,13 @@ CREATE TABLE `user_files_info` (
   `File_name` varchar(255) NOT NULL,
   `File_size` varchar(45) NOT NULL,
   `File_type` varchar(45) NOT NULL,
+  `Encoding` varchar(45) NOT NULL,
   `Upload_date` datetime NOT NULL,
   PRIMARY KEY (`File_id`),
   KEY `fk_user_files_info_users1_idx` (`User_id`),
+  CONSTRAINT `fk_user_files_info_user_files1` FOREIGN KEY (`File_id`) REFERENCES `user_files` (`file_id`),
   CONSTRAINT `fk_user_files_info_users1` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +43,7 @@ CREATE TABLE `user_files_info` (
 
 LOCK TABLES `user_files_info` WRITE;
 /*!40000 ALTER TABLE `user_files_info` DISABLE KEYS */;
-INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\test.txt','19B','.txt','2024-02-16 19:40:12'),(2,1,'C:\\Users\\robot\\Desktop\\test2.txt','0B','.txt','2024-02-16 19:53:47'),(3,1,'C:\\Users\\robot\\Desktop\\test.txt','15B','.txt','2024-02-16 19:56:35'),(4,1,'C:\\Users\\robot\\Desktop\\test2.txt','19B','.txt','2024-02-18 18:35:27'),(5,1,'C:\\Users\\robot\\Desktop\\test3.txt','20B','.txt','2024-02-18 18:59:23'),(6,1,'C:\\Users\\robot\\Desktop\\opa.txt','24B','.txt','2024-02-18 19:27:14'),(7,1,'C:\\Users\\robot\\Desktop\\opa.txt','13B','.txt','2024-02-18 19:31:27'),(8,1,'C:\\Users\\robot\\Desktop\\opa.txt','17B','.txt','2024-02-18 19:39:14'),(9,1,'C:\\Users\\robot\\Desktop\\opa.txt','26B','.txt','2024-02-18 19:47:10'),(10,1,'C:\\Users\\robot\\Desktop\\opa.txt','15B','.txt','2024-02-18 20:39:40'),(11,1,'C:\\Users\\robot\\Desktop\\opa.txt','17B','.txt','2024-02-19 23:01:11'),(12,1,'C:\\Users\\robot\\Desktop\\opa.txt','18B','.txt','2024-02-19 23:30:39'),(13,1,'C:\\Users\\robot\\Desktop\\opa.txt','17B','.txt','2024-02-19 23:36:17'),(14,1,'C:\\Users\\robot\\Desktop\\proba.txt','17B','.txt','2024-02-19 23:37:31');
+INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\proba.txt','25B','.txt','','2024-02-20 18:17:17'),(2,1,'C:\\Users\\robot\\Desktop\\proba.txt','25B','.txt','','2024-02-20 18:19:22'),(3,1,'C:\\Users\\robot\\Desktop\\proba.txt','21B','.txt','','2024-02-20 18:36:45'),(4,1,'C:\\Users\\robot\\Desktop\\proba.txt','24B','.txt','','2024-02-20 19:00:47'),(5,1,'C:\\Users\\robot\\Desktop\\proba.txt','19B','.txt','','2024-02-20 19:12:07'),(6,1,'C:\\Users\\robot\\Desktop\\proba.txt','275B','.txt','','2024-02-20 19:16:53'),(7,1,'C:\\Users\\robot\\Desktop\\proba.txt','275B','.txt','','2024-02-20 19:31:18'),(8,1,'C:\\Users\\robot\\Desktop\\proba.txt','25B','.txt','','2024-02-20 20:16:22'),(9,1,'C:\\Users\\robot\\Desktop\\proba.txt','278B','.txt','','2024-02-20 20:25:34'),(10,1,'C:\\Users\\robot\\Desktop\\proba.txt','278B','.txt','','2024-02-20 20:28:43'),(11,1,'C:\\Users\\robot\\Desktop\\proba.txt','284B','.txt','','2024-02-20 20:31:17'),(12,1,'C:\\Users\\robot\\Desktop\\proba.txt','284B','.txt','','2024-02-20 20:34:48'),(13,1,'C:\\Users\\robot\\Desktop\\opa.txt','284B','.txt','','2024-02-20 20:40:25'),(14,1,'C:\\Users\\robot\\Desktop\\12d.jpg','9.3KB','.jpg','','2024-02-25 17:22:52'),(15,1,'C:\\Users\\robot\\Desktop\\ku4e2.jpg','7KB','.jpg','','2024-02-25 17:26:39'),(16,1,'C:\\Users\\robot\\Desktop\\real - Copy.png','1.3MB','.png','','2024-02-25 17:30:06'),(17,1,'C:\\Users\\robot\\Desktop\\real - Copy.png','1.3MB','.png','Unicode (UTF-8)','2024-02-25 19:30:23'),(18,1,'C:\\Users\\robot\\Desktop\\real - Copy.png','1.3MB','.png','Unicode (UTF-8)','2024-02-25 19:32:09'),(19,1,'C:\\Users\\robot\\Desktop\\real - Copy.png','1.3MB','.png','Unicode (UTF-8)','2024-02-25 19:33:59'),(20,1,'C:\\Users\\robot\\Desktop\\real - Copy.png','1.3MB','.png','Unicode (UTF-8)','2024-02-25 19:36:07'),(21,1,'C:\\Users\\robot\\Desktop\\ku4e.jpg','7KB','.jpg','UTF8EncodingSealed','2024-02-25 20:59:50'),(22,1,'C:\\Users\\robot\\Desktop\\ku4e.jpg','7KB','.jpg','UTF8EncodingSealed','2024-02-25 21:00:45'),(23,1,'C:\\Users\\robot\\Desktop\\ku4e.jpg','7KB','.jpg','UTF8EncodingSealed','2024-02-25 21:02:15'),(24,1,'C:\\Users\\robot\\Desktop\\da.txt','7B','.txt','UTF8EncodingSealed','2024-02-25 21:03:59'),(25,1,'C:\\Users\\robot\\Desktop\\test.jpg','81.1KB','.jpg','UTF8EncodingSealed','2024-02-26 18:22:17');
 /*!40000 ALTER TABLE `user_files_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-20  0:04:56
+-- Dump completed on 2024-02-26 18:24:26
