@@ -55,6 +55,15 @@
             txt_key_encryption = new MaskedTextBox();
             label7 = new Label();
             panel2 = new Panel();
+            check_loginfail = new CheckBox();
+            check_accdel = new CheckBox();
+            label18 = new Label();
+            check_changedpass = new CheckBox();
+            check_decrypt = new CheckBox();
+            check_encrypt = new CheckBox();
+            check_newreg = new CheckBox();
+            check_logout = new CheckBox();
+            check_login = new CheckBox();
             button8 = new Button();
             button9 = new Button();
             clearLogs = new Button();
@@ -90,13 +99,7 @@
             txt_key_decryption = new MaskedTextBox();
             label14 = new Label();
             Decryption_button = new Button();
-            check_login = new CheckBox();
-            check_logout = new CheckBox();
-            check_newreg = new CheckBox();
-            check_encrypt = new CheckBox();
-            check_decrypt = new CheckBox();
-            check_changedpass = new CheckBox();
-            label18 = new Label();
+            btn_showlogs = new Button();
             menuStrip1.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
@@ -390,6 +393,9 @@
             // panel2
             // 
             panel2.BackColor = Color.Black;
+            panel2.Controls.Add(btn_showlogs);
+            panel2.Controls.Add(check_loginfail);
+            panel2.Controls.Add(check_accdel);
             panel2.Controls.Add(label18);
             panel2.Controls.Add(check_changedpass);
             panel2.Controls.Add(check_decrypt);
@@ -415,6 +421,113 @@
             panel2.Size = new Size(1093, 874);
             panel2.TabIndex = 7;
             // 
+            // check_loginfail
+            // 
+            check_loginfail.AutoSize = true;
+            check_loginfail.ForeColor = Color.White;
+            check_loginfail.Location = new Point(616, 242);
+            check_loginfail.Name = "check_loginfail";
+            check_loginfail.Size = new Size(107, 19);
+            check_loginfail.TabIndex = 28;
+            check_loginfail.Text = "Failed to Log in";
+            check_loginfail.UseVisualStyleBackColor = true;
+            check_loginfail.CheckedChanged += check_loginfail_CheckedChanged;
+            // 
+            // check_accdel
+            // 
+            check_accdel.AutoSize = true;
+            check_accdel.ForeColor = Color.White;
+            check_accdel.Location = new Point(593, 403);
+            check_accdel.Name = "check_accdel";
+            check_accdel.Size = new Size(113, 19);
+            check_accdel.TabIndex = 27;
+            check_accdel.Text = "Account deleted";
+            check_accdel.UseVisualStyleBackColor = true;
+            check_accdel.CheckedChanged += check_accdel_CheckedChanged;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
+            label18.ForeColor = Color.White;
+            label18.Location = new Point(629, 179);
+            label18.Name = "label18";
+            label18.Size = new Size(70, 25);
+            label18.TabIndex = 26;
+            label18.Text = "Filters:";
+            // 
+            // check_changedpass
+            // 
+            check_changedpass.AutoSize = true;
+            check_changedpass.ForeColor = Color.White;
+            check_changedpass.Location = new Point(600, 378);
+            check_changedpass.Name = "check_changedpass";
+            check_changedpass.Size = new Size(127, 19);
+            check_changedpass.TabIndex = 25;
+            check_changedpass.Text = "Changed password";
+            check_changedpass.UseVisualStyleBackColor = true;
+            check_changedpass.CheckedChanged += check_changedpass_CheckedChanged;
+            // 
+            // check_decrypt
+            // 
+            check_decrypt.AutoSize = true;
+            check_decrypt.ForeColor = Color.White;
+            check_decrypt.Location = new Point(613, 353);
+            check_decrypt.Name = "check_decrypt";
+            check_decrypt.Size = new Size(104, 19);
+            check_decrypt.TabIndex = 24;
+            check_decrypt.Text = "Decrypted files";
+            check_decrypt.UseVisualStyleBackColor = true;
+            check_decrypt.CheckedChanged += check_decrypt_CheckedChanged;
+            // 
+            // check_encrypt
+            // 
+            check_encrypt.AutoSize = true;
+            check_encrypt.ForeColor = Color.White;
+            check_encrypt.Location = new Point(608, 328);
+            check_encrypt.Name = "check_encrypt";
+            check_encrypt.Size = new Size(103, 19);
+            check_encrypt.TabIndex = 23;
+            check_encrypt.Text = "Encrypted files";
+            check_encrypt.UseVisualStyleBackColor = true;
+            check_encrypt.CheckedChanged += check_encrypt_CheckedChanged;
+            // 
+            // check_newreg
+            // 
+            check_newreg.AutoSize = true;
+            check_newreg.ForeColor = Color.White;
+            check_newreg.Location = new Point(634, 299);
+            check_newreg.Name = "check_newreg";
+            check_newreg.Size = new Size(86, 19);
+            check_newreg.TabIndex = 22;
+            check_newreg.Text = "registration";
+            check_newreg.UseVisualStyleBackColor = true;
+            check_newreg.CheckedChanged += check_newreg_CheckedChanged;
+            // 
+            // check_logout
+            // 
+            check_logout.AutoSize = true;
+            check_logout.ForeColor = Color.White;
+            check_logout.Location = new Point(634, 271);
+            check_logout.Name = "check_logout";
+            check_logout.Size = new Size(67, 19);
+            check_logout.TabIndex = 21;
+            check_logout.Text = "Log out";
+            check_logout.UseVisualStyleBackColor = true;
+            check_logout.CheckedChanged += check_logout_CheckedChanged;
+            // 
+            // check_login
+            // 
+            check_login.AutoSize = true;
+            check_login.ForeColor = Color.White;
+            check_login.Location = new Point(640, 209);
+            check_login.Name = "check_login";
+            check_login.Size = new Size(59, 19);
+            check_login.TabIndex = 20;
+            check_login.Text = "Log in";
+            check_login.UseVisualStyleBackColor = true;
+            check_login.CheckedChanged += check_login_CheckedChanged;
+            // 
             // button8
             // 
             button8.Image = (Image)resources.GetObject("button8.Image");
@@ -436,7 +549,7 @@
             // 
             // clearLogs
             // 
-            clearLogs.Location = new Point(611, 87);
+            clearLogs.Location = new Point(608, 65);
             clearLogs.Name = "clearLogs";
             clearLogs.Size = new Size(109, 41);
             clearLogs.TabIndex = 18;
@@ -775,82 +888,15 @@
             Decryption_button.UseVisualStyleBackColor = true;
             Decryption_button.Click += Decryption_button_Click;
             // 
-            // check_login
+            // btn_showlogs
             // 
-            check_login.AutoSize = true;
-            check_login.ForeColor = Color.White;
-            check_login.Location = new Point(640, 171);
-            check_login.Name = "check_login";
-            check_login.Size = new Size(59, 19);
-            check_login.TabIndex = 20;
-            check_login.Text = "Log in";
-            check_login.UseVisualStyleBackColor = true;
-            // 
-            // check_logout
-            // 
-            check_logout.AutoSize = true;
-            check_logout.ForeColor = Color.White;
-            check_logout.Location = new Point(637, 204);
-            check_logout.Name = "check_logout";
-            check_logout.Size = new Size(67, 19);
-            check_logout.TabIndex = 21;
-            check_logout.Text = "Log out";
-            check_logout.UseVisualStyleBackColor = true;
-            // 
-            // check_newreg
-            // 
-            check_newreg.AutoSize = true;
-            check_newreg.ForeColor = Color.White;
-            check_newreg.Location = new Point(637, 232);
-            check_newreg.Name = "check_newreg";
-            check_newreg.Size = new Size(86, 19);
-            check_newreg.TabIndex = 22;
-            check_newreg.Text = "registration";
-            check_newreg.UseVisualStyleBackColor = true;
-            // 
-            // check_encrypt
-            // 
-            check_encrypt.AutoSize = true;
-            check_encrypt.ForeColor = Color.White;
-            check_encrypt.Location = new Point(611, 261);
-            check_encrypt.Name = "check_encrypt";
-            check_encrypt.Size = new Size(103, 19);
-            check_encrypt.TabIndex = 23;
-            check_encrypt.Text = "Encrypted files";
-            check_encrypt.UseVisualStyleBackColor = true;
-            // 
-            // check_decrypt
-            // 
-            check_decrypt.AutoSize = true;
-            check_decrypt.ForeColor = Color.White;
-            check_decrypt.Location = new Point(616, 286);
-            check_decrypt.Name = "check_decrypt";
-            check_decrypt.Size = new Size(104, 19);
-            check_decrypt.TabIndex = 24;
-            check_decrypt.Text = "Decrypted files";
-            check_decrypt.UseVisualStyleBackColor = true;
-            // 
-            // check_changedpass
-            // 
-            check_changedpass.AutoSize = true;
-            check_changedpass.ForeColor = Color.White;
-            check_changedpass.Location = new Point(603, 311);
-            check_changedpass.Name = "check_changedpass";
-            check_changedpass.Size = new Size(127, 19);
-            check_changedpass.TabIndex = 25;
-            check_changedpass.Text = "Changed password";
-            check_changedpass.UseVisualStyleBackColor = true;
-            // 
-            // label18
-            // 
-            label18.AutoSize = true;
-            label18.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
-            label18.ForeColor = Color.White;
-            label18.Location = new Point(616, 135);
-            label18.Name = "label18";
-            label18.Size = new Size(70, 25);
-            label18.TabIndex = 26;
-            label18.Text = "Filters:";
+            btn_showlogs.Location = new Point(608, 122);
+            btn_showlogs.Name = "btn_showlogs";
+            btn_showlogs.Size = new Size(109, 41);
+            btn_showlogs.TabIndex = 29;
+            btn_showlogs.Text = "Show all logs";
+            btn_showlogs.UseVisualStyleBackColor = true;
+            btn_showlogs.Click += btn_showlogs_Click;
             // 
             // Form3
             // 
@@ -964,5 +1010,8 @@
         private CheckBox check_logout;
         private CheckBox check_login;
         private Label label18;
+        private CheckBox check_loginfail;
+        private CheckBox check_accdel;
+        private Button btn_showlogs;
     }
 }

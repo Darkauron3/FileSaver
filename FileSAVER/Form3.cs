@@ -592,7 +592,7 @@ public partial class Form3 : CustomForm
 
 
     //Method for inserting inforamtion about encrypted file in the table user_files_info 
-    private bool importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype,string encoding, string uploadDate)
+    private bool importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype, string encoding, string uploadDate)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
@@ -1832,6 +1832,31 @@ public partial class Form3 : CustomForm
         }
     }
 
+    private void refreshLogs()
+    {
+        List<string> filtered_logs = new List<string>();
+        List<string> logs = new List<string>();
+        getLogs(logs);
+
+        foreach (string log in logs)
+        {
+            if ((check_login.Checked && log.Contains("Action: Logged in")) ||
+           (check_logout.Checked && log.Contains("Action: Log out")) ||
+           (check_newreg.Checked && log.Contains("Action: New Account registered")) ||
+           (check_encrypt.Checked && log.Contains("Action: File encrypted")) ||
+           (check_decrypt.Checked && log.Contains("Action: File decrypted")) ||
+           (check_changedpass.Checked && log.Contains("Action: Changed password")) ||
+           (check_loginfail.Checked && log.Contains("Action: Failed to log in") ||
+           (check_accdel.Checked && log.Contains("Action: Account deleted"))))
+            {
+                filtered_logs.Add(log);
+            }
+        }
+
+        string filteredLogsText = string.Join(Environment.NewLine + Environment.NewLine, filtered_logs);
+        richtxt1.Text = filteredLogsText;
+    }
+
     private void clearLogs_Click(object sender, EventArgs e)
     {
         richtxt1.Clear();
@@ -1843,6 +1868,54 @@ public partial class Form3 : CustomForm
     {
         panel2.Enabled = false;
         panel2.Visible = false;
+    }
+
+    private void check_login_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void check_loginfail_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void check_logout_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void check_newreg_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void check_encrypt_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void check_decrypt_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void check_changedpass_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void check_accdel_CheckedChanged(object sender, EventArgs e)
+    {
+        refreshLogs();
+    }
+
+    private void btn_showlogs_Click(object sender, EventArgs e)
+    {
+        List<string> logs = new List<string>();
+        getLogs(logs);
+        string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
+        richtxt1.Text = allLogs;
     }
 }
 

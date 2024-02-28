@@ -30,7 +30,7 @@ CREATE TABLE `login_logs` (
   PRIMARY KEY (`log_Id`),
   KEY `fk_login_logs_users1_idx` (`users_User_id`),
   CONSTRAINT `fk_login_logs_users1` FOREIGN KEY (`users_User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `login_logs` (
 
 LOCK TABLES `login_logs` WRITE;
 /*!40000 ALTER TABLE `login_logs` DISABLE KEYS */;
-INSERT INTO `login_logs` VALUES (1,1,'2024-02-22 18:53:33','Log out'),(2,1,'2024-02-25 17:22:24','Logged in'),(3,1,'2024-02-25 17:22:54','File encrypted -> C:\\Users\\robot\\Desktop\\12d.jpg'),(4,1,'2024-02-25 17:23:47','File decrypted -> C:\\Users\\robot\\Desktop\\12d.filesaver_14'),(5,1,'2024-02-25 17:26:41','File encrypted -> C:\\Users\\robot\\Desktop\\ku4e2.jpg'),(6,1,'2024-02-25 17:26:45','File decrypted -> C:\\Users\\robot\\Desktop\\ku4e2.filesaver_15'),(7,1,'2024-02-25 17:30:07','File encrypted -> C:\\Users\\robot\\Desktop\\real - Copy.png'),(8,1,'2024-02-25 17:30:12','File decrypted -> C:\\Users\\robot\\Desktop\\real - Copy.filesaver_16'),(9,1,'2024-02-25 17:34:08','Log out'),(10,1,'2024-02-25 19:30:09','Logged in'),(11,1,'2024-02-25 19:33:52','Logged in'),(12,1,'2024-02-25 19:36:00','Logged in'),(13,1,'2024-02-25 19:36:08','File encrypted -> C:\\Users\\robot\\Desktop\\real - Copy.png'),(14,1,'2024-02-25 20:13:07','Logged in'),(15,1,'2024-02-25 20:59:43','Logged in'),(16,1,'2024-02-25 21:03:51','Logged in'),(17,1,'2024-02-25 21:04:00','File encrypted -> C:\\Users\\robot\\Desktop\\da.txt'),(18,1,'2024-02-25 21:04:13','File decrypted -> C:\\Users\\robot\\Desktop\\da.filesaver_24'),(19,1,'2024-02-26 18:22:06','Logged in'),(20,1,'2024-02-26 18:22:18','File encrypted -> C:\\Users\\robot\\Desktop\\test.jpg'),(21,1,'2024-02-26 18:23:19','File decrypted -> C:\\Users\\robot\\Desktop\\test.filesaver_25'),(22,1,'2024-02-26 18:24:03','Log out');
+INSERT INTO `login_logs` VALUES (1,1,'2024-02-27 17:39:14','Log out'),(2,1,'2024-02-27 18:40:44','Logged in'),(3,4,'2024-02-27 18:40:52','Account deleted'),(4,1,'2024-02-27 18:46:16','Logged in'),(5,1,'2024-02-27 18:49:51','Logged in'),(6,1,'2024-02-27 18:50:02','Log out');
 /*!40000 ALTER TABLE `login_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-26 18:24:25
+-- Dump completed on 2024-02-28  6:49:26
