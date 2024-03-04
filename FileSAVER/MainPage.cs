@@ -28,24 +28,14 @@ using System.Text.RegularExpressions;
 using System.IO;
 
 
-public partial class Form3 : CustomForm
+public partial class MainPage : CustomForm
 {
 
 
     //Setting the window to take up the entire screen 
-    public Form3()
+    public MainPage()
     {
         InitializeComponent();
-        this.WindowState = FormWindowState.Maximized;
-        panel1.Enabled = false;
-        panel1.Visible = false;
-        panel2.Enabled = false;
-        panel2.Visible = false;
-        panel3.Enabled = false;
-        panel3.Visible = false;
-        panel4.Enabled = false;
-        panel4.Visible = false;
-
     }
 
     /*
@@ -268,82 +258,9 @@ public partial class Form3 : CustomForm
 
     }
 
-    //Update the new user data for the user's account for panel1
-    private bool updateUserDataPanel1(string lastUsername)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
 
-        string newUsername = txt_username.Text;
-        string newEmail = txt_email.Text;
-        string newAge = txt_age.Text;
-        int newDeletedValue = 0;
-        string query = "UPDATE users SET username=@NewUsername, email = @NewEmail, age = @NewAge, deleted = @NewDeleted WHERE username = @Username;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@NewUsername", newUsername);
-        cmd.Parameters.AddWithValue("@NewEmail", newEmail);
-        cmd.Parameters.AddWithValue("@NewAge", newAge);
-        cmd.Parameters.AddWithValue("@NewDeleted", newDeletedValue);
-        cmd.Parameters.AddWithValue("@Username", lastUsername);
 
-        int rowsAffected = cmd.ExecuteNonQuery();
-        if (rowsAffected > 0)
-        {
-            Console.WriteLine("Insert successful");
-            panel1.Visible = false;
-            panel1.Visible = true;
 
-            getCurrentlyLoggedUser().username = newUsername;
-            CurrentConnection.Close();
-            return true;
-
-        }
-        else
-        {
-            Console.WriteLine("Insert failed");
-            CurrentConnection.Close();
-            return false;
-        }
-
-    }
-
-    //Update the new user data for the user's account for panel2
-    private bool updateUserDataPanel3(string lastUsername)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-
-        string newUsername = txtUsername.Text;
-        string newEmail = txtEmail.Text;
-        string newAge = txtAge.Text;
-        int newDeletedValue = 0;
-        string query = "UPDATE users SET username=@NewUsername, email = @NewEmail, age = @NewAge, deleted = @NewDeleted WHERE username = @Username;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@NewUsername", newUsername);
-        cmd.Parameters.AddWithValue("@NewEmail", newEmail);
-        cmd.Parameters.AddWithValue("@NewAge", newAge);
-        cmd.Parameters.AddWithValue("@NewDeleted", newDeletedValue);
-        cmd.Parameters.AddWithValue("@Username", lastUsername);
-
-        int rowsAffected = cmd.ExecuteNonQuery();
-        if (rowsAffected > 0)
-        {
-            Console.WriteLine("Insert successful");
-
-            CurrentConnection.Close();
-            return true;
-
-        }
-        else
-        {
-            Console.WriteLine("Insert failed");
-            CurrentConnection.Close();
-            return false;
-        }
-
-    }
 
     //Method for checking if the user is admin
     private bool checkIfUserIsAdmin(int userId)
@@ -475,7 +392,7 @@ public partial class Form3 : CustomForm
 
 
         Dispose();
-        Form1 form1 = new Form1();
+        Login form1 = new Login();
         form1.Show();
 
         //Making a log that the user has logged out of his account
@@ -731,6 +648,14 @@ public partial class Form3 : CustomForm
         }
     }
 
+    static void WaitRandomTime(Random random, int minMilliseconds, int maxMilliseconds)
+    {
+        int randomMilliseconds = random.Next(minMilliseconds, maxMilliseconds + 1);
+        Console.WriteLine($"Waiting for {randomMilliseconds} milliseconds...");
+        System.Threading.Thread.Sleep(randomMilliseconds);
+    }
+
+
     //1st part of my encryption algorithm -> shuffle the file with the key 
     private void firstStepOfEncryption(List<string> key, List<string> file)
     {
@@ -740,6 +665,9 @@ public partial class Form3 : CustomForm
             if (key == null || key.Count == 0)
                 return;
 
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
+
             string lastElement = key[key.Count - 1];
             key.RemoveAt(key.Count - 1);
             key.Insert(0, lastElement);
@@ -747,6 +675,8 @@ public partial class Form3 : CustomForm
         //Then the rotated password is added to the file content
         for (int i = 0; i < key.Count; i++)
         {
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
             file.Add(key[i]);
         }
 
@@ -762,6 +692,8 @@ public partial class Form3 : CustomForm
         {
             string a = file[i - 2];
             file[i - 2] = file[i];
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
             file[i] = a;
         }
 
@@ -771,6 +703,7 @@ public partial class Form3 : CustomForm
 
         for (int i = 1; i < file.Count; i += 3)
         {
+
             if (i + 3 >= file.Count) //if i + 3 doesn't exist we break
             {
                 break;
@@ -778,6 +711,8 @@ public partial class Form3 : CustomForm
             string element = file[i + 3];
             file[i + 3] = file[i];
             file[i] = element;
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
         }
     }
 
@@ -801,7 +736,8 @@ public partial class Form3 : CustomForm
             int sumFirstHex = firstValueFromFirstNumber + secondValueFromFirstNumber;//for example if the first hex is 16 sum = 1 + 6 = 7
             int sumSecondHex = firstValueFromNextNumber + secondValueFromNextNumber;//for example if the second hex is 13 sum = 1 + 3 = 4
             int sum = sumFirstHex + sumSecondHex;//Makes the sum of the sums of the hex symbols - > 7 + 4 = 11
-
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
             //If the sum is even we change the symbols from the hex -> we change frist symbol from the first hex with the second symbol from the second hex
             //like this "16" "13" - > "36" "11"
             if (sum % 2 == 0)
@@ -831,6 +767,8 @@ public partial class Form3 : CustomForm
     {
         for (int i = 0; i < file.Count; i += 2)
         {
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
             //If file.Count is odd the last element can't get replaced because is alone, so it breaks
             if (i + 1 >= file.Count) break;
             char[] hex_value = file[i].ToCharArray();
@@ -856,6 +794,8 @@ public partial class Form3 : CustomForm
         if (file.Count % 2 != 0)
         {
             string firstEl = file[0];
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
             file[0] = file[file.Count - 1];
             file[file.Count - 1] = firstEl;
         }
@@ -874,7 +814,8 @@ public partial class Form3 : CustomForm
             file[0] = file[file.Count - 1];
             file[file.Count - 1] = firstEl;
         }
-
+        Random random = new Random();
+        WaitRandomTime(random, 1000, 3000);
         //First reverse the shuffle make the elements in the right order
         for (int i = 0; i < file.Count; i += 2)
         {
@@ -908,7 +849,8 @@ public partial class Form3 : CustomForm
             char[] rightNumberValues = file[i].ToCharArray();
             int firstValueFromRightNumber = int.Parse(rightNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
             int secondValueFromRightNumber = int.Parse(rightNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
-
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000);
             //Takes the hex number before the last hex number for example "13" and separate the symbols -> "1" and "3" and converts them to int
             char[] leftNumberValues = file[i - 1].ToCharArray();
             int firstValueFromLeftNumber = int.Parse(leftNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
@@ -953,7 +895,8 @@ public partial class Form3 : CustomForm
         {
             index = i;
         }
-
+        Random random = new Random();
+        WaitRandomTime(random, 1000, 3000);
         for (int i = index; i >= 0; i -= 3)
         {
             if (i == 1 || i == 0 || i == 2)
@@ -980,7 +923,8 @@ public partial class Form3 : CustomForm
         int br = 0;
         for (int i = file.Count - 1; i >= 0; i--)
         {
-            if (br < key.Count)
+            Random random = new Random();
+            WaitRandomTime(random, 1000, 3000); if (br < key.Count)
             {
                 file.RemoveAt(i);
                 br++;
@@ -1040,210 +984,13 @@ public partial class Form3 : CustomForm
     //When user select the option - "my account"
     private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        panel1.Visible = true;
-        panel1.Enabled = true;
-        string lastloguser = getCurrentlyLoggedUser().username;
-
-
-        if (!string.IsNullOrEmpty(lastloguser))
-        {
-            UserData userdata = GetUserData(getUserIdByUsername(lastloguser));
-
-            txt_username.Text = userdata.Username;
-            txt_email.Text = userdata.Email;
-            txt_age.Text = userdata.Age.ToString();
-            lbl_acc_type.Text = userdata.Type;
-        }
+        MyAccount m = new MyAccount();
+        Hide();
+        m.Visible = true;
 
     }
 
-    //Clear button
-    private void button3_Click(object sender, EventArgs e)
-    {
-        txt_username.Text = null;
-        txt_email.Text = null;
-        txt_age.Text = null;
-        lbl_acc_type.Text = null;
-    }
 
-    //Exit button
-    private void button4_Click(object sender, EventArgs e)
-    {
-        panel1.Visible = false;
-        panel1.Enabled = false;
-    }
-
-    //SAVE CHANGES
-    private void button2_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            string lastUsername = getCurrentlyLoggedUser().username;
-
-            if (!string.IsNullOrEmpty(lastUsername))
-            {
-                UserData userdata = GetUserData(getUserIdByUsername(lastUsername));
-
-                string username = userdata.Username;
-                string email = userdata.Email;
-                string age = userdata.Age.ToString();
-                string type = userdata.Type;
-
-                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(age) || string.IsNullOrEmpty(type))
-                {
-                    MessageBox.Show("Some values are null!");
-                    return;
-                }
-
-                if (txt_username.Text == username && txt_email.Text == email && txt_age.Text == age)
-                {
-                    MessageBox.Show("No changes has been applied! If you want to save new changes you need to edit some value!");
-                    return;
-                }
-                if (txt_username.Text != username && txt_email.Text == email && txt_age.Text == age)
-                {
-                    if (checkForExistingUsername(txt_username.Text))
-                    {
-                        MessageBox.Show("This username you choose has already been registered");
-                        return;
-                    }
-                    else
-                    {
-                        bool isUpdated = updateUserDataPanel1(lastUsername);
-                        if (isUpdated == false)
-                        {
-                            MessageBox.Show("Error occured, new user data wasn't inserted!");
-                            return;
-                        }
-                        else
-                        {
-                            MessageBox.Show("User edited successfully!");
-                            return;
-                        }
-                    }
-
-                }
-                else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
-                {
-                    if (checkForExistingEmail(txt_email.Text))
-                    {
-                        MessageBox.Show("This email you choose has already been registered");
-                        return;
-                    }
-                    else
-                    {
-                        bool isUpdated = updateUserDataPanel1(lastUsername);
-                        if (isUpdated == false)
-                        {
-                            MessageBox.Show("Error occured, new user data wasn't inserted!");
-                            return;
-                        }
-                        else
-                        {
-                            MessageBox.Show("User edited successfully!");
-                            return;
-                        }
-                    }
-                }
-                else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
-                {
-                    if (Convert.ToInt32(txt_age.Text) < 18)
-                    {
-                        MessageBox.Show("The age must be 18 or over!");
-                        return;
-                    }
-                    bool isUpdated = updateUserDataPanel1(lastUsername);
-                    if (isUpdated == false)
-                    {
-                        MessageBox.Show("Error occured, new user data wasn't inserted!");
-                        return;
-                    }
-                    else
-                    {
-                        MessageBox.Show("User edited successfully!");
-                        return;
-                    }
-                }
-                else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text == age)
-                {
-                    bool isUpdated = updateUserDataPanel1(lastUsername);
-                    if (isUpdated == false)
-                    {
-                        MessageBox.Show("Error occured, new user data wasn't inserted!");
-                        return;
-                    }
-                    else
-                    {
-                        MessageBox.Show("User edited successfully!");
-                        return;
-                    }
-                }
-                else if (txt_username.Text != username && txt_email.Text == email && txt_age.Text != age)
-                {
-                    if (Convert.ToInt32(txt_age.Text) < 18)
-                    {
-                        MessageBox.Show("The age must be 18 or over!");
-                        return;
-                    }
-                    bool isUpdated = updateUserDataPanel1(lastUsername);
-                    if (isUpdated == false)
-                    {
-                        MessageBox.Show("Error occured, new user data wasn't inserted!");
-                        return;
-                    }
-                    else
-                    {
-                        MessageBox.Show("User edited successfully!");
-                        return;
-                    }
-                }
-                else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text != age)
-                {
-                    if (Convert.ToInt32(txt_age.Text) < 18)
-                    {
-                        MessageBox.Show("The age must be 18 or over!");
-                        return;
-                    }
-                    bool isUpdated = updateUserDataPanel1(lastUsername);
-                    if (isUpdated == false)
-                    {
-                        MessageBox.Show("Error occured, new user data wasn't inserted!");
-                        return;
-                    }
-                    else
-                    {
-                        MessageBox.Show("User edited successfully!");
-                        return;
-                    }
-                }
-                else if (txt_username.Text != username && txt_email.Text != email && txt_age.Text != age)
-                {
-                    if (Convert.ToInt32(txt_age.Text) < 18)
-                    {
-                        MessageBox.Show("The age must be 18 or over!");
-                        return;
-                    }
-                    bool isUpdated = updateUserDataPanel1(lastUsername);
-                    if (isUpdated == false)
-                    {
-                        MessageBox.Show("Error occured, new user data wasn't inserted!");
-                        return;
-                    }
-                    else
-                    {
-                        MessageBox.Show("User edited successfully!");
-                        return;
-                    }
-                }
-
-            }
-        }
-        catch (MySqlException e1)
-        {
-            MessageBox.Show("Error: " + e1.Message);
-        }
-
-    }
 
     private void Logout_clicked(object sender, EventArgs e)
     {
@@ -1367,31 +1114,6 @@ public partial class Form3 : CustomForm
 
     }
 
-    private void adminToolsToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-
-        string lastUsername = getCurrentlyLoggedUser().username;
-        int userId = getUserIdByUsername(lastUsername);
-        if (checkIfUserIsAdmin(userId))
-        {
-            panel2.Enabled = true;
-            panel2.Visible = true;
-            List<string> logs = new List<string>();
-            getLogs(logs);
-            string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
-            richtxt1.Text = allLogs;
-            writeToComboAllUsernames(combo1);
-            writeToComboAllUsernames(combo2);
-
-
-        }
-        else
-        {
-            MessageBox.Show("You are not admin user, so you can't use admin tools!");
-            return;
-        }
-
-    }
 
     private void button6_Click(object sender, EventArgs e)
     {
@@ -1405,6 +1127,7 @@ public partial class Form3 : CustomForm
         combo1.Items.Clear();
         writeToComboAllUsernames(combo1);
     }
+
 
     private void combo1_SelectedIndexChanged(object sender, EventArgs e)
     {
@@ -1422,9 +1145,7 @@ public partial class Form3 : CustomForm
         txtUsername.Text = username;
         txtEmail.Text = email;
         txtAge.Text = age;
-        lbl_acc_type.Text = type;
-        panel3.Visible = true;
-        panel3.Enabled = true;
+        //lbl_acc_type.Text = type;
 
     }
 

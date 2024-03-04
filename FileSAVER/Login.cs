@@ -10,9 +10,9 @@ using Microsoft.VisualBasic;
 using System.Text.RegularExpressions;
 using System;
 
-public partial class Form1 : CustomForm
+public partial class Login : CustomForm
 {
-    public Form1()
+    public Login()
     {
         InitializeComponent();
     }
@@ -236,7 +236,7 @@ public partial class Form1 : CustomForm
                         return;
                     }
 
-                    Form3 form3 = new Form3();
+                    MainPage form3 = new MainPage();
                     CustomUser currentUser = new CustomUser(UsernameToCheck);
 
 
@@ -272,7 +272,7 @@ public partial class Form1 : CustomForm
     //Register link
     private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        Form2 form2 = new Form2();
+        Register form2 = new Register();
         Hide();
         form2.Show();
 

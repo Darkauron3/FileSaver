@@ -17,7 +17,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Data.SqlClient;
 
-public partial class Form2 : CustomForm
+public partial class Register : CustomForm
 {
 
     //Method for inserting query to table users
@@ -300,7 +300,7 @@ public partial class Form2 : CustomForm
     }
 
 
-    public Form2()
+    public Register()
     {
         InitializeComponent();
     }
@@ -314,7 +314,7 @@ public partial class Form2 : CustomForm
     private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
         Close();
-        Form1 formm1 = new Form1();
+        Login formm1 = new Login();
         formm1.Show();
 
     }
@@ -434,7 +434,7 @@ public partial class Form2 : CustomForm
 
             }
             Close();
-            Form1 formm1 = new Form1();
+            Login formm1 = new Login();
             formm1.Show();
 
         }

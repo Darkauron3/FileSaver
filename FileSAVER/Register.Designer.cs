@@ -2,7 +2,7 @@
 
 namespace FileSAVER
 {
-    partial class Form2
+    partial class Register
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace FileSAVER
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Register));
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
