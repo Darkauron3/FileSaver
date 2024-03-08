@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AdminTools));
             nav_panel = new Panel();
+            btn_mainpage = new Button();
             btn_logout = new Button();
             btn_admintools = new Button();
             btn_acc = new Button();
@@ -75,6 +76,7 @@
             // nav_panel
             // 
             nav_panel.BackColor = Color.FromArgb(62, 120, 138);
+            nav_panel.Controls.Add(btn_mainpage);
             nav_panel.Controls.Add(btn_logout);
             nav_panel.Controls.Add(btn_admintools);
             nav_panel.Controls.Add(btn_acc);
@@ -85,6 +87,22 @@
             nav_panel.Size = new Size(225, 797);
             nav_panel.TabIndex = 12;
             // 
+            // btn_mainpage
+            // 
+            btn_mainpage.FlatAppearance.BorderSize = 0;
+            btn_mainpage.FlatStyle = FlatStyle.Flat;
+            btn_mainpage.ForeColor = Color.White;
+            btn_mainpage.Image = (Image)resources.GetObject("btn_mainpage.Image");
+            btn_mainpage.ImageAlign = ContentAlignment.TopCenter;
+            btn_mainpage.Location = new Point(-3, 123);
+            btn_mainpage.Name = "btn_mainpage";
+            btn_mainpage.Size = new Size(225, 108);
+            btn_mainpage.TabIndex = 5;
+            btn_mainpage.Text = "Encrypt/Decrypt File";
+            btn_mainpage.TextAlign = ContentAlignment.BottomCenter;
+            btn_mainpage.UseVisualStyleBackColor = true;
+            btn_mainpage.Click += btn_mainpage_Click;
+            // 
             // btn_logout
             // 
             btn_logout.FlatAppearance.BorderSize = 0;
@@ -92,28 +110,30 @@
             btn_logout.ForeColor = Color.White;
             btn_logout.Image = (Image)resources.GetObject("btn_logout.Image");
             btn_logout.ImageAlign = ContentAlignment.TopCenter;
-            btn_logout.Location = new Point(3, 601);
+            btn_logout.Location = new Point(0, 685);
             btn_logout.Name = "btn_logout";
             btn_logout.Size = new Size(225, 108);
             btn_logout.TabIndex = 3;
             btn_logout.Text = "Log out";
             btn_logout.TextAlign = ContentAlignment.BottomCenter;
             btn_logout.UseVisualStyleBackColor = true;
+            btn_logout.Click += btn_logout_Click;
             // 
             // btn_admintools
             // 
+            btn_admintools.BackColor = Color.DarkOrange;
             btn_admintools.FlatAppearance.BorderSize = 0;
             btn_admintools.FlatStyle = FlatStyle.Flat;
             btn_admintools.ForeColor = Color.White;
             btn_admintools.Image = (Image)resources.GetObject("btn_admintools.Image");
             btn_admintools.ImageAlign = ContentAlignment.TopCenter;
-            btn_admintools.Location = new Point(0, 383);
+            btn_admintools.Location = new Point(3, 498);
             btn_admintools.Name = "btn_admintools";
             btn_admintools.Size = new Size(225, 108);
             btn_admintools.TabIndex = 2;
             btn_admintools.Text = "Admin tools";
             btn_admintools.TextAlign = ContentAlignment.BottomCenter;
-            btn_admintools.UseVisualStyleBackColor = true;
+            btn_admintools.UseVisualStyleBackColor = false;
             // 
             // btn_acc
             // 
@@ -122,13 +142,14 @@
             btn_acc.ForeColor = Color.White;
             btn_acc.Image = (Image)resources.GetObject("btn_acc.Image");
             btn_acc.ImageAlign = ContentAlignment.TopCenter;
-            btn_acc.Location = new Point(0, 173);
+            btn_acc.Location = new Point(3, 311);
             btn_acc.Name = "btn_acc";
             btn_acc.Size = new Size(225, 108);
             btn_acc.TabIndex = 1;
             btn_acc.Text = "My Account";
             btn_acc.TextAlign = ContentAlignment.BottomCenter;
             btn_acc.UseVisualStyleBackColor = true;
+            btn_acc.Click += btn_acc_Click;
             // 
             // panel1
             // 
@@ -188,6 +209,7 @@
             btn_showlogs.Text = "Show all logs";
             btn_showlogs.TextAlign = ContentAlignment.MiddleRight;
             btn_showlogs.UseVisualStyleBackColor = false;
+            btn_showlogs.Click += btn_showlogs_Click;
             // 
             // check_loginfail
             // 
@@ -200,6 +222,7 @@
             check_loginfail.TabIndex = 39;
             check_loginfail.Text = "Failed to Log in";
             check_loginfail.UseVisualStyleBackColor = true;
+            check_loginfail.CheckedChanged += check_loginfail_CheckedChanged;
             // 
             // check_accdel
             // 
@@ -212,6 +235,7 @@
             check_accdel.TabIndex = 38;
             check_accdel.Text = "Account deleted";
             check_accdel.UseVisualStyleBackColor = true;
+            check_accdel.CheckedChanged += check_accdel_CheckedChanged;
             // 
             // check_changedpass
             // 
@@ -224,6 +248,7 @@
             check_changedpass.TabIndex = 36;
             check_changedpass.Text = "Changed password";
             check_changedpass.UseVisualStyleBackColor = true;
+            check_changedpass.CheckedChanged += check_changedpass_CheckedChanged;
             // 
             // check_decrypt
             // 
@@ -236,6 +261,7 @@
             check_decrypt.TabIndex = 35;
             check_decrypt.Text = "Decrypted files";
             check_decrypt.UseVisualStyleBackColor = true;
+            check_decrypt.CheckedChanged += check_decrypt_CheckedChanged;
             // 
             // check_encrypt
             // 
@@ -248,6 +274,7 @@
             check_encrypt.TabIndex = 34;
             check_encrypt.Text = "Encrypted files";
             check_encrypt.UseVisualStyleBackColor = true;
+            check_encrypt.CheckedChanged += check_encrypt_CheckedChanged;
             // 
             // check_newreg
             // 
@@ -260,6 +287,7 @@
             check_newreg.TabIndex = 33;
             check_newreg.Text = "registration";
             check_newreg.UseVisualStyleBackColor = true;
+            check_newreg.CheckedChanged += check_newreg_CheckedChanged;
             // 
             // check_logout
             // 
@@ -272,6 +300,7 @@
             check_logout.TabIndex = 32;
             check_logout.Text = "Log out";
             check_logout.UseVisualStyleBackColor = true;
+            check_logout.CheckedChanged += check_logout_CheckedChanged;
             // 
             // check_login
             // 
@@ -284,6 +313,7 @@
             check_login.TabIndex = 31;
             check_login.Text = "Log in";
             check_login.UseVisualStyleBackColor = true;
+            check_login.CheckedChanged += check_login_CheckedChanged;
             // 
             // clearLogs
             // 
@@ -299,6 +329,7 @@
             clearLogs.Text = "Clear all logs";
             clearLogs.TextAlign = ContentAlignment.MiddleRight;
             clearLogs.UseVisualStyleBackColor = false;
+            clearLogs.Click += clearLogs_Click;
             // 
             // combo1
             // 
@@ -308,6 +339,7 @@
             combo1.Name = "combo1";
             combo1.Size = new Size(223, 38);
             combo1.TabIndex = 41;
+            combo1.SelectedIndexChanged += combo1_SelectedIndexChanged;
             // 
             // comboBox1
             // 
@@ -317,12 +349,13 @@
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(221, 38);
             comboBox1.TabIndex = 21;
+            comboBox1.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
             // 
             // label9
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
-            label9.ForeColor = Color.Olive;
+            label9.ForeColor = Color.DarkOrange;
             label9.Location = new Point(344, 77);
             label9.Name = "label9";
             label9.Size = new Size(208, 32);
@@ -382,7 +415,7 @@
             lbl_realtype.AutoSize = true;
             lbl_realtype.BackColor = SystemColors.ActiveCaptionText;
             lbl_realtype.Font = new Font("Times New Roman", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
-            lbl_realtype.ForeColor = Color.Olive;
+            lbl_realtype.ForeColor = Color.DarkOrange;
             lbl_realtype.Location = new Point(426, 401);
             lbl_realtype.Name = "lbl_realtype";
             lbl_realtype.Size = new Size(69, 31);
@@ -418,6 +451,7 @@
             btn_save_changes.Text = "Save changes";
             btn_save_changes.TextAlign = ContentAlignment.MiddleRight;
             btn_save_changes.UseVisualStyleBackColor = false;
+            btn_save_changes.Click += btn_save_changes_Click;
             // 
             // txtAge
             // 
@@ -459,7 +493,7 @@
             // 
             label10.AutoSize = true;
             label10.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
-            label10.ForeColor = Color.Olive;
+            label10.ForeColor = Color.DarkOrange;
             label10.Location = new Point(1238, 153);
             label10.Name = "label10";
             label10.Size = new Size(137, 32);
@@ -482,7 +516,7 @@
             // 
             label2.AutoSize = true;
             label2.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
-            label2.ForeColor = Color.Olive;
+            label2.ForeColor = Color.DarkOrange;
             label2.Location = new Point(801, 77);
             label2.Name = "label2";
             label2.Size = new Size(416, 32);
@@ -493,7 +527,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
-            label4.ForeColor = Color.Olive;
+            label4.ForeColor = Color.DarkOrange;
             label4.Location = new Point(361, 601);
             label4.Name = "label4";
             label4.Size = new Size(213, 32);
@@ -524,7 +558,7 @@
             label14.TabIndex = 80;
             label14.Text = "Select user:";
             // 
-            // Form6
+            // AdminTools
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
@@ -563,9 +597,12 @@
             Controls.Add(richtxt1);
             Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "Form6";
+            Name = "AdminTools";
             Text = "Form6";
             Load += Form6_Load;
+            MouseDown += AdminTools_MouseDown;
+            MouseMove += AdminTools_MouseMove;
+            MouseUp += AdminTools_MouseUp;
             nav_panel.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -606,7 +643,7 @@
         private Label label8;
         private Label lbl_realtype;
         private Label label12;
-        private Button button2;
+        private Button btn_mainpage;
         private TextBox txtAge;
         private TextBox txtUsername;
         private TextBox txtEmail;

@@ -12,10 +12,41 @@ using System;
 
 public partial class Login : CustomForm
 {
+    
     public Login()
     {
         InitializeComponent();
     }
+
+    private bool isDragging = false;
+    private int mouseX, mouseY;
+    private void Login_MouseDown(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            isDragging = true;
+            mouseX = e.X;
+            mouseY = e.Y;
+        }
+    }
+
+    private void Login_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (isDragging)
+        {
+            this.Left += e.X - mouseX;
+            this.Top += e.Y - mouseY;
+        }
+    }
+
+    private void Login_MouseUp(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            isDragging = false;
+        }
+    }
+
 
 
     //Method for entering the data to the user's logs
@@ -29,13 +60,14 @@ public partial class Login : CustomForm
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@User_id", User_id);
         cmd.Parameters.AddWithValue("@Time", DateTime.Now);
-        cmd.Parameters.AddWithValue("@Action", action); 
+        cmd.Parameters.AddWithValue("@Action", action);
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -155,7 +187,7 @@ public partial class Login : CustomForm
         try
         {
             smtpClient.Send(mailMessage);
-            
+
         }
         catch (Exception ex)
         {
@@ -222,14 +254,14 @@ public partial class Login : CustomForm
             string UsernameToCheck = txt1.Text;
             string PasswordToCheck = txt2.Text;
             int userId = getUserIdByUsername(UsernameToCheck);
-            string storedHash = getPasswordByUserId(userId);     
+            string storedHash = getPasswordByUserId(userId);
 
             bool isUsernameValid = checkForExistingUsername(UsernameToCheck);
             if (isUsernameValid)
             {
                 if (BCrypt.Verify(PasswordToCheck, storedHash))
                 {
-                    bool isitlogged = CreateLog(userId,"Logged in");
+                    bool isitlogged = CreateLog(userId, "Logged in");
                     if (isitlogged == false)
                     {
                         MessageBox.Show("Failed to insert data!");
@@ -242,8 +274,10 @@ public partial class Login : CustomForm
 
                     setCurrentlyLoggedUser(currentUser);
                     Hide();
+                    form3.StartPosition = FormStartPosition.CenterScreen;
                     form3.Show();
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Wrong username or password!");
 
@@ -256,28 +290,23 @@ public partial class Login : CustomForm
 
                     return;
                 }
-            } else
+            }
+            else
             {
                 MessageBox.Show("Wrong username or password!");
                 return;
             }
 
 
-        } catch (MySqlException ex)
+        }
+        catch (MySqlException ex)
         {
             MessageBox.Show(ex.ToString());
         }
     }
 
-    //Register link
-    private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-    {
-        Register form2 = new Register();
-        Hide();
-        form2.Show();
 
 
-    }
 
     private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
@@ -292,18 +321,31 @@ public partial class Login : CustomForm
         }
 
         int userid = getUserIdByUsername(username);
-        if (userid == 0) {
+        if (userid == 0)
+        {
             MessageBox.Show("There isn't a user with that username!");
             return;
         }
         string email = getEmailByUserId(userid);
-        
+
 
         string new_pass = GenerateRandomPassword();
         SendEmail(email, new_pass, username);
         changeUserPassByUserId(userid, new_pass);
 
 
+    }
+
+    private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        Register form2 = new Register();
+        Hide();
+        form2.Show();
+    }
+
+    private void button2_Click(object sender, EventArgs e)
+    {
+        Application.Exit();
     }
 }
 

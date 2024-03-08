@@ -26,10 +26,12 @@
             Encryption_button = new Button();
             label7 = new Label();
             nav_panel = new Panel();
+            btn_mainpage = new Button();
             btn_logout = new Button();
             btn_admintools = new Button();
             btn_acc = new Button();
             panel1 = new Panel();
+            label1 = new Label();
             pictureBox1 = new PictureBox();
             bot_panel = new Panel();
             label11 = new Label();
@@ -37,7 +39,7 @@
             label10 = new Label();
             btn_decrypt = new Button();
             pictureBox2 = new PictureBox();
-            txt_decryption = new MaskedTextBox();
+            txt_key_decryption = new MaskedTextBox();
             label6 = new Label();
             label8 = new Label();
             label2 = new Label();
@@ -46,7 +48,6 @@
             label4 = new Label();
             label5 = new Label();
             txt_key_encryption = new MaskedTextBox();
-            label1 = new Label();
             nav_panel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -58,13 +59,12 @@
             // button1
             // 
             button1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button1.Location = new Point(1123, 670);
+            button1.Location = new Point(1306, 710);
             button1.Name = "button1";
             button1.Size = new Size(151, 75);
             button1.TabIndex = 1;
             button1.Text = "Log out";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += Logout_clicked;
             // 
             // Encryption_button
             // 
@@ -85,6 +85,7 @@
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label7.ForeColor = Color.DarkOrange;
             label7.Location = new Point(321, 133);
             label7.Name = "label7";
             label7.Size = new Size(245, 66);
@@ -94,6 +95,7 @@
             // nav_panel
             // 
             nav_panel.BackColor = Color.FromArgb(62, 120, 138);
+            nav_panel.Controls.Add(btn_mainpage);
             nav_panel.Controls.Add(btn_logout);
             nav_panel.Controls.Add(btn_admintools);
             nav_panel.Controls.Add(btn_acc);
@@ -101,8 +103,24 @@
             nav_panel.Dock = DockStyle.Left;
             nav_panel.Location = new Point(0, 0);
             nav_panel.Name = "nav_panel";
-            nav_panel.Size = new Size(225, 757);
+            nav_panel.Size = new Size(225, 797);
             nav_panel.TabIndex = 11;
+            // 
+            // btn_mainpage
+            // 
+            btn_mainpage.BackColor = Color.DarkOrange;
+            btn_mainpage.FlatAppearance.BorderSize = 0;
+            btn_mainpage.FlatStyle = FlatStyle.Flat;
+            btn_mainpage.ForeColor = Color.White;
+            btn_mainpage.Image = (Image)resources.GetObject("btn_mainpage.Image");
+            btn_mainpage.ImageAlign = ContentAlignment.TopCenter;
+            btn_mainpage.Location = new Point(-3, 106);
+            btn_mainpage.Name = "btn_mainpage";
+            btn_mainpage.Size = new Size(228, 123);
+            btn_mainpage.TabIndex = 4;
+            btn_mainpage.Text = "Encrypt/Decrypt File";
+            btn_mainpage.TextAlign = ContentAlignment.BottomCenter;
+            btn_mainpage.UseVisualStyleBackColor = false;
             // 
             // btn_logout
             // 
@@ -111,13 +129,14 @@
             btn_logout.ForeColor = Color.White;
             btn_logout.Image = (Image)resources.GetObject("btn_logout.Image");
             btn_logout.ImageAlign = ContentAlignment.TopCenter;
-            btn_logout.Location = new Point(3, 601);
+            btn_logout.Location = new Point(3, 681);
             btn_logout.Name = "btn_logout";
-            btn_logout.Size = new Size(225, 108);
+            btn_logout.Size = new Size(225, 116);
             btn_logout.TabIndex = 3;
             btn_logout.Text = "Log out";
             btn_logout.TextAlign = ContentAlignment.BottomCenter;
             btn_logout.UseVisualStyleBackColor = true;
+            btn_logout.Click += btn_logout_Click;
             // 
             // btn_admintools
             // 
@@ -126,13 +145,14 @@
             btn_admintools.ForeColor = Color.White;
             btn_admintools.Image = (Image)resources.GetObject("btn_admintools.Image");
             btn_admintools.ImageAlign = ContentAlignment.TopCenter;
-            btn_admintools.Location = new Point(0, 383);
+            btn_admintools.Location = new Point(3, 473);
             btn_admintools.Name = "btn_admintools";
-            btn_admintools.Size = new Size(225, 108);
+            btn_admintools.Size = new Size(225, 129);
             btn_admintools.TabIndex = 2;
             btn_admintools.Text = "Admin tools";
             btn_admintools.TextAlign = ContentAlignment.BottomCenter;
             btn_admintools.UseVisualStyleBackColor = true;
+            btn_admintools.Click += btn_admintools_Click;
             // 
             // btn_acc
             // 
@@ -141,13 +161,14 @@
             btn_acc.ForeColor = Color.White;
             btn_acc.Image = (Image)resources.GetObject("btn_acc.Image");
             btn_acc.ImageAlign = ContentAlignment.TopCenter;
-            btn_acc.Location = new Point(0, 173);
+            btn_acc.Location = new Point(3, 282);
             btn_acc.Name = "btn_acc";
             btn_acc.Size = new Size(225, 108);
             btn_acc.TabIndex = 1;
             btn_acc.Text = "My Account";
             btn_acc.TextAlign = ContentAlignment.BottomCenter;
             btn_acc.UseVisualStyleBackColor = true;
+            btn_acc.Click += btn_acc_Click;
             // 
             // panel1
             // 
@@ -159,6 +180,18 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(225, 88);
             panel1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Font = new Font("Corbel", 11.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
+            label1.ForeColor = Color.Black;
+            label1.Location = new Point(0, 63);
+            label1.Name = "label1";
+            label1.Size = new Size(222, 18);
+            label1.TabIndex = 2;
+            label1.Text = "\"Where Security Meets Simplicity\"";
+            label1.TextAlign = ContentAlignment.BottomCenter;
             // 
             // pictureBox1
             // 
@@ -176,13 +209,13 @@
             bot_panel.Controls.Add(label10);
             bot_panel.Controls.Add(btn_decrypt);
             bot_panel.Controls.Add(pictureBox2);
-            bot_panel.Controls.Add(txt_decryption);
+            bot_panel.Controls.Add(txt_key_decryption);
             bot_panel.Controls.Add(label6);
             bot_panel.Controls.Add(label8);
             bot_panel.Dock = DockStyle.Bottom;
-            bot_panel.Location = new Point(225, 356);
+            bot_panel.Location = new Point(225, 396);
             bot_panel.Name = "bot_panel";
-            bot_panel.Size = new Size(1061, 401);
+            bot_panel.Size = new Size(1244, 401);
             bot_panel.TabIndex = 12;
             // 
             // label11
@@ -199,6 +232,7 @@
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label9.ForeColor = Color.DarkOrange;
             label9.Location = new Point(752, 130);
             label9.Name = "label9";
             label9.Size = new Size(249, 66);
@@ -226,9 +260,10 @@
             btn_decrypt.Name = "btn_decrypt";
             btn_decrypt.Size = new Size(281, 46);
             btn_decrypt.TabIndex = 20;
-            btn_decrypt.Text = "Browse File For Encryption";
+            btn_decrypt.Text = "Browse File For Decryption";
             btn_decrypt.TextAlign = ContentAlignment.MiddleRight;
             btn_decrypt.UseVisualStyleBackColor = false;
+            btn_decrypt.Click += btn_decrypt_Click;
             // 
             // pictureBox2
             // 
@@ -239,13 +274,13 @@
             pictureBox2.TabIndex = 20;
             pictureBox2.TabStop = false;
             // 
-            // txt_decryption
+            // txt_key_decryption
             // 
-            txt_decryption.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_decryption.Location = new Point(52, 230);
-            txt_decryption.Name = "txt_decryption";
-            txt_decryption.Size = new Size(318, 41);
-            txt_decryption.TabIndex = 20;
+            txt_key_decryption.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_key_decryption.Location = new Point(52, 230);
+            txt_key_decryption.Name = "txt_key_decryption";
+            txt_key_decryption.Size = new Size(318, 41);
+            txt_key_decryption.TabIndex = 20;
             // 
             // label6
             // 
@@ -262,6 +297,7 @@
             // 
             label8.AutoSize = true;
             label8.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label8.ForeColor = Color.DarkOrange;
             label8.Location = new Point(106, 130);
             label8.Name = "label8";
             label8.Size = new Size(245, 66);
@@ -313,6 +349,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            label5.ForeColor = Color.DarkOrange;
             label5.Location = new Point(980, 143);
             label5.Name = "label5";
             label5.Size = new Size(246, 66);
@@ -327,23 +364,11 @@
             txt_key_encryption.Size = new Size(318, 41);
             txt_key_encryption.TabIndex = 19;
             // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Corbel", 11.25F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point);
-            label1.ForeColor = Color.Black;
-            label1.Location = new Point(0, 63);
-            label1.Name = "label1";
-            label1.Size = new Size(222, 18);
-            label1.TabIndex = 2;
-            label1.Text = "\"Where Security Meets Simplicity\"";
-            label1.TextAlign = ContentAlignment.BottomCenter;
-            // 
-            // Form3
+            // MainPage
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
-            ClientSize = new Size(1286, 757);
+            ClientSize = new Size(1469, 797);
             Controls.Add(txt_key_encryption);
             Controls.Add(label5);
             Controls.Add(label4);
@@ -358,9 +383,11 @@
             Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
             ForeColor = Color.FromArgb(62, 120, 138);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "Form3";
+            Name = "MainPage";
             Text = "Form3";
-            FormClosed += Closebutton_clicked;
+            MouseDown += MainPage_MouseDown;
+            MouseMove += MainPage_MouseMove;
+            MouseUp += MainPage_MouseUp;
             nav_panel.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -392,12 +419,13 @@
         private Label label6;
         private Label label8;
         private MaskedTextBox txt_key_encryption;
-        private MaskedTextBox txt_decryption;
+        private MaskedTextBox txt_key_decryption;
         private Label label11;
         private Label label9;
         private Label label10;
         private Button btn_decrypt;
         private PictureBox pictureBox2;
         private Label label1;
+        private Button btn_mainpage;
     }
 }

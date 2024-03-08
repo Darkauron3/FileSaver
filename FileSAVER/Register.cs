@@ -20,6 +20,40 @@ using System.Data.SqlClient;
 public partial class Register : CustomForm
 {
 
+    public Register()
+    {
+        InitializeComponent();
+    }
+
+    private bool isDragging = false;
+    private int mouseX, mouseY;
+    private void Register_MouseDown(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            isDragging = true;
+            mouseX = e.X;
+            mouseY = e.Y;
+        }
+    }
+
+    private void Register_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (isDragging)
+        {
+            this.Left += e.X - mouseX;
+            this.Top += e.Y - mouseY;
+        }
+    }
+
+    private void Register_MouseUp(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            isDragging = false;
+        }
+    }
+
     //Method for inserting query to table users
     private bool InsertIntoUsers(string username, string email, int age, string type)
     {
@@ -34,7 +68,7 @@ public partial class Register : CustomForm
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             MySqlDataReader reader = cmd.ExecuteReader();
 
-            if(reader.HasRows)
+            if (reader.HasRows)
             {
                 // If there are deleted users, update the first one found with the new data
                 reader.Read();
@@ -212,7 +246,8 @@ public partial class Register : CustomForm
                     return false;
                 }
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             // Handle other exceptions
             Console.WriteLine("Error: " + ex.Message);
@@ -300,11 +335,6 @@ public partial class Register : CustomForm
     }
 
 
-    public Register()
-    {
-        InitializeComponent();
-    }
-
     private void Form2_FormClosed(object sender, FormClosedEventArgs e)
     {
         Dispose();
@@ -376,11 +406,11 @@ public partial class Register : CustomForm
                         MessageBox.Show("There is alreadey registered administrator!");
                         return;
                     }
-                    bool isItInsertedUsers = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "admin");                 
+                    bool isItInsertedUsers = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "admin");
                     string hashedPassword = BCrypt.HashPassword(txt_password.Text);
                     bool isItInsertedUserpasswords = InsertIntoUserspasswords(getUserIdByUsername(txt_username.Text), hashedPassword);
-                    
-                    if(isItInsertedUsers == false || isItInsertedUserpasswords == false)
+
+                    if (isItInsertedUsers == false || isItInsertedUserpasswords == false)
                     {
                         return;
                     }
@@ -410,7 +440,8 @@ public partial class Register : CustomForm
                     if (isItInsertedUsers == false || isItInsertedUserpasswords == false)
                     {
                         return;
-                    } else if(isItInsertedUsers && isItInsertedUserpasswords)
+                    }
+                    else if (isItInsertedUsers && isItInsertedUserpasswords)
                     {
                         MessageBox.Show("Data inserted successfuly!");
                         string username = txt_username.Text;

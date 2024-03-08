@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using System.Text;
 namespace FileSAVER;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
@@ -38,15 +37,35 @@ public partial class MainPage : CustomForm
         InitializeComponent();
     }
 
-    /*
-     * !!!!!!!! ----------------------------------------------------------------------------
-     * !!!!!!!
-     * !!!!!!                                   -!-
-     * !!!!!  ZA VRUSHTANE NA PANEL1 V DESIGNERA V PROPERTIES V LOCATION NAPISHI (986, 410)
-     * !!!!!
-     * !!!!!!
-     * !!!!!!!------------------------------------------------------------------------------
-     */
+    private bool isDragging = false;
+    private int mouseX, mouseY;
+    private void MainPage_MouseDown(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            isDragging = true;
+            mouseX = e.X;
+            mouseY = e.Y;
+        }
+    }
+
+    private void MainPage_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (isDragging)
+        {
+            this.Left += e.X - mouseX;
+            this.Top += e.Y - mouseY;
+        }
+    }
+
+    private void MainPage_MouseUp(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            isDragging = false;
+        }
+    }
+
 
 
 
@@ -299,8 +318,8 @@ public partial class MainPage : CustomForm
 
         string query = "SELECT username FROM users WHERE User_id='" + id + "';";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        //cmd.Parameters.AddWithValue("@userId", id);
-        //cmd.Parameters.AddWithValue("@Deleted", 0);
+        cmd.Parameters.AddWithValue("@userId", id);
+        cmd.Parameters.AddWithValue("@Deleted", 0);
         MySqlDataReader reader = cmd.ExecuteReader();
 
         string username = null;
@@ -665,9 +684,6 @@ public partial class MainPage : CustomForm
             if (key == null || key.Count == 0)
                 return;
 
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
-
             string lastElement = key[key.Count - 1];
             key.RemoveAt(key.Count - 1);
             key.Insert(0, lastElement);
@@ -675,8 +691,6 @@ public partial class MainPage : CustomForm
         //Then the rotated password is added to the file content
         for (int i = 0; i < key.Count; i++)
         {
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
             file.Add(key[i]);
         }
 
@@ -692,8 +706,6 @@ public partial class MainPage : CustomForm
         {
             string a = file[i - 2];
             file[i - 2] = file[i];
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
             file[i] = a;
         }
 
@@ -711,8 +723,6 @@ public partial class MainPage : CustomForm
             string element = file[i + 3];
             file[i + 3] = file[i];
             file[i] = element;
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
         }
     }
 
@@ -736,8 +746,6 @@ public partial class MainPage : CustomForm
             int sumFirstHex = firstValueFromFirstNumber + secondValueFromFirstNumber;//for example if the first hex is 16 sum = 1 + 6 = 7
             int sumSecondHex = firstValueFromNextNumber + secondValueFromNextNumber;//for example if the second hex is 13 sum = 1 + 3 = 4
             int sum = sumFirstHex + sumSecondHex;//Makes the sum of the sums of the hex symbols - > 7 + 4 = 11
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
             //If the sum is even we change the symbols from the hex -> we change frist symbol from the first hex with the second symbol from the second hex
             //like this "16" "13" - > "36" "11"
             if (sum % 2 == 0)
@@ -767,8 +775,6 @@ public partial class MainPage : CustomForm
     {
         for (int i = 0; i < file.Count; i += 2)
         {
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
             //If file.Count is odd the last element can't get replaced because is alone, so it breaks
             if (i + 1 >= file.Count) break;
             char[] hex_value = file[i].ToCharArray();
@@ -794,8 +800,6 @@ public partial class MainPage : CustomForm
         if (file.Count % 2 != 0)
         {
             string firstEl = file[0];
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
             file[0] = file[file.Count - 1];
             file[file.Count - 1] = firstEl;
         }
@@ -814,8 +818,6 @@ public partial class MainPage : CustomForm
             file[0] = file[file.Count - 1];
             file[file.Count - 1] = firstEl;
         }
-        Random random = new Random();
-        WaitRandomTime(random, 1000, 3000);
         //First reverse the shuffle make the elements in the right order
         for (int i = 0; i < file.Count; i += 2)
         {
@@ -849,8 +851,6 @@ public partial class MainPage : CustomForm
             char[] rightNumberValues = file[i].ToCharArray();
             int firstValueFromRightNumber = int.Parse(rightNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
             int secondValueFromRightNumber = int.Parse(rightNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000);
             //Takes the hex number before the last hex number for example "13" and separate the symbols -> "1" and "3" and converts them to int
             char[] leftNumberValues = file[i - 1].ToCharArray();
             int firstValueFromLeftNumber = int.Parse(leftNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
@@ -895,8 +895,6 @@ public partial class MainPage : CustomForm
         {
             index = i;
         }
-        Random random = new Random();
-        WaitRandomTime(random, 1000, 3000);
         for (int i = index; i >= 0; i -= 3)
         {
             if (i == 1 || i == 0 || i == 2)
@@ -923,8 +921,7 @@ public partial class MainPage : CustomForm
         int br = 0;
         for (int i = file.Count - 1; i >= 0; i--)
         {
-            Random random = new Random();
-            WaitRandomTime(random, 1000, 3000); if (br < key.Count)
+            if (br < key.Count)
             {
                 file.RemoveAt(i);
                 br++;
@@ -979,27 +976,6 @@ public partial class MainPage : CustomForm
             sb.Append((char)Convert.ToInt32(hex, 16));
         }
         return sb.ToString();
-    }
-
-    //When user select the option - "my account"
-    private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        MyAccount m = new MyAccount();
-        Hide();
-        m.Visible = true;
-
-    }
-
-
-
-    private void Logout_clicked(object sender, EventArgs e)
-    {
-        Logout();
-    }
-
-    private void Closebutton_clicked(object sender, FormClosedEventArgs e)
-    {
-        Logout();
     }
 
     private int getFileIdForEncryptionBtn()
@@ -1114,148 +1090,6 @@ public partial class MainPage : CustomForm
 
     }
 
-
-    private void button6_Click(object sender, EventArgs e)
-    {
-        txtUsername.Text = null;
-        txtEmail.Text = null;
-        txtAge.Text = null;
-    }
-
-    private void combo1_MouseClicked(object sender, MouseEventArgs e)
-    {
-        combo1.Items.Clear();
-        writeToComboAllUsernames(combo1);
-    }
-
-
-    private void combo1_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
-        string choosenUser = combo1.SelectedItem.ToString();
-        int id = getUserIdByUsername(choosenUser);
-
-        UserData userdata = GetUserData(id);
-
-        string username = userdata.Username;
-        string email = userdata.Email;
-        string age = userdata.Age.ToString();
-        string type = userdata.Type;
-
-        txtUsername.Text = username;
-        txtEmail.Text = email;
-        txtAge.Text = age;
-        //lbl_acc_type.Text = type;
-
-    }
-
-    private void btn_save_changes_Click(object sender, EventArgs e)
-    {
-        try
-        {
-            string choosenUser = combo1.SelectedItem.ToString();
-
-            if (!string.IsNullOrEmpty(choosenUser))
-            {
-                UserData userdata = GetUserData(getUserIdByUsername(choosenUser));
-
-                string username = userdata.Username;
-                string email = userdata.Email;
-                string age = userdata.Age.ToString();
-                string type = userdata.Type;
-
-                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(age) || string.IsNullOrEmpty(type))
-                {
-                    MessageBox.Show("Some values are null!");
-                    return;
-                }
-                if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text == age)
-                {
-                    MessageBox.Show("There are not changes to the user. If you want to edit your account change some value of the following input fields!");
-                    return;
-                }
-
-
-                if (txtUsername.Text == username || txtEmail.Text == email || txtAge.Text == age)
-                {
-                    if (txtUsername.Text != username && txtEmail.Text == email && txtAge.Text == age)
-                    {
-                        if (checkForExistingUsername(txtUsername.Text))
-                        {
-                            MessageBox.Show("This username you choose has already been registered");
-                            return;
-                        }
-                        else
-                        {
-                            bool isUpdated = updateUserDataPanel3(choosenUser);
-                            if (isUpdated == false)
-                            {
-                                MessageBox.Show("Error occured, new user data wasn't inserted!");
-                                return;
-                            }
-                            else
-                            {
-                                MessageBox.Show("User edited successfully!");
-                                return;
-                            }
-                        }
-
-                    }
-                    else if (txtUsername.Text == username && txtEmail.Text != email && txtAge.Text == age)
-                    {
-                        if (checkForExistingEmail(txtEmail.Text))
-                        {
-                            MessageBox.Show("This email you choose has already been registered");
-                            return;
-                        }
-                        else
-                        {
-                            bool isUpdated = updateUserDataPanel3(choosenUser);
-                            if (isUpdated == false)
-                            {
-                                MessageBox.Show("Error occured, new user data wasn't inserted!");
-                                return;
-                            }
-                            else
-                            {
-                                MessageBox.Show("User edited successfully!");
-                                return;
-                            }
-                        }
-                    }
-                    else if (txtUsername.Text == username && txtEmail.Text == email && txtAge.Text != age)
-                    {
-                        bool isUpdated = updateUserDataPanel3(choosenUser);
-                        if (isUpdated == false)
-                        {
-                            MessageBox.Show("Error occured, new user data wasn't inserted!");
-                            return;
-                        }
-                        else
-                        {
-                            MessageBox.Show("User edited successfully!");
-                            return;
-                        }
-                    }
-                }
-
-            }
-
-
-
-        }
-        catch (MySqlException e1)
-        {
-            MessageBox.Show("Error: " + e1.Message);
-        }
-
-    }
-
-    private void button5_Click(object sender, EventArgs e)
-    {
-        panel3.Enabled = false;
-        panel3.Visible = false;
-    }
 
     private string getOldFileType(int userid, int fileid)
     {
@@ -1374,45 +1208,28 @@ public partial class MainPage : CustomForm
         }
     }
 
-    private void combo2_SelectedIndexChanged(object sender, EventArgs e)
+    private void btn_acc_Click(object sender, EventArgs e)
     {
-        try
-        {
-            string choosenUser = combo2.SelectedItem.ToString();
-            DialogResult dialogResult = MessageBox.Show("Are you sure you wanna delete this user?", "Deleting user", MessageBoxButtons.YesNo);
-            if (dialogResult == DialogResult.Yes)
-            {
-                int id = getUserIdByUsername(choosenUser);
-                bool isDeletedUsers = changeDeletedToTrueForUsers(id);
-                bool isDeletedUsersPasswords = changeDeletedToTrueForUsersPasswords(id);
-                bool isCreatedLog = createLog(id, "Account deleted");
-                if (isDeletedUsers && isDeletedUsersPasswords && isCreatedLog)
-                {
-                    combo2.Items.Clear();
-                    List<string> logs = new List<string>();
-                    getLogs(logs);
-                    string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
-                    richtxt1.Text = allLogs;
-                    writeToComboAllUsernames(combo2);
-
-                    MessageBox.Show("Successfully deleted user -> " + choosenUser);
-
-                }
-            }
-            else if (dialogResult == DialogResult.No)
-            {
-                combo2.Items.Clear();
-                writeToComboAllUsernames(combo2);
-            }
-
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show("Error: " + ex.Message);
-        }
+        MyAccount m = new MyAccount();
+        Hide();
+        m.StartPosition = FormStartPosition.CenterScreen;
+        m.Visible = true;
     }
 
-    private void Decryption_button_Click(object sender, EventArgs e)
+    private void btn_admintools_Click(object sender, EventArgs e)
+    {
+        AdminTools a = new AdminTools();
+        Hide();
+        a.StartPosition = FormStartPosition.CenterScreen;
+        a.Visible = true;
+    }
+
+    private void btn_logout_Click(object sender, EventArgs e)
+    {
+        Logout();
+    }
+
+    private void btn_decrypt_Click(object sender, EventArgs e)
     {
         string key = txt_key_decryption.Text;
         List<string> key_hexlist = stringToHexArrayList(key);
@@ -1468,175 +1285,6 @@ public partial class MainPage : CustomForm
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
-    }
-
-
-
-    private void changePasswordToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        panel4.Enabled = true;
-        panel4.Visible = true;
-    }
-
-    private void btn_changepass_Click(object sender, EventArgs e)
-    {
-        string oldpass = txt_oldpass.Text;
-        string newpass = txt_newpass.Text;
-        string confirm_newpass = txt_newpass_confirm.Text;
-
-        string passwordPattern = "^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$";
-        bool isPasswordValid = Regex.IsMatch(newpass, passwordPattern);
-        if (isPasswordValid == false)
-        {
-            MessageBox.Show("The password should contain at least 8 characters, at least one uppercase character and at least one special symbol!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
-        }
-
-
-        string username = getCurrentlyLoggedUser().username;
-        int id = getUserIdByUsername(username);
-
-        string database_hash = getUserPassByUserId(id);
-
-        if (BCrypt.Verify(oldpass, database_hash))
-        {
-            if (newpass.Equals(confirm_newpass))
-            {
-                string new_hash = BCrypt.HashPassword(newpass);
-                updateUserPassByUserId(id, new_hash);
-                createLog(id, "Changed password");
-                MessageBox.Show("Passord changed successfuly!");
-            }
-            else
-            {
-                MessageBox.Show("New password and confirm new password are not the same!");
-                return;
-            }
-        }
-        else
-        {
-            MessageBox.Show("Wrong pasword!");
-            return;
-        }
-
-
-    }
-
-    private void button7_Click(object sender, EventArgs e)
-    {
-        panel4.Enabled = false;
-        panel4.Visible = false;
-    }
-
-    private void clearAllLogs()
-    {
-        string connstring = "Server=localhost;Database=mydb;User=adminuser;Password=adminuseradminuser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-
-        string query = "TRUNCATE TABLE login_logs;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-
-        int rowsAffected = cmd.ExecuteNonQuery();
-        if (rowsAffected >= 0)
-        {
-            Console.WriteLine("Insert successful");
-            CurrentConnection.Close();
-
-        }
-        else
-        {
-            Console.WriteLine("Insert failed");
-            CurrentConnection.Close();
-            MessageBox.Show("Erorr occured cleaning the logs!");
-            return;
-        }
-    }
-
-    private void refreshLogs()
-    {
-        List<string> filtered_logs = new List<string>();
-        List<string> logs = new List<string>();
-        getLogs(logs);
-
-        foreach (string log in logs)
-        {
-            if ((check_login.Checked && log.Contains("Action: Logged in")) ||
-           (check_logout.Checked && log.Contains("Action: Log out")) ||
-           (check_newreg.Checked && log.Contains("Action: New Account registered")) ||
-           (check_encrypt.Checked && log.Contains("Action: File encrypted")) ||
-           (check_decrypt.Checked && log.Contains("Action: File decrypted")) ||
-           (check_changedpass.Checked && log.Contains("Action: Changed password")) ||
-           (check_loginfail.Checked && log.Contains("Action: Failed to log in") ||
-           (check_accdel.Checked && log.Contains("Action: Account deleted"))))
-            {
-                filtered_logs.Add(log);
-            }
-        }
-
-        string filteredLogsText = string.Join(Environment.NewLine + Environment.NewLine, filtered_logs);
-        richtxt1.Text = filteredLogsText;
-    }
-
-    private void clearLogs_Click(object sender, EventArgs e)
-    {
-        richtxt1.Clear();
-        clearAllLogs();
-
-    }
-
-    private void button8_Click(object sender, EventArgs e)
-    {
-        panel2.Enabled = false;
-        panel2.Visible = false;
-    }
-
-    private void check_login_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void check_loginfail_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void check_logout_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void check_newreg_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void check_encrypt_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void check_decrypt_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void check_changedpass_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void check_accdel_CheckedChanged(object sender, EventArgs e)
-    {
-        refreshLogs();
-    }
-
-    private void btn_showlogs_Click(object sender, EventArgs e)
-    {
-        List<string> logs = new List<string>();
-        getLogs(logs);
-        string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
-        richtxt1.Text = allLogs;
     }
 }
 

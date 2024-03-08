@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MyAccount));
             panel1 = new Panel();
+            btn_mainpage = new Button();
             btn_logout = new Button();
             panel2 = new Panel();
             label1 = new Label();
@@ -40,7 +41,7 @@
             label7 = new Label();
             lbl_acc_type = new Label();
             label6 = new Label();
-            button2 = new Button();
+            btn_savechanges = new Button();
             txt_age = new TextBox();
             txt_username = new TextBox();
             txt_email = new TextBox();
@@ -64,6 +65,7 @@
             // panel1
             // 
             panel1.BackColor = Color.FromArgb(62, 120, 138);
+            panel1.Controls.Add(btn_mainpage);
             panel1.Controls.Add(btn_logout);
             panel1.Controls.Add(panel2);
             panel1.Controls.Add(btn_admintools);
@@ -71,8 +73,25 @@
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(233, 605);
+            panel1.Size = new Size(233, 797);
             panel1.TabIndex = 0;
+            // 
+            // btn_mainpage
+            // 
+            btn_mainpage.BackColor = Color.Transparent;
+            btn_mainpage.FlatAppearance.BorderSize = 0;
+            btn_mainpage.FlatStyle = FlatStyle.Flat;
+            btn_mainpage.ForeColor = Color.White;
+            btn_mainpage.Image = (Image)resources.GetObject("btn_mainpage.Image");
+            btn_mainpage.ImageAlign = ContentAlignment.TopCenter;
+            btn_mainpage.Location = new Point(0, 120);
+            btn_mainpage.Name = "btn_mainpage";
+            btn_mainpage.Size = new Size(233, 108);
+            btn_mainpage.TabIndex = 7;
+            btn_mainpage.Text = "Encrypt/Decrypt File";
+            btn_mainpage.TextAlign = ContentAlignment.BottomCenter;
+            btn_mainpage.UseVisualStyleBackColor = false;
+            btn_mainpage.Click += btn_mainpage_Click;
             // 
             // btn_logout
             // 
@@ -81,13 +100,14 @@
             btn_logout.ForeColor = Color.White;
             btn_logout.Image = (Image)resources.GetObject("btn_logout.Image");
             btn_logout.ImageAlign = ContentAlignment.TopCenter;
-            btn_logout.Location = new Point(8, 442);
+            btn_logout.Location = new Point(5, 689);
             btn_logout.Name = "btn_logout";
             btn_logout.Size = new Size(225, 108);
             btn_logout.TabIndex = 6;
             btn_logout.Text = "Log out";
             btn_logout.TextAlign = ContentAlignment.BottomCenter;
             btn_logout.UseVisualStyleBackColor = true;
+            btn_logout.Click += btn_logout_Click;
             // 
             // panel2
             // 
@@ -128,28 +148,30 @@
             btn_admintools.ForeColor = Color.White;
             btn_admintools.Image = (Image)resources.GetObject("btn_admintools.Image");
             btn_admintools.ImageAlign = ContentAlignment.TopCenter;
-            btn_admintools.Location = new Point(5, 277);
+            btn_admintools.Location = new Point(0, 495);
             btn_admintools.Name = "btn_admintools";
-            btn_admintools.Size = new Size(225, 108);
+            btn_admintools.Size = new Size(233, 108);
             btn_admintools.TabIndex = 5;
             btn_admintools.Text = "Admin tools";
             btn_admintools.TextAlign = ContentAlignment.BottomCenter;
             btn_admintools.UseVisualStyleBackColor = true;
+            btn_admintools.Click += btn_admintools_Click;
             // 
             // btn_acc
             // 
+            btn_acc.BackColor = Color.DarkOrange;
             btn_acc.FlatAppearance.BorderSize = 0;
             btn_acc.FlatStyle = FlatStyle.Flat;
             btn_acc.ForeColor = Color.White;
             btn_acc.Image = (Image)resources.GetObject("btn_acc.Image");
             btn_acc.ImageAlign = ContentAlignment.TopCenter;
-            btn_acc.Location = new Point(5, 120);
+            btn_acc.Location = new Point(0, 295);
             btn_acc.Name = "btn_acc";
-            btn_acc.Size = new Size(225, 108);
+            btn_acc.Size = new Size(233, 115);
             btn_acc.TabIndex = 4;
             btn_acc.Text = "My Account";
             btn_acc.TextAlign = ContentAlignment.BottomCenter;
-            btn_acc.UseVisualStyleBackColor = true;
+            btn_acc.UseVisualStyleBackColor = false;
             // 
             // label5
             // 
@@ -180,7 +202,7 @@
             lbl_acc_type.AutoSize = true;
             lbl_acc_type.BackColor = SystemColors.ActiveCaptionText;
             lbl_acc_type.Font = new Font("Times New Roman", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
-            lbl_acc_type.ForeColor = Color.Olive;
+            lbl_acc_type.ForeColor = Color.DarkOrange;
             lbl_acc_type.Location = new Point(442, 399);
             lbl_acc_type.Name = "lbl_acc_type";
             lbl_acc_type.Size = new Size(69, 31);
@@ -199,30 +221,31 @@
             label6.TabIndex = 19;
             label6.Text = "Your account";
             // 
-            // button2
+            // btn_savechanges
             // 
-            button2.Anchor = AnchorStyles.Left;
-            button2.BackColor = Color.FromArgb(62, 120, 138);
-            button2.BackgroundImageLayout = ImageLayout.Center;
-            button2.Font = new Font("Century Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            button2.ForeColor = Color.White;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.ImageAlign = ContentAlignment.MiddleLeft;
-            button2.Location = new Point(377, 438);
-            button2.Margin = new Padding(10);
-            button2.Name = "button2";
-            button2.Size = new Size(232, 46);
-            button2.TabIndex = 23;
-            button2.Text = "Save changes";
-            button2.TextAlign = ContentAlignment.MiddleRight;
-            button2.UseVisualStyleBackColor = false;
+            btn_savechanges.Anchor = AnchorStyles.Left;
+            btn_savechanges.BackColor = Color.FromArgb(62, 120, 138);
+            btn_savechanges.BackgroundImageLayout = ImageLayout.Center;
+            btn_savechanges.Font = new Font("Century Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_savechanges.ForeColor = Color.White;
+            btn_savechanges.Image = (Image)resources.GetObject("btn_savechanges.Image");
+            btn_savechanges.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_savechanges.Location = new Point(409, 446);
+            btn_savechanges.Margin = new Padding(10);
+            btn_savechanges.Name = "btn_savechanges";
+            btn_savechanges.Size = new Size(232, 46);
+            btn_savechanges.TabIndex = 23;
+            btn_savechanges.Text = "Save changes";
+            btn_savechanges.TextAlign = ContentAlignment.MiddleRight;
+            btn_savechanges.UseVisualStyleBackColor = false;
+            btn_savechanges.Click += btn_savechanges_Click;
             // 
             // txt_age
             // 
             txt_age.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
             txt_age.Location = new Point(418, 339);
             txt_age.Name = "txt_age";
-            txt_age.Size = new Size(223, 39);
+            txt_age.Size = new Size(308, 39);
             txt_age.TabIndex = 22;
             // 
             // txt_username
@@ -230,7 +253,7 @@
             txt_username.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
             txt_username.Location = new Point(418, 196);
             txt_username.Name = "txt_username";
-            txt_username.Size = new Size(223, 39);
+            txt_username.Size = new Size(308, 39);
             txt_username.TabIndex = 20;
             // 
             // txt_email
@@ -238,7 +261,7 @@
             txt_email.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
             txt_email.Location = new Point(418, 268);
             txt_email.Name = "txt_email";
-            txt_email.Size = new Size(223, 39);
+            txt_email.Size = new Size(308, 39);
             txt_email.TabIndex = 21;
             // 
             // label2
@@ -272,19 +295,20 @@
             btn_changepass.ForeColor = Color.White;
             btn_changepass.Image = (Image)resources.GetObject("btn_changepass.Image");
             btn_changepass.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_changepass.Location = new Point(1060, 436);
+            btn_changepass.Location = new Point(1100, 446);
             btn_changepass.Name = "btn_changepass";
             btn_changepass.Size = new Size(271, 48);
             btn_changepass.TabIndex = 37;
             btn_changepass.Text = "Change password";
             btn_changepass.TextAlign = ContentAlignment.MiddleRight;
             btn_changepass.UseVisualStyleBackColor = false;
+            btn_changepass.Click += btn_changepass_Click;
             // 
             // label17
             // 
             label17.AutoSize = true;
             label17.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label17.Location = new Point(859, 339);
+            label17.Location = new Point(815, 348);
             label17.Name = "label17";
             label17.Size = new Size(245, 24);
             label17.TabIndex = 36;
@@ -294,7 +318,7 @@
             // 
             label16.AutoSize = true;
             label16.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label16.Location = new Point(944, 268);
+            label16.Location = new Point(867, 277);
             label16.Name = "label16";
             label16.Size = new Size(160, 24);
             label16.TabIndex = 35;
@@ -304,7 +328,7 @@
             // 
             label15.AutoSize = true;
             label15.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label15.Location = new Point(957, 205);
+            label15.Location = new Point(880, 221);
             label15.Name = "label15";
             label15.Size = new Size(147, 24);
             label15.TabIndex = 34;
@@ -312,26 +336,26 @@
             // 
             // txt_newpass_confirm
             // 
-            txt_newpass_confirm.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_newpass_confirm.Location = new Point(1131, 339);
+            txt_newpass_confirm.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_newpass_confirm.Location = new Point(1066, 339);
             txt_newpass_confirm.Name = "txt_newpass_confirm";
-            txt_newpass_confirm.Size = new Size(213, 33);
+            txt_newpass_confirm.Size = new Size(318, 39);
             txt_newpass_confirm.TabIndex = 33;
             // 
             // txt_newpass
             // 
-            txt_newpass.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_newpass.Location = new Point(1131, 267);
+            txt_newpass.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_newpass.Location = new Point(1066, 277);
             txt_newpass.Name = "txt_newpass";
-            txt_newpass.Size = new Size(213, 33);
+            txt_newpass.Size = new Size(318, 39);
             txt_newpass.TabIndex = 32;
             // 
             // txt_oldpass
             // 
-            txt_oldpass.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_oldpass.Location = new Point(1131, 202);
+            txt_oldpass.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            txt_oldpass.Location = new Point(1066, 212);
             txt_oldpass.Name = "txt_oldpass";
-            txt_oldpass.Size = new Size(213, 33);
+            txt_oldpass.Size = new Size(318, 39);
             txt_oldpass.TabIndex = 31;
             // 
             // label3
@@ -340,7 +364,7 @@
             label3.BackColor = Color.Transparent;
             label3.Font = new Font("Century Gothic", 36F, FontStyle.Bold, GraphicsUnit.Point);
             label3.ForeColor = Color.FromArgb(62, 120, 138);
-            label3.Location = new Point(956, 53);
+            label3.Location = new Point(984, 53);
             label3.Name = "label3";
             label3.Size = new Size(449, 56);
             label3.TabIndex = 38;
@@ -350,8 +374,8 @@
             // 
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
-            label8.ForeColor = Color.Olive;
-            label8.Location = new Point(944, 120);
+            label8.ForeColor = Color.DarkOrange;
+            label8.Location = new Point(957, 120);
             label8.Name = "label8";
             label8.Size = new Size(476, 32);
             label8.TabIndex = 39;
@@ -361,18 +385,18 @@
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
-            label9.ForeColor = Color.Olive;
+            label9.ForeColor = Color.DarkOrange;
             label9.Location = new Point(341, 120);
             label9.Name = "label9";
             label9.Size = new Size(282, 32);
             label9.TabIndex = 40;
             label9.Text = "Change your current data";
             // 
-            // Form5
+            // MyAccount
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
-            ClientSize = new Size(1462, 605);
+            ClientSize = new Size(1469, 797);
             Controls.Add(label9);
             Controls.Add(label8);
             Controls.Add(label3);
@@ -389,7 +413,7 @@
             Controls.Add(label7);
             Controls.Add(lbl_acc_type);
             Controls.Add(label6);
-            Controls.Add(button2);
+            Controls.Add(btn_savechanges);
             Controls.Add(txt_age);
             Controls.Add(txt_username);
             Controls.Add(txt_email);
@@ -397,8 +421,11 @@
             Font = new Font("Century Gothic", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
             ForeColor = Color.FromArgb(62, 120, 138);
             FormBorderStyle = FormBorderStyle.None;
-            Name = "Form5";
+            Name = "MyAccount";
             Text = "Form5";
+            MouseDown += MyAccount_MouseDown;
+            MouseMove += MyAccount_MouseMove;
+            MouseUp += MyAccount_MouseUp;
             panel1.ResumeLayout(false);
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
@@ -420,7 +447,7 @@
         private Label label7;
         private Label lbl_acc_type;
         private Label label6;
-        private Button button2;
+        private Button btn_savechanges;
         private TextBox txt_age;
         private TextBox txt_username;
         private TextBox txt_email;
@@ -436,5 +463,6 @@
         private Label label3;
         private Label label8;
         private Label label9;
+        private Button btn_mainpage;
     }
 }

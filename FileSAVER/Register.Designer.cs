@@ -207,12 +207,13 @@ namespace FileSAVER
             rdbtn2.Text = "Normal user";
             rdbtn2.UseVisualStyleBackColor = true;
             // 
-            // Form2
+            // Register
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            AutoValidate = AutoValidate.Disable;
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
-            ClientSize = new Size(595, 544);
+            ClientSize = new Size(611, 583);
             Controls.Add(rdbtn2);
             Controls.Add(rdbtn1);
             Controls.Add(btn2);
@@ -229,11 +230,16 @@ namespace FileSAVER
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.None;
             MaximumSize = new Size(611, 583);
             MinimumSize = new Size(611, 583);
-            Name = "Form2";
+            Name = "Register";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Form2";
             FormClosed += Form2_FormClosed;
+            MouseDown += Register_MouseDown;
+            MouseMove += Register_MouseMove;
+            MouseUp += Register_MouseUp;
             ResumeLayout(false);
             PerformLayout();
         }
