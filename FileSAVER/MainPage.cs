@@ -1101,7 +1101,7 @@ public partial class MainPage : CustomForm
         }
     }
 
-    private void btn_acc_Click(object sender, EventArgs e)
+        private void btn_acc_Click(object sender, EventArgs e)
     {
         MyAccount m = new MyAccount();
         Hide();
@@ -1111,10 +1111,20 @@ public partial class MainPage : CustomForm
 
     private void btn_admintools_Click(object sender, EventArgs e)
     {
-        AdminTools a = new AdminTools();
-        Hide();
-        a.StartPosition = FormStartPosition.CenterScreen;
-        a.Visible = true;
+        string username = getCurrentlyLoggedUser().username;
+        int id = getUserIdByUsername(username);
+        if(checkIfUserIsAdmin(id))
+        {
+           AdminTools a = new AdminTools();
+           Hide();
+           a.StartPosition = FormStartPosition.CenterScreen;
+           a.Visible = true;
+        } else
+        {
+            MessageBox.Show("You are not admin, so you can't use admin tools!");
+            return;
+        }
+        
     }
 
     private void btn_logout_Click(object sender, EventArgs e)
@@ -1175,15 +1185,11 @@ public partial class MainPage : CustomForm
             DateTime currentTime = DateTime.Now;
             string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
 
-            StreamReader reader = new StreamReader(filePath, detectEncodingFromByteOrderMarks: true);
-            Encoding encoding = reader.CurrentEncoding;
-            string enc = encoding.GetType().Name;
-            reader.Close();
-
             bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, lbl_choosen_en_file.Text, fileSizeString, fileType, uploadDate);
             if (isItImportedKeys && isItImportedKeysInfo)
             {
-                MessageBox.Show("Data inserted successfully");
+                MessageBox.Show("IMPORTANT! Don't change the file extension, this program after encrypting your file will change the file extension with a new one called .filesaver_(number) its important, because the extension holds the id of your file in the database and if you change this extension you may never decrypt your file back!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("File encrypted successfully!");
             }
 
             byte[] encryptedBytes = hexListToByteArray(file_hexlist);
@@ -1250,7 +1256,7 @@ public partial class MainPage : CustomForm
                     MessageBox.Show("Wrong password for decryption!");
                     return;
                 }
-                MessageBox.Show("File decrypted successfully!");
+            MessageBox.Show("File decrypted successfully!");
             } catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);

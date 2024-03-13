@@ -29,35 +29,35 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Login));
-            button1 = new Button();
+            login_btn = new Button();
             label1 = new Label();
             txt1 = new TextBox();
             txt2 = new TextBox();
-            linkLabel2 = new LinkLabel();
+            forgotpass_link = new LinkLabel();
             panel1 = new Panel();
             pictureBox2 = new PictureBox();
             panel2 = new Panel();
             pictureBox3 = new PictureBox();
             label4 = new Label();
-            linkLabel1 = new LinkLabel();
+            register_link = new LinkLabel();
             button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             SuspendLayout();
             // 
-            // button1
+            // login_btn
             // 
-            button1.BackColor = Color.DarkOrange;
-            button1.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            button1.ForeColor = Color.FromArgb(41, 44, 51);
-            button1.Location = new Point(179, 352);
-            button1.Margin = new Padding(4, 3, 4, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(169, 53);
-            button1.TabIndex = 0;
-            button1.Text = "Login";
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            login_btn.BackColor = Color.DarkOrange;
+            login_btn.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
+            login_btn.ForeColor = Color.FromArgb(41, 44, 51);
+            login_btn.Location = new Point(179, 352);
+            login_btn.Margin = new Padding(4, 3, 4, 3);
+            login_btn.Name = "login_btn";
+            login_btn.Size = new Size(169, 53);
+            login_btn.TabIndex = 0;
+            login_btn.Text = "Login";
+            login_btn.UseVisualStyleBackColor = false;
+            login_btn.Click += button1_Click;
             // 
             // label1
             // 
@@ -97,21 +97,21 @@
             txt2.Size = new Size(369, 43);
             txt2.TabIndex = 5;
             // 
-            // linkLabel2
+            // forgotpass_link
             // 
-            linkLabel2.AutoSize = true;
-            linkLabel2.BackColor = Color.Transparent;
-            linkLabel2.BorderStyle = BorderStyle.FixedSingle;
-            linkLabel2.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            linkLabel2.LinkColor = Color.DarkOrange;
-            linkLabel2.Location = new Point(302, 274);
-            linkLabel2.Margin = new Padding(4, 0, 4, 0);
-            linkLabel2.Name = "linkLabel2";
-            linkLabel2.Size = new Size(185, 27);
-            linkLabel2.TabIndex = 7;
-            linkLabel2.TabStop = true;
-            linkLabel2.Text = "Fogot password?";
-            linkLabel2.LinkClicked += linkLabel2_LinkClicked;
+            forgotpass_link.AutoSize = true;
+            forgotpass_link.BackColor = Color.Transparent;
+            forgotpass_link.BorderStyle = BorderStyle.FixedSingle;
+            forgotpass_link.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            forgotpass_link.LinkColor = Color.DarkOrange;
+            forgotpass_link.Location = new Point(302, 274);
+            forgotpass_link.Margin = new Padding(4, 0, 4, 0);
+            forgotpass_link.Name = "forgotpass_link";
+            forgotpass_link.Size = new Size(185, 27);
+            forgotpass_link.TabIndex = 7;
+            forgotpass_link.TabStop = true;
+            forgotpass_link.Text = "Fogot password?";
+            forgotpass_link.LinkClicked += linkLabel2_LinkClicked;
             // 
             // panel1
             // 
@@ -169,20 +169,20 @@
             label4.TabIndex = 14;
             label4.Text = "Please login to your account";
             // 
-            // linkLabel1
+            // register_link
             // 
-            linkLabel1.AutoSize = true;
-            linkLabel1.BackColor = Color.Transparent;
-            linkLabel1.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            linkLabel1.LinkColor = Color.DarkOrange;
-            linkLabel1.Location = new Point(197, 171);
-            linkLabel1.Margin = new Padding(4, 0, 4, 0);
-            linkLabel1.Name = "linkLabel1";
-            linkLabel1.Size = new Size(288, 25);
-            linkLabel1.TabIndex = 15;
-            linkLabel1.TabStop = true;
-            linkLabel1.Text = "No account? Register Here!";
-            linkLabel1.LinkClicked += linkLabel1_LinkClicked_1;
+            register_link.AutoSize = true;
+            register_link.BackColor = Color.Transparent;
+            register_link.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            register_link.LinkColor = Color.DarkOrange;
+            register_link.Location = new Point(197, 171);
+            register_link.Margin = new Padding(4, 0, 4, 0);
+            register_link.Name = "register_link";
+            register_link.Size = new Size(288, 25);
+            register_link.TabIndex = 15;
+            register_link.TabStop = true;
+            register_link.Text = "No account? Register Here!";
+            register_link.LinkClicked += linkLabel1_LinkClicked_1;
             // 
             // button2
             // 
@@ -203,13 +203,13 @@
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(554, 456);
             Controls.Add(button2);
-            Controls.Add(linkLabel1);
+            Controls.Add(register_link);
             Controls.Add(panel2);
-            Controls.Add(button1);
+            Controls.Add(login_btn);
             Controls.Add(label4);
             Controls.Add(pictureBox3);
             Controls.Add(txt2);
-            Controls.Add(linkLabel2);
+            Controls.Add(forgotpass_link);
             Controls.Add(panel1);
             Controls.Add(label1);
             Controls.Add(pictureBox2);
@@ -229,17 +229,17 @@
 
         #endregion
 
-        private Button button1;
+        private Button login_btn;
         private Label label1;
         private TextBox txt1;
         private TextBox txt2;
-        private LinkLabel linkLabel2;
+        private LinkLabel forgotpass_link;
         private Panel panel1;
         private PictureBox pictureBox2;
         private Panel panel2;
         private PictureBox pictureBox3;
         private Label label4;
-        private LinkLabel linkLabel1;
+        private LinkLabel register_link;
         private Button button2;
     }
 }
