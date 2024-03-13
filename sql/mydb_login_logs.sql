@@ -30,7 +30,7 @@ CREATE TABLE `login_logs` (
   PRIMARY KEY (`log_Id`),
   KEY `fk_login_logs_users1_idx` (`users_User_id`),
   CONSTRAINT `fk_login_logs_users1` FOREIGN KEY (`users_User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -39,7 +39,7 @@ CREATE TABLE `login_logs` (
 
 LOCK TABLES `login_logs` WRITE;
 /*!40000 ALTER TABLE `login_logs` DISABLE KEYS */;
-INSERT INTO `login_logs` VALUES (1,1,'2024-02-27 17:39:14','Log out'),(2,1,'2024-02-27 18:40:44','Logged in'),(3,4,'2024-02-27 18:40:52','Account deleted'),(4,1,'2024-02-27 18:46:16','Logged in'),(5,1,'2024-02-27 18:49:51','Logged in'),(6,1,'2024-02-27 18:50:02','Log out');
+INSERT INTO `login_logs` VALUES (1,1,'2024-03-13 17:06:33','New account registered'),(2,1,'2024-03-13 17:06:38','Logged in'),(3,1,'2024-03-13 17:07:11','File encrypted -> C:\\Users\\robot\\Desktop\\workbench_Viktor_Vladinov_2_11a.mwb'),(4,1,'2024-03-13 17:07:18','File decrypted -> C:\\Users\\robot\\Desktop\\workbench_Viktor_Vladinov_2_11a.filesaver_1'),(5,1,'2024-03-13 17:07:21','Log out');
 /*!40000 ALTER TABLE `login_logs` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-02-28  6:49:26
+-- Dump completed on 2024-03-13 17:14:09
