@@ -1004,92 +1004,6 @@ public partial class MainPage : CustomForm
     }
 
 
-    private void Encryption_button_Click(object sender, EventArgs e)
-    {
-
-        string key = txt_key_encryption.Text;
-        List<string> key_hexlist = stringToHexArrayList(key);
-
-        OpenFileDialog fd = new OpenFileDialog();
-
-
-        fd.Filter = "All Files (*.*)|*.*";
-        fd.Multiselect = false;
-
-        if (fd.ShowDialog() == DialogResult.OK)
-        {
-            string filePath = fd.FileName;
-
-            try
-            {
-                /*
-                 * 
-                 * 
-                 * 
-                 *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UTF-8 ENCODING 
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-                List<string> file_hexlist = byteArrayToHexList(fileBytes);
-
-                firstStepOfEncryption(key_hexlist, file_hexlist);
-                secondStepOfEncryption(file_hexlist);
-                thirdStepOfEncryption(file_hexlist);
-                fourthStepOfEncryption(file_hexlist);
-
-                //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
-                //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
-
-                string username = CurrenltyLoggedUser.username;
-                string key_Value = txt_key_encryption.Text;
-                int userId = getUserIdByUsername(username);
-                bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
-
-                string name = fd.FileName;
-                //gets the file size and format it into MB/GB..
-                long fileSizeBytes = new FileInfo(fd.FileName).Length;
-                string fileSizeString = GetFileSizeString(fileSizeBytes);
-                //Gets the filetyoe if the imported file
-                string fileType = System.IO.Path.GetExtension(fd.FileName);
-                // Format the date and time according to MySQL DATETIME format
-                DateTime currentTime = DateTime.Now;
-                string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
-
-                StreamReader reader = new StreamReader(filePath, detectEncodingFromByteOrderMarks: true);
-                Encoding encoding = reader.CurrentEncoding;
-                string enc = encoding.GetType().Name;
-                reader.Close();
-
-                bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, enc, uploadDate);
-                if (isItImportedKeys && isItImportedKeysInfo)
-                {
-                    MessageBox.Show("Data inserted successfully");
-                }
-
-                byte[] encryptedBytes = hexListToByteArray(file_hexlist);
-
-                // Now, you can save the encryptedBytes array back to the file, replacing the original content
-                File.WriteAllBytes(filePath, encryptedBytes);
-
-                int fileid = getFileIdForEncryptionBtn();
-                string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
-                File.Move(filePath, newFilePath);
-
-                createEncryptedFileLog(userId, filePath);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("error " + ex.Message);
-            }
-        }
-
-    }
-
 
     private string getOldFileType(int userid, int fileid)
     {
@@ -1229,9 +1143,105 @@ public partial class MainPage : CustomForm
         Logout();
     }
 
-    private void btn_decrypt_Click(object sender, EventArgs e)
+
+    private void btn_encrypt_Click(object sender, EventArgs e)
+    {
+
+        string key = txt_key_encryption.Text;
+        if (String.IsNullOrEmpty(key))
+        {
+            MessageBox.Show("Please first enter password for the file, then select the file!");
+            return;
+        }
+        List<string> key_hexlist = stringToHexArrayList(key);
+
+        OpenFileDialog fd = new OpenFileDialog();
+
+
+        fd.Filter = "All Files (*.*)|*.*";
+        fd.Multiselect = false;
+
+        if (fd.ShowDialog() == DialogResult.OK)
+        {
+            string filePath = fd.FileName;
+
+            try
+            {
+                /*
+                 * 
+                 * 
+                 * 
+                 *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UTF-8 ENCODING 
+                 *
+                 *
+                 *
+                 *
+                 *
+                 */
+                byte[] fileBytes = File.ReadAllBytes(filePath);
+                List<string> file_hexlist = byteArrayToHexList(fileBytes);
+
+                firstStepOfEncryption(key_hexlist, file_hexlist);
+                secondStepOfEncryption(file_hexlist);
+                thirdStepOfEncryption(file_hexlist);
+                fourthStepOfEncryption(file_hexlist);
+
+                //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
+                //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
+
+                string username = CurrenltyLoggedUser.username;
+                string key_Value = txt_key_encryption.Text;
+                int userId = getUserIdByUsername(username);
+                bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
+
+                string name = fd.FileName;
+                //gets the file size and format it into MB/GB..
+                long fileSizeBytes = new FileInfo(fd.FileName).Length;
+                string fileSizeString = GetFileSizeString(fileSizeBytes);
+                //Gets the filetyoe if the imported file
+                string fileType = System.IO.Path.GetExtension(fd.FileName);
+                // Format the date and time according to MySQL DATETIME format
+                DateTime currentTime = DateTime.Now;
+                string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+                StreamReader reader = new StreamReader(filePath, detectEncodingFromByteOrderMarks: true);
+                Encoding encoding = reader.CurrentEncoding;
+                string enc = encoding.GetType().Name;
+                reader.Close();
+
+                bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, enc, uploadDate);
+                if (isItImportedKeys && isItImportedKeysInfo)
+                {
+                    MessageBox.Show("Data inserted successfully");
+                }
+
+                byte[] encryptedBytes = hexListToByteArray(file_hexlist);
+
+                // Now, you can save the encryptedBytes array back to the file, replacing the original content
+                File.WriteAllBytes(filePath, encryptedBytes);
+
+                int fileid = getFileIdForEncryptionBtn();
+                string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
+                File.Move(filePath, newFilePath);
+
+                createEncryptedFileLog(userId, filePath);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("error " + ex.Message);
+            }
+        }
+    }
+
+    private void btn_decrypto_Click(object sender, EventArgs e)
     {
         string key = txt_key_decryption.Text;
+        if (String.IsNullOrEmpty(key))
+        {
+            MessageBox.Show("Please first enter password for the file, then select the file!");
+            return;
+        }
         List<string> key_hexlist = stringToHexArrayList(key);
 
         OpenFileDialog fd = new OpenFileDialog();

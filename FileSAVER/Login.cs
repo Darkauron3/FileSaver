@@ -12,12 +12,14 @@ using System;
 
 public partial class Login : CustomForm
 {
-    
+
     public Login()
     {
         InitializeComponent();
     }
 
+    //The functions enable users to move the form around their screen.
+    //This functionality is provided by the title bar in Windows, which I removed due to design considerations. 
     private bool isDragging = false;
     private int mouseX, mouseY;
     private void Login_MouseDown(object sender, MouseEventArgs e)
@@ -49,7 +51,7 @@ public partial class Login : CustomForm
 
 
 
-    //Method for entering the data to the user's logs
+    //Method that creates logs about action in the table login_logs
     private bool CreateLog(int User_id, string action)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
@@ -77,7 +79,7 @@ public partial class Login : CustomForm
 
     }
 
-    //Method for sending select queries
+    //A method for retrieving a password hash from the database for a specific user.
     private String getPasswordByUserId(int User_id)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";

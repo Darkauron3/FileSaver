@@ -335,19 +335,6 @@ public partial class Register : CustomForm
     }
 
 
-    private void Form2_FormClosed(object sender, FormClosedEventArgs e)
-    {
-        Dispose();
-    }
-
-
-    private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-    {
-        Close();
-        Login formm1 = new Login();
-        formm1.Show();
-
-    }
 
     private void btn1_Click(object sender, EventArgs e)
     {
@@ -485,15 +472,11 @@ public partial class Register : CustomForm
     }
 
 
-    private void btn2_Click(object sender, EventArgs e)
+    private void button1_Click(object sender, EventArgs e)
     {
-        txt_username.Text = null;
-        txt_password.Text = null;
-        txt_password_confirm.Text = null;
-        txt_email.Text = null;
-        txt_age.Text = null;
+        Login l = new Login();
+        Hide();
+        l.Visible = true;
     }
-
-
 }
 

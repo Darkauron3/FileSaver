@@ -47,13 +47,13 @@
             // 
             // button1
             // 
-            button1.BackColor = Color.FromArgb(62, 120, 138);
+            button1.BackColor = Color.DarkOrange;
             button1.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            button1.ForeColor = Color.Black;
-            button1.Location = new Point(179, 328);
+            button1.ForeColor = Color.FromArgb(41, 44, 51);
+            button1.Location = new Point(179, 352);
             button1.Margin = new Padding(4, 3, 4, 3);
             button1.Name = "button1";
-            button1.Size = new Size(169, 77);
+            button1.Size = new Size(169, 53);
             button1.TabIndex = 0;
             button1.Text = "Login";
             button1.UseVisualStyleBackColor = false;
@@ -79,7 +79,7 @@
             txt1.BorderStyle = BorderStyle.None;
             txt1.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point);
             txt1.ForeColor = Color.White;
-            txt1.Location = new Point(116, 125);
+            txt1.Location = new Point(116, 117);
             txt1.Margin = new Padding(4, 3, 4, 3);
             txt1.Name = "txt1";
             txt1.Size = new Size(368, 43);
@@ -103,7 +103,7 @@
             linkLabel2.BackColor = Color.Transparent;
             linkLabel2.BorderStyle = BorderStyle.FixedSingle;
             linkLabel2.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            linkLabel2.LinkColor = Color.FromArgb(62, 120, 138);
+            linkLabel2.LinkColor = Color.DarkOrange;
             linkLabel2.Location = new Point(302, 274);
             linkLabel2.Margin = new Padding(4, 0, 4, 0);
             linkLabel2.Name = "linkLabel2";
@@ -174,7 +174,7 @@
             linkLabel1.AutoSize = true;
             linkLabel1.BackColor = Color.Transparent;
             linkLabel1.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            linkLabel1.LinkColor = Color.FromArgb(62, 120, 138);
+            linkLabel1.LinkColor = Color.DarkOrange;
             linkLabel1.Location = new Point(197, 171);
             linkLabel1.Margin = new Padding(4, 0, 4, 0);
             linkLabel1.Name = "linkLabel1";
