@@ -348,9 +348,9 @@ public partial class Register : CustomForm
             bool isUsernameValid = Regex.IsMatch(txt_username.Text, usernamePattern);
 
             string passwordPattern = "^(?=.*[A-Z])(?=.*[!@#$%^&*])(.{8,})$";
-            bool isPasswordValid = Regex.IsMatch(txt_password.Text, passwordPattern);
+            bool isPasswordValid = Regex.IsMatch(txt_pass.Text, passwordPattern);
 
-            bool isRepeatPasswordValid = txt_password.Text == txt_password_confirm.Text;
+            bool isRepeatPasswordValid = txt_pass.Text == txt_passconfirm.Text;
 
             string emailPattern = @"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$";
             bool isEmailValid = Regex.IsMatch(txt_email.Text, emailPattern);
@@ -394,7 +394,7 @@ public partial class Register : CustomForm
                         return;
                     }
                     bool isItInsertedUsers = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "admin");
-                    string hashedPassword = BCrypt.HashPassword(txt_password.Text);
+                    string hashedPassword = BCrypt.HashPassword(txt_pass.Text);
                     bool isItInsertedUserpasswords = InsertIntoUserspasswords(getUserIdByUsername(txt_username.Text), hashedPassword);
 
                     if (isItInsertedUsers == false || isItInsertedUserpasswords == false)
@@ -422,7 +422,7 @@ public partial class Register : CustomForm
                 try
                 {
                     bool isItInsertedUsers = InsertIntoUsers(txt_username.Text, txt_email.Text, Convert.ToInt32(txt_age.Text), "normal user");
-                    string hashedPassword = BCrypt.HashPassword(txt_password.Text);
+                    string hashedPassword = BCrypt.HashPassword(txt_pass.Text);
                     bool isItInsertedUserpasswords = InsertIntoUserspasswords(getUserIdByUsername(txt_username.Text), hashedPassword);
                     if (isItInsertedUsers == false || isItInsertedUserpasswords == false)
                     {

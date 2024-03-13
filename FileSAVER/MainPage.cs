@@ -158,8 +158,7 @@ public partial class MainPage : CustomForm
         {
             CurrentConnection.Close();
             return true;
-        }
-        else
+        } else
         {
             CurrentConnection.Close();
             return false;
@@ -183,8 +182,7 @@ public partial class MainPage : CustomForm
         {
             CurrentConnection.Close();
             return true;
-        }
-        else
+        } else
         {
             CurrentConnection.Close();
             return false;
@@ -210,8 +208,7 @@ public partial class MainPage : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        }
-        else
+        } else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -238,8 +235,7 @@ public partial class MainPage : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        }
-        else
+        } else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -266,8 +262,7 @@ public partial class MainPage : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        }
-        else
+        } else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -300,8 +295,7 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        }
-        else
+        } else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -326,8 +320,7 @@ public partial class MainPage : CustomForm
         if (reader.Read())
         {
             username = reader[0].ToString();
-        }
-        else
+        } else
         {
             MessageBox.Show("User with this id doesn't exist!");
             return null;
@@ -376,8 +369,7 @@ public partial class MainPage : CustomForm
                 reader.Close();
                 CurrentConnection.Close();
                 return true;
-            }
-            else
+            } else
             {
                 reader.Close();
                 CurrentConnection.Close();
@@ -479,8 +471,7 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        }
-        else
+        } else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -514,8 +505,7 @@ public partial class MainPage : CustomForm
             Console.WriteLine("Data inserted");
             CurrentConnection.Close();
             return true;
-        }
-        else
+        } else
         {
             Console.WriteLine("Failed to insert data");
             MessageBox.Show("Failed to insert the data!");
@@ -528,19 +518,18 @@ public partial class MainPage : CustomForm
 
 
     //Method for inserting inforamtion about encrypted file in the table user_files_info 
-    private bool importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype, string encoding, string uploadDate)
+    private bool importEncryptionKeysInfo(int user_id, string filename, string filesize, string filetype, string uploadDate)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO user_files_info (User_id, File_name, File_size, File_type, Encoding, Upload_date) VALUES (@User_id, @filename, @filesize, @filetype, @encoding, @uploaddate)";
+        string query = "INSERT INTO user_files_info (User_id, File_name, File_size, File_type, Upload_date) VALUES (@User_id, @filename, @filesize, @filetype, @uploaddate)";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@User_id", user_id);
         cmd.Parameters.AddWithValue("@filename", filename);
         cmd.Parameters.AddWithValue("@filesize", filesize);
         cmd.Parameters.AddWithValue("@filetype", filetype);
-        cmd.Parameters.AddWithValue("@encoding", encoding);
         cmd.Parameters.AddWithValue("uploaddate", uploadDate);
 
         int rowsAffected = cmd.ExecuteNonQuery();
@@ -548,8 +537,7 @@ public partial class MainPage : CustomForm
         {
             Console.WriteLine("Data inserted");
             return true;
-        }
-        else
+        } else
         {
             Console.WriteLine("Failed to insert data");
             MessageBox.Show("Failed to insert the data!");
@@ -600,8 +588,7 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return file_id;
 
-        }
-        else
+        } else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -628,8 +615,7 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return encoding;
 
-        }
-        else
+        } else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -658,8 +644,7 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        }
-        else
+        } else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -757,8 +742,7 @@ public partial class MainPage : CustomForm
 
                 //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
                 //like this "16" "13" - > "13" "63"
-            }
-            else
+            } else
             {
                 string newValueFori = firstValueFromFirstNumber.ToString("X") + firstValueFromNextNumber.ToString("X");
                 string newValueForiplusone = secondValueFromFirstNumber.ToString("X") + secondValueFromNextNumber.ToString("X");
@@ -872,8 +856,7 @@ public partial class MainPage : CustomForm
 
                 //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
                 //like this "16" "13" - > "13" "63"
-            }
-            else
+            } else
             {
                 string newRightValues = secondValueFromLeftNumber.ToString("X") + secondValueFromRightNumber.ToString("X");
                 string newLeftValues = firstValueFromLeftNumber.ToString("X") + firstValueFromRightNumber.ToString("X");
@@ -925,8 +908,7 @@ public partial class MainPage : CustomForm
             {
                 file.RemoveAt(i);
                 br++;
-            }
-            else
+            } else
             {
                 return;
             }
@@ -993,8 +975,7 @@ public partial class MainPage : CustomForm
             reader.Close();
             CurrentConnection.Close();
             return fileId;
-        }
-        else
+        } else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -1092,8 +1073,7 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        }
-        else
+        } else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -1114,8 +1094,7 @@ public partial class MainPage : CustomForm
         {
             // Convert the matched value to an integer and return
             return int.Parse(match.Value);
-        }
-        else
+        } else
         {
             // Return -1 or throw an exception indicating that no numbers were found
             throw new InvalidOperationException("No numbers found in the filename.");
@@ -1155,83 +1134,74 @@ public partial class MainPage : CustomForm
         }
         List<string> key_hexlist = stringToHexArrayList(key);
 
-        OpenFileDialog fd = new OpenFileDialog();
+        string filePath = lbl_choosen_en_file.Text;
 
-
-        fd.Filter = "All Files (*.*)|*.*";
-        fd.Multiselect = false;
-
-        if (fd.ShowDialog() == DialogResult.OK)
+        try
         {
-            string filePath = fd.FileName;
+            /*
+             * 
+             * 
+             * 
+             *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UTF-8 ENCODING 
+             *
+             *
+             *
+             *
+             *
+             */
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            List<string> file_hexlist = byteArrayToHexList(fileBytes);
 
-            try
+            firstStepOfEncryption(key_hexlist, file_hexlist);
+            secondStepOfEncryption(file_hexlist);
+            thirdStepOfEncryption(file_hexlist);
+            fourthStepOfEncryption(file_hexlist);
+
+            //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
+            //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
+
+            string username = CurrenltyLoggedUser.username;
+            string key_Value = txt_key_encryption.Text;
+            int userId = getUserIdByUsername(username);
+            bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
+
+            string name = lbl_choosen_en_file.Text;
+            //gets the file size and format it into MB/GB..
+            long fileSizeBytes = new FileInfo(lbl_choosen_en_file.Text).Length;
+            string fileSizeString = GetFileSizeString(fileSizeBytes);
+            //Gets the filetyoe if the imported file
+            string fileType = System.IO.Path.GetExtension(lbl_choosen_en_file.Text);
+            // Format the date and time according to MySQL DATETIME format
+            DateTime currentTime = DateTime.Now;
+            string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+            StreamReader reader = new StreamReader(filePath, detectEncodingFromByteOrderMarks: true);
+            Encoding encoding = reader.CurrentEncoding;
+            string enc = encoding.GetType().Name;
+            reader.Close();
+
+            bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, lbl_choosen_en_file.Text, fileSizeString, fileType, uploadDate);
+            if (isItImportedKeys && isItImportedKeysInfo)
             {
-                /*
-                 * 
-                 * 
-                 * 
-                 *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UTF-8 ENCODING 
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-                List<string> file_hexlist = byteArrayToHexList(fileBytes);
-
-                firstStepOfEncryption(key_hexlist, file_hexlist);
-                secondStepOfEncryption(file_hexlist);
-                thirdStepOfEncryption(file_hexlist);
-                fourthStepOfEncryption(file_hexlist);
-
-                //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
-                //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
-
-                string username = CurrenltyLoggedUser.username;
-                string key_Value = txt_key_encryption.Text;
-                int userId = getUserIdByUsername(username);
-                bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
-
-                string name = fd.FileName;
-                //gets the file size and format it into MB/GB..
-                long fileSizeBytes = new FileInfo(fd.FileName).Length;
-                string fileSizeString = GetFileSizeString(fileSizeBytes);
-                //Gets the filetyoe if the imported file
-                string fileType = System.IO.Path.GetExtension(fd.FileName);
-                // Format the date and time according to MySQL DATETIME format
-                DateTime currentTime = DateTime.Now;
-                string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
-
-                StreamReader reader = new StreamReader(filePath, detectEncodingFromByteOrderMarks: true);
-                Encoding encoding = reader.CurrentEncoding;
-                string enc = encoding.GetType().Name;
-                reader.Close();
-
-                bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, fd.FileName, fileSizeString, fileType, enc, uploadDate);
-                if (isItImportedKeys && isItImportedKeysInfo)
-                {
-                    MessageBox.Show("Data inserted successfully");
-                }
-
-                byte[] encryptedBytes = hexListToByteArray(file_hexlist);
-
-                // Now, you can save the encryptedBytes array back to the file, replacing the original content
-                File.WriteAllBytes(filePath, encryptedBytes);
-
-                int fileid = getFileIdForEncryptionBtn();
-                string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
-                File.Move(filePath, newFilePath);
-
-                createEncryptedFileLog(userId, filePath);
-
+                MessageBox.Show("Data inserted successfully");
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("error " + ex.Message);
-            }
+
+            byte[] encryptedBytes = hexListToByteArray(file_hexlist);
+
+            // Now, you can save the encryptedBytes array back to the file, replacing the original content
+            File.WriteAllBytes(filePath, encryptedBytes);
+
+            int fileid = getFileIdForEncryptionBtn();
+            string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
+            File.Move(filePath, newFilePath);
+
+            createEncryptedFileLog(userId, filePath);
+
+        } catch (Exception ex)
+        {
+            MessageBox.Show("error " + ex.Message);
         }
+
     }
 
     private void btn_decrypto_Click(object sender, EventArgs e)
@@ -1244,6 +1214,74 @@ public partial class MainPage : CustomForm
         }
         List<string> key_hexlist = stringToHexArrayList(key);
 
+        string filePath = lbl_decryption_choosen.Text;
+
+            try
+            {
+                byte[] fileBytes = File.ReadAllBytes(filePath);
+                List<string> file_hexlist = byteArrayToHexList(fileBytes);
+
+                string username = getCurrentlyLoggedUser().username;
+                int id = getUserIdByUsername(username);
+
+                int file_id = ExtractFileId(lbl_decryption_choosen.Text);
+
+                string database_pass_hash = getUserPassHash(id, file_id);
+                string pass = txt_key_decryption.Text;
+
+                if (BCrypt.Verify(pass, database_pass_hash))
+                {
+                    int fileId = ExtractFileId(lbl_decryption_choosen.Text);
+                    firstStepOfDecryption(file_hexlist);
+                    secondStepOfDecryption(file_hexlist);
+                    thirdStepOfDecryption(file_hexlist);
+                    fourthStepOfDeryption(file_hexlist, key_hexlist);
+
+                    byte[] decryptedBytes = hexListToByteArray(file_hexlist);
+                    File.WriteAllBytes(lbl_decryption_choosen.Text, decryptedBytes);
+
+                    string oldFiletype = getOldFileType(id, fileId);
+                    string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
+                    File.Move(filePath, newFilePath);
+
+                    createDecryptedFileLog(id, filePath);
+                } else
+                {
+                    MessageBox.Show("Wrong password for decryption!");
+                    return;
+                }
+                MessageBox.Show("File decrypted successfully!");
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+    }
+
+    private void Choose_encryption_file_Click(object sender, EventArgs e)
+    {
+        OpenFileDialog fd = new OpenFileDialog();
+
+
+        fd.Filter = "All Files (*.*)|*.*";
+        fd.Multiselect = false;
+
+        if (fd.ShowDialog() == DialogResult.OK)
+        {
+            string filePath = fd.FileName;
+
+            try
+            {
+                lbl_choosen_en_file.Text = filePath;
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+    }
+
+    private void Choose_decryption_file_Click(object sender, EventArgs e)
+    {
+
         OpenFileDialog fd = new OpenFileDialog();
 
         fd.Filter = "All Files (*.*)|*.*";
@@ -1255,45 +1293,12 @@ public partial class MainPage : CustomForm
 
             try
             {
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-                List<string> file_hexlist = byteArrayToHexList(fileBytes);
-
-                string username = getCurrentlyLoggedUser().username;
-                int id = getUserIdByUsername(username);
-
-                int file_id = ExtractFileId(fd.FileName);
-
-                string database_pass_hash = getUserPassHash(id, file_id);
-                string pass = txt_key_decryption.Text;
-
-                if (BCrypt.Verify(pass, database_pass_hash))
-                {
-                    int fileId = ExtractFileId(fd.FileName);
-                    firstStepOfDecryption(file_hexlist);
-                    secondStepOfDecryption(file_hexlist);
-                    thirdStepOfDecryption(file_hexlist);
-                    fourthStepOfDeryption(file_hexlist, key_hexlist);
-
-                    byte[] decryptedBytes = hexListToByteArray(file_hexlist);
-                    File.WriteAllBytes(fd.FileName, decryptedBytes);
-
-                    string oldFiletype = getOldFileType(id, fileId);
-                    string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
-                    File.Move(filePath, newFilePath);
-
-                    createDecryptedFileLog(id, filePath);
-                }
-                else
-                {
-                    MessageBox.Show("Wrong password for decryption!");
-                    return;
-                }
-                MessageBox.Show("File decrypted successfully!");
-            }
-            catch (Exception ex)
+                lbl_decryption_choosen.Text = filePath;
+            } catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+
         }
     }
 }

@@ -56,6 +56,10 @@
             label12 = new Label();
             label13 = new Label();
             btn_encrypt = new Button();
+            lbl_choosen_en_file = new Label();
+            label16 = new Label();
+            label17 = new Label();
+            lbl_decryption_choosen = new Label();
             nav_panel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -89,6 +93,7 @@
             Choose_encryption_file.Text = "Browse File For Encryption";
             Choose_encryption_file.TextAlign = ContentAlignment.MiddleRight;
             Choose_encryption_file.UseVisualStyleBackColor = false;
+            Choose_encryption_file.Click += Choose_encryption_file_Click;
             // 
             // label7
             // 
@@ -213,6 +218,8 @@
             // 
             // bot_panel
             // 
+            bot_panel.Controls.Add(lbl_decryption_choosen);
+            bot_panel.Controls.Add(label17);
             bot_panel.Controls.Add(btn_decrypto);
             bot_panel.Controls.Add(label14);
             bot_panel.Controls.Add(label15);
@@ -331,6 +338,7 @@
             Choose_decryption_file.Text = "Browse File For Decryption";
             Choose_decryption_file.TextAlign = ContentAlignment.MiddleRight;
             Choose_decryption_file.UseVisualStyleBackColor = false;
+            Choose_decryption_file.Click += Choose_decryption_file_Click;
             // 
             // txt_key_decryption
             // 
@@ -468,11 +476,55 @@
             btn_encrypt.UseVisualStyleBackColor = false;
             btn_encrypt.Click += btn_encrypt_Click;
             // 
+            // lbl_choosen_en_file
+            // 
+            lbl_choosen_en_file.AutoSize = true;
+            lbl_choosen_en_file.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_choosen_en_file.ForeColor = Color.White;
+            lbl_choosen_en_file.Location = new Point(756, 297);
+            lbl_choosen_en_file.Name = "lbl_choosen_en_file";
+            lbl_choosen_en_file.Size = new Size(0, 24);
+            lbl_choosen_en_file.TabIndex = 24;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label16.ForeColor = Color.White;
+            label16.Location = new Point(756, 264);
+            label16.Name = "label16";
+            label16.Size = new Size(143, 24);
+            label16.TabIndex = 25;
+            label16.Text = "Choosen file:";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label17.ForeColor = Color.White;
+            label17.Location = new Point(531, 272);
+            label17.Name = "label17";
+            label17.Size = new Size(143, 24);
+            label17.TabIndex = 26;
+            label17.Text = "Choosen file:";
+            // 
+            // lbl_decryption_choosen
+            // 
+            lbl_decryption_choosen.AutoSize = true;
+            lbl_decryption_choosen.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_decryption_choosen.ForeColor = Color.White;
+            lbl_decryption_choosen.Location = new Point(531, 314);
+            lbl_decryption_choosen.Name = "lbl_decryption_choosen";
+            lbl_decryption_choosen.Size = new Size(0, 24);
+            lbl_decryption_choosen.TabIndex = 27;
+            // 
             // MainPage
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(1469, 797);
+            Controls.Add(label16);
+            Controls.Add(lbl_choosen_en_file);
             Controls.Add(btn_encrypt);
             Controls.Add(label12);
             Controls.Add(label13);
@@ -545,5 +597,9 @@
         private Label label14;
         private Label label15;
         private PictureBox pictureBox5;
+        private Label lbl_choosen_en_file;
+        private Label label16;
+        private Label lbl_decryption_choosen;
+        private Label label17;
     }
 }
