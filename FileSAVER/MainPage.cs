@@ -37,6 +37,7 @@ public partial class MainPage : CustomForm
         InitializeComponent();
     }
 
+    //3 method for mouse movement, so the user can drag the windows around his screen
     private bool isDragging = false;
     private int mouseX, mouseY;
     private void MainPage_MouseDown(object sender, MouseEventArgs e)
@@ -67,12 +68,7 @@ public partial class MainPage : CustomForm
     }
 
 
-
-
-
-
-
-    //Constructor for the metod for recieving user data
+    //Constructor for UserData
     public class UserData
     {
         public string Username { get; set; }
@@ -80,7 +76,7 @@ public partial class MainPage : CustomForm
         public int Age { get; set; }
         public string Type { get; set; }
     }
-    //Method for recieving data of the last logged in user
+    //Method for recieving data of user by user_id
     private static UserData GetUserData(int User_id)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
@@ -141,54 +137,6 @@ public partial class MainPage : CustomForm
 
 
     }
-    //Method for check if the username already exists in the database
-    private bool checkForExistingUsername(string username)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-        string query = "SELECT COUNT(*) FROM users WHERE username=@Username AND deleted=@Deleted";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@Username", username);
-        cmd.Parameters.AddWithValue("@Deleted", 0);
-
-        int count = Convert.ToInt32(cmd.ExecuteScalar());
-
-        if (count > 0)
-        {
-            CurrentConnection.Close();
-            return true;
-        } else
-        {
-            CurrentConnection.Close();
-            return false;
-        }
-
-    }
-
-    private bool checkForExistingEmail(string email)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-        string query = "SELECT COUNT(*) FROM users WHERE email=@Email AND deleted=@Deleted;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@Email", email);
-        cmd.Parameters.AddWithValue("@Deleted", 0);
-
-        int count = Convert.ToInt32(cmd.ExecuteScalar());
-
-        if (count > 0)
-        {
-            CurrentConnection.Close();
-            return true;
-        } else
-        {
-            CurrentConnection.Close();
-            return false;
-        }
-
-    }
 
     //Method for making a log in login_logs
     private bool createLog(int User_id, string action)
@@ -217,7 +165,7 @@ public partial class MainPage : CustomForm
         return true;
 
     }
-
+    //Method for creating a log about an encrypted file
     private bool createEncryptedFileLog(int userid, string filepath)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
@@ -244,7 +192,7 @@ public partial class MainPage : CustomForm
         return true;
 
     }
-
+    //Method for creating a log about an decrypted file
     private bool createDecryptedFileLog(int userid, string filepath)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
@@ -271,10 +219,6 @@ public partial class MainPage : CustomForm
         return true;
 
     }
-
-
-
-
 
     //Method for checking if the user is admin
     private bool checkIfUserIsAdmin(int userId)
@@ -352,56 +296,11 @@ public partial class MainPage : CustomForm
         CurrentConnection.Close();
         return logs;
     }
-
-    private bool? checkIfUserIsDeleted(int id)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-        string query = "SELECT deleted FROM users WHERE User_id=@userId;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@userId", id);
-        MySqlDataReader reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            if (Convert.ToInt32(reader["deleted"]) == 1)
-            {
-                reader.Close();
-                CurrentConnection.Close();
-                return true;
-            } else
-            {
-                reader.Close();
-                CurrentConnection.Close();
-                return false;
-            }
-        }
-        return null;
-    }
-    //Method for writing all usernames to the ComboBox from the database
-    private void writeToComboAllUsernames(ComboBox combo)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-
-        string query = "SELECT username FROM users WHERE deleted=@deleted;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@deleted", 0);
-        MySqlDataReader reader = cmd.ExecuteReader();
-        while (reader.Read())
-        {
-            combo.Items.Add(reader["username"]);
-        }
-        reader.Close();
-        CurrentConnection.Close();
-    }
+   
 
     //Method which is called whenever the user log out of the account
     private void Logout()
     {
-
-
         Dispose();
         Login form1 = new Login();
         form1.Show();
@@ -536,14 +435,16 @@ public partial class MainPage : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
+            CurrentConnection.Close();
             return true;
         } else
         {
             Console.WriteLine("Failed to insert data");
             MessageBox.Show("Failed to insert the data!");
+            CurrentConnection.Close();
             return false;
         }
-        CurrentConnection.Close();
+        
 
     }
 
@@ -1126,13 +1027,13 @@ public partial class MainPage : CustomForm
         }
         
     }
-
+    //Logout from navigiotion bar
     private void btn_logout_Click(object sender, EventArgs e)
     {
         Logout();
     }
 
-
+    //Encrypt button
     private void btn_encrypt_Click(object sender, EventArgs e)
     {
 
@@ -1148,27 +1049,20 @@ public partial class MainPage : CustomForm
 
         try
         {
-            /*
-             * 
-             * 
-             * 
-             *CHANGES ARE NEEDED SO, BECAUSE CYRILIC SYMBOLS ARE NOT IN THE ASCII AND NEEDS UTF-8 ENCODING 
-             *
-             *
-             *
-             *
-             *
-             */
             byte[] fileBytes = File.ReadAllBytes(filePath);
             List<string> file_hexlist = byteArrayToHexList(fileBytes);
 
-            firstStepOfEncryption(key_hexlist, file_hexlist);
+            firstStepOfEncryption(key_hexlist, file_hexlist); 
+            secondStepOfEncryption(file_hexlist);
             secondStepOfEncryption(file_hexlist);
             thirdStepOfEncryption(file_hexlist);
+            thirdStepOfEncryption(file_hexlist);
             fourthStepOfEncryption(file_hexlist);
+            
 
-            //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the db 
-            //Also the password will be hashed and stored into the db so when the user provide the right file with the right pass the file to start
+
+            //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the database
+            //Also the password will be hashed and stored into the database 
 
             string username = CurrenltyLoggedUser.username;
             string key_Value = txt_key_encryption.Text;
@@ -1185,9 +1079,11 @@ public partial class MainPage : CustomForm
             DateTime currentTime = DateTime.Now;
             string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
 
+            //Import information about the ecnrypted file in the user_files_info table
             bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, lbl_choosen_en_file.Text, fileSizeString, fileType, uploadDate);
             if (isItImportedKeys && isItImportedKeysInfo)
             {
+                //Telling the user to don't change file extension because there is the fileid which is needed in the decryption process
                 MessageBox.Show("IMPORTANT! Don't change the file extension, this program after encrypting your file will change the file extension with a new one called .filesaver_(number) its important, because the extension holds the id of your file in the database and if you change this extension you may never decrypt your file back!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 MessageBox.Show("File encrypted successfully!");
             }
@@ -1210,6 +1106,7 @@ public partial class MainPage : CustomForm
 
     }
 
+    //Decryption button
     private void btn_decrypto_Click(object sender, EventArgs e)
     {
         string key = txt_key_decryption.Text;
@@ -1238,12 +1135,17 @@ public partial class MainPage : CustomForm
                 if (BCrypt.Verify(pass, database_pass_hash))
                 {
                     int fileId = ExtractFileId(lbl_decryption_choosen.Text);
+
+                //1 2 3 3 2 3 3 2 2 4
+
                     firstStepOfDecryption(file_hexlist);
                     secondStepOfDecryption(file_hexlist);
+                    secondStepOfDecryption(file_hexlist);
                     thirdStepOfDecryption(file_hexlist);
-                    fourthStepOfDeryption(file_hexlist, key_hexlist);
-
-                    byte[] decryptedBytes = hexListToByteArray(file_hexlist);
+                    thirdStepOfDecryption(file_hexlist);
+                    fourthStepOfDeryption(file_hexlist, key_hexlist);                
+    
+                byte[] decryptedBytes = hexListToByteArray(file_hexlist);
                     File.WriteAllBytes(lbl_decryption_choosen.Text, decryptedBytes);
 
                     string oldFiletype = getOldFileType(id, fileId);

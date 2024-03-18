@@ -40,7 +40,7 @@
             pictureBox3 = new PictureBox();
             label4 = new Label();
             register_link = new LinkLabel();
-            button2 = new Button();
+            exit_btn = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             SuspendLayout();
@@ -182,19 +182,19 @@
             register_link.TabIndex = 15;
             register_link.TabStop = true;
             register_link.Text = "No account? Register Here!";
-            register_link.LinkClicked += linkLabel1_LinkClicked_1;
+            register_link.LinkClicked += register_link_LinkClicked;
             // 
-            // button2
+            // exit_btn
             // 
-            button2.BackColor = Color.Black;
-            button2.BackgroundImageLayout = ImageLayout.None;
-            button2.Image = (Image)resources.GetObject("button2.Image");
-            button2.Location = new Point(504, -2);
-            button2.Name = "button2";
-            button2.Size = new Size(51, 49);
-            button2.TabIndex = 16;
-            button2.UseVisualStyleBackColor = false;
-            button2.Click += button2_Click;
+            exit_btn.BackColor = Color.Black;
+            exit_btn.BackgroundImageLayout = ImageLayout.None;
+            exit_btn.Image = (Image)resources.GetObject("exit_btn.Image");
+            exit_btn.Location = new Point(504, -2);
+            exit_btn.Name = "exit_btn";
+            exit_btn.Size = new Size(51, 49);
+            exit_btn.TabIndex = 16;
+            exit_btn.UseVisualStyleBackColor = false;
+            exit_btn.Click += button2_Click;
             // 
             // Login
             // 
@@ -202,7 +202,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(554, 456);
-            Controls.Add(button2);
+            Controls.Add(exit_btn);
             Controls.Add(register_link);
             Controls.Add(panel2);
             Controls.Add(login_btn);
@@ -240,6 +240,6 @@
         private PictureBox pictureBox3;
         private Label label4;
         private LinkLabel register_link;
-        private Button button2;
+        private Button exit_btn;
     }
 }

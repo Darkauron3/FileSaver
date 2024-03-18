@@ -68,8 +68,7 @@ public partial class Login : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        }
-        else
+        } else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -156,7 +155,7 @@ public partial class Login : CustomForm
         return false;
     }
 
-    
+
 
     //Method for getting user's email by provided user id
     private string getEmailByUserId(int userid)
@@ -217,8 +216,7 @@ public partial class Login : CustomForm
                     Hide();
                     form3.StartPosition = FormStartPosition.CenterScreen;
                     form3.Show();
-                }
-                else
+                } else
                 {
                     MessageBox.Show("Wrong username or password!");
 
@@ -231,16 +229,14 @@ public partial class Login : CustomForm
 
                     return;
                 }
-            }
-            else
+            } else
             {
                 MessageBox.Show("Wrong username or password!");
                 return;
             }
 
 
-        }
-        catch (MySqlException ex)
+        } catch (MySqlException ex)
         {
             MessageBox.Show(ex.ToString());
         }
@@ -256,16 +252,17 @@ public partial class Login : CustomForm
         r.Visible = true;
     }
 
-    private void linkLabel1_LinkClicked_1(object sender, LinkLabelLinkClickedEventArgs e)
-    {
-        Register form2 = new Register();
-        Hide();
-        form2.Show();
-    }
-
+    //Exit button
     private void button2_Click(object sender, EventArgs e)
     {
         Application.Exit();
+    }
+
+    private void register_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        Register r = new Register();
+        Hide();
+        r.Visible = true;
     }
 }
 

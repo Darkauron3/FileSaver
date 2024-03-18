@@ -33,7 +33,7 @@ namespace FileSAVER
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Register));
             label1 = new Label();
             label2 = new Label();
-            btn1 = new Button();
+            btn_register = new Button();
             rdbtn1 = new RadioButton();
             rdbtn2 = new RadioButton();
             panel2 = new Panel();
@@ -50,7 +50,7 @@ namespace FileSAVER
             txt_pass = new TextBox();
             panel6 = new Panel();
             txt_passconfirm = new TextBox();
-            button1 = new Button();
+            return_btn = new Button();
             SuspendLayout();
             // 
             // label1
@@ -76,17 +76,17 @@ namespace FileSAVER
             label2.TabIndex = 1;
             label2.Text = "Username:";
             // 
-            // btn1
+            // btn_register
             // 
-            btn1.BackColor = Color.DarkOrange;
-            btn1.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
-            btn1.Location = new Point(207, 568);
-            btn1.Name = "btn1";
-            btn1.Size = new Size(219, 56);
-            btn1.TabIndex = 14;
-            btn1.Text = "Register!";
-            btn1.UseVisualStyleBackColor = false;
-            btn1.Click += btn1_Click;
+            btn_register.BackColor = Color.DarkOrange;
+            btn_register.Font = new Font("Century Gothic", 15.75F, FontStyle.Bold, GraphicsUnit.Point);
+            btn_register.Location = new Point(207, 568);
+            btn_register.Name = "btn_register";
+            btn_register.Size = new Size(219, 56);
+            btn_register.TabIndex = 14;
+            btn_register.Text = "Register!";
+            btn_register.UseVisualStyleBackColor = false;
+            btn_register.Click += btn1_Click;
             // 
             // rdbtn1
             // 
@@ -267,17 +267,17 @@ namespace FileSAVER
             txt_passconfirm.Size = new Size(369, 43);
             txt_passconfirm.TabIndex = 32;
             // 
-            // button1
+            // return_btn
             // 
-            button1.BackColor = Color.FromArgb(41, 44, 51);
-            button1.BackgroundImageLayout = ImageLayout.None;
-            button1.Image = (Image)resources.GetObject("button1.Image");
-            button1.Location = new Point(-2, 3);
-            button1.Name = "button1";
-            button1.Size = new Size(78, 66);
-            button1.TabIndex = 35;
-            button1.UseVisualStyleBackColor = false;
-            button1.Click += button1_Click;
+            return_btn.BackColor = Color.FromArgb(41, 44, 51);
+            return_btn.BackgroundImageLayout = ImageLayout.None;
+            return_btn.Image = (Image)resources.GetObject("return_btn.Image");
+            return_btn.Location = new Point(-2, 3);
+            return_btn.Name = "return_btn";
+            return_btn.Size = new Size(78, 66);
+            return_btn.TabIndex = 35;
+            return_btn.UseVisualStyleBackColor = false;
+            return_btn.Click += button1_Click;
             // 
             // Register
             // 
@@ -286,7 +286,7 @@ namespace FileSAVER
             AutoValidate = AutoValidate.Disable;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(663, 662);
-            Controls.Add(button1);
+            Controls.Add(return_btn);
             Controls.Add(panel6);
             Controls.Add(txt_pass);
             Controls.Add(txt_passconfirm);
@@ -303,7 +303,7 @@ namespace FileSAVER
             Controls.Add(txt_username);
             Controls.Add(rdbtn2);
             Controls.Add(rdbtn1);
-            Controls.Add(btn1);
+            Controls.Add(btn_register);
             Controls.Add(label2);
             Controls.Add(label1);
             FormBorderStyle = FormBorderStyle.None;
@@ -323,7 +323,7 @@ namespace FileSAVER
         private Label label2;
         private MaskedTextBox txt_password;
         private MaskedTextBox txt_password_confirm;
-        private Button btn1;
+        private Button btn_register;
         private RadioButton rdbtn1;
         private RadioButton rdbtn2;
         private Panel panel2;
@@ -342,6 +342,6 @@ namespace FileSAVER
         private TextBox txt_pass;
         private Panel panel6;
         private TextBox txt_passconfirm;
-        private Button button1;
+        private Button return_btn;
     }
 }

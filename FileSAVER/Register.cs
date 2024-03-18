@@ -25,6 +25,8 @@ public partial class Register : CustomForm
         InitializeComponent();
     }
 
+
+    //3 methods for mouse movement, so the form can be moved around user's screen
     private bool isDragging = false;
     private int mouseX, mouseY;
     private void Register_MouseDown(object sender, MouseEventArgs e)
@@ -54,7 +56,7 @@ public partial class Register : CustomForm
         }
     }
 
-    //Method for inserting query to table users
+    //Method for creating a new user and inserting the data in the users table
     private bool InsertIntoUsers(string username, string email, int age, string type)
     {
         try
@@ -179,7 +181,8 @@ public partial class Register : CustomForm
         }
     }
 
-    //Mehtod for inserting query to table users_passwords
+    //Mehtod for inserting the new user's password in the table users_tables
+    //If there is deleted user the new register user gets his place, so the autoincrement id don't get wrong
     private bool InsertIntoUserspasswords(int User_id, string pass_hash)
     {
         try
@@ -335,10 +338,9 @@ public partial class Register : CustomForm
     }
 
 
-
+    //Regiser button
     private void btn1_Click(object sender, EventArgs e)
     {
-
         try
         {
             string usernameToCheck = txt_username.Text;
@@ -384,7 +386,7 @@ public partial class Register : CustomForm
                 return;
             }
 
-            if (rdbtn1.Checked == true)
+            if (rdbtn1.Checked == true)//If the new user choose to be admin
             {
                 try
                 {
@@ -416,7 +418,7 @@ public partial class Register : CustomForm
 
 
             }
-            else if (rdbtn2.Checked == true)
+            else if (rdbtn2.Checked == true)//If the new user choose to be normal user
             {
 
                 try
@@ -471,7 +473,7 @@ public partial class Register : CustomForm
 
     }
 
-
+    //Return button which returns to login page 
     private void button1_Click(object sender, EventArgs e)
     {
         Login l = new Login();
