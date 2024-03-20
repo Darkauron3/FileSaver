@@ -51,6 +51,14 @@ namespace FileSAVER
             panel6 = new Panel();
             txt_passconfirm = new TextBox();
             return_btn = new Button();
+            closed_eye = new PictureBox();
+            open_eye = new PictureBox();
+            closed_eye2 = new PictureBox();
+            open_eye2 = new PictureBox();
+            ((System.ComponentModel.ISupportInitialize)closed_eye).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)open_eye).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closed_eye2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)open_eye2).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -243,6 +251,7 @@ namespace FileSAVER
             txt_pass.Location = new Point(190, 161);
             txt_pass.Margin = new Padding(4, 3, 4, 3);
             txt_pass.Name = "txt_pass";
+            txt_pass.PasswordChar = '*';
             txt_pass.Size = new Size(369, 43);
             txt_pass.TabIndex = 34;
             // 
@@ -264,6 +273,7 @@ namespace FileSAVER
             txt_passconfirm.Location = new Point(191, 239);
             txt_passconfirm.Margin = new Padding(4, 3, 4, 3);
             txt_passconfirm.Name = "txt_passconfirm";
+            txt_passconfirm.PasswordChar = '*';
             txt_passconfirm.Size = new Size(369, 43);
             txt_passconfirm.TabIndex = 32;
             // 
@@ -279,6 +289,46 @@ namespace FileSAVER
             return_btn.UseVisualStyleBackColor = false;
             return_btn.Click += button1_Click;
             // 
+            // closed_eye
+            // 
+            closed_eye.Image = (Image)resources.GetObject("closed_eye.Image");
+            closed_eye.Location = new Point(509, 155);
+            closed_eye.Name = "closed_eye";
+            closed_eye.Size = new Size(54, 49);
+            closed_eye.TabIndex = 36;
+            closed_eye.TabStop = false;
+            closed_eye.Click += closed_eye_Click;
+            // 
+            // open_eye
+            // 
+            open_eye.Image = (Image)resources.GetObject("open_eye.Image");
+            open_eye.Location = new Point(509, 155);
+            open_eye.Name = "open_eye";
+            open_eye.Size = new Size(55, 49);
+            open_eye.TabIndex = 37;
+            open_eye.TabStop = false;
+            open_eye.Click += open_eye_Click;
+            // 
+            // closed_eye2
+            // 
+            closed_eye2.Image = (Image)resources.GetObject("closed_eye2.Image");
+            closed_eye2.Location = new Point(515, 235);
+            closed_eye2.Name = "closed_eye2";
+            closed_eye2.Size = new Size(49, 42);
+            closed_eye2.TabIndex = 38;
+            closed_eye2.TabStop = false;
+            closed_eye2.Click += closed_eye2_Click;
+            // 
+            // open_eye2
+            // 
+            open_eye2.Image = (Image)resources.GetObject("open_eye2.Image");
+            open_eye2.Location = new Point(515, 234);
+            open_eye2.Name = "open_eye2";
+            open_eye2.Size = new Size(48, 43);
+            open_eye2.TabIndex = 39;
+            open_eye2.TabStop = false;
+            open_eye2.Click += open_eye2_Click;
+            // 
             // Register
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -286,6 +336,10 @@ namespace FileSAVER
             AutoValidate = AutoValidate.Disable;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(663, 662);
+            Controls.Add(open_eye2);
+            Controls.Add(closed_eye2);
+            Controls.Add(open_eye);
+            Controls.Add(closed_eye);
             Controls.Add(return_btn);
             Controls.Add(panel6);
             Controls.Add(txt_pass);
@@ -313,6 +367,10 @@ namespace FileSAVER
             MouseDown += Register_MouseDown;
             MouseMove += Register_MouseMove;
             MouseUp += Register_MouseUp;
+            ((System.ComponentModel.ISupportInitialize)closed_eye).EndInit();
+            ((System.ComponentModel.ISupportInitialize)open_eye).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closed_eye2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)open_eye2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -343,5 +401,9 @@ namespace FileSAVER
         private Panel panel6;
         private TextBox txt_passconfirm;
         private Button return_btn;
+        private PictureBox closed_eye;
+        private PictureBox open_eye;
+        private PictureBox closed_eye2;
+        private PictureBox open_eye2;
     }
 }

@@ -264,5 +264,19 @@ public partial class Login : CustomForm
         Hide();
         r.Visible = true;
     }
+
+    private void open_eye_Click(object sender, EventArgs e)
+    {
+        open_eye.Visible = false;
+        closed_eye.Visible = true;
+        txt2.PasswordChar = '\0';
+    }
+
+    private void closed_eye_Click(object sender, EventArgs e)
+    {
+        closed_eye.Visible = false;
+        open_eye.Visible = true;
+        txt2.PasswordChar = '*';
+    }
 }
 

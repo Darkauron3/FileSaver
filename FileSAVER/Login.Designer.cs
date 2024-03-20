@@ -41,8 +41,12 @@
             label4 = new Label();
             register_link = new LinkLabel();
             exit_btn = new Button();
+            open_eye = new PictureBox();
+            closed_eye = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)open_eye).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closed_eye).BeginInit();
             SuspendLayout();
             // 
             // login_btn
@@ -94,6 +98,7 @@
             txt2.Location = new Point(116, 226);
             txt2.Margin = new Padding(4, 3, 4, 3);
             txt2.Name = "txt2";
+            txt2.PasswordChar = '*';
             txt2.Size = new Size(369, 43);
             txt2.TabIndex = 5;
             // 
@@ -196,12 +201,35 @@
             exit_btn.UseVisualStyleBackColor = false;
             exit_btn.Click += button2_Click;
             // 
+            // open_eye
+            // 
+            open_eye.Image = (Image)resources.GetObject("open_eye.Image");
+            open_eye.Location = new Point(434, 226);
+            open_eye.Name = "open_eye";
+            open_eye.Size = new Size(53, 43);
+            open_eye.TabIndex = 17;
+            open_eye.TabStop = false;
+            open_eye.Click += open_eye_Click;
+            // 
+            // closed_eye
+            // 
+            closed_eye.Image = (Image)resources.GetObject("closed_eye.Image");
+            closed_eye.Location = new Point(434, 225);
+            closed_eye.Name = "closed_eye";
+            closed_eye.Size = new Size(51, 46);
+            closed_eye.TabIndex = 18;
+            closed_eye.TabStop = false;
+            closed_eye.Visible = false;
+            closed_eye.Click += closed_eye_Click;
+            // 
             // Login
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(554, 456);
+            Controls.Add(closed_eye);
+            Controls.Add(open_eye);
             Controls.Add(exit_btn);
             Controls.Add(register_link);
             Controls.Add(panel2);
@@ -223,6 +251,8 @@
             MouseUp += Login_MouseUp;
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)open_eye).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closed_eye).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -241,5 +271,7 @@
         private Label label4;
         private LinkLabel register_link;
         private Button exit_btn;
+        private PictureBox open_eye;
+        private PictureBox closed_eye;
     }
 }
