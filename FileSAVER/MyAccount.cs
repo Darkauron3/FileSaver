@@ -51,7 +51,40 @@ namespace FileSAVER
             }
         }
 
+        private void getmyEncryptedFiles(int userId)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+            string query = "SELECT * FROM user_files_info WHERE User_id=@userid;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@userid", userId);
+            MySqlDataReader reader = cmd.ExecuteReader();
 
+            int counter = 1;
+            richtxt_myfiles.Clear();
+            if (reader.Read())
+            {
+                string fileName = reader.GetString("File_name");
+                string fileSize = reader.GetString("File_size");
+                string fileType = reader.GetString("File_type");
+                DateTime uploadDate = reader.GetDateTime("Upload_date");
+
+                string fileDetails = $"{counter}. " +
+                             $"File Name: {fileName} " +
+                             $"\nSize: {fileSize} bytes " +
+                             $"\nType: {fileType} " +
+                             $"\nUploaded: {uploadDate.ToString()}";
+                richtxt_myfiles.AppendText(fileDetails + Environment.NewLine);
+                counter++;
+            }
+            else
+            {
+                richtxt_myfiles.AppendText("Your account don't have any encrypted file yet. Encryped files will show up here.");
+                return;
+            }
+
+        }
 
 
         public MyAccount()
@@ -69,6 +102,9 @@ namespace FileSAVER
             txt_email.Text = email;
             txt_age.Text = age;
             lbl_acc_type.Text = type;
+
+            getmyEncryptedFiles(id);
+
         }
 
 
@@ -89,27 +125,25 @@ namespace FileSAVER
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             cmd.Parameters.AddWithValue("@userId", User_id);
             cmd.Parameters.AddWithValue("@Deleted", 0);
+            MySqlDataReader reader = cmd.ExecuteReader();
 
-            using (MySqlDataReader reader = cmd.ExecuteReader())
+            if (reader.Read() && reader.HasRows)
             {
-
-                if (reader.Read() && reader.HasRows)
+                UserData userData = new UserData
                 {
-                    UserData userData = new UserData
-                    {
-                        Username = reader["username"].ToString(),
-                        Email = reader["email"].ToString(),
-                        Age = Convert.ToInt32(reader["age"]),
-                        Type = reader["type"].ToString()
+                    Username = reader["username"].ToString(),
+                    Email = reader["email"].ToString(),
+                    Age = Convert.ToInt32(reader["age"]),
+                    Type = reader["type"].ToString()
 
-                    };
-                    reader.Close();
-                    return userData;
-                }
+                };
                 reader.Close();
-                CurrentConnection.Close();
-                return null;
+                return userData;
             }
+            reader.Close();
+            CurrentConnection.Close();
+            return null;
+
         }
 
 
@@ -502,11 +536,48 @@ namespace FileSAVER
                 MessageBox.Show("Error: " + e1.Message);
             }
 
+        }
 
+        private void closed_eye1_Click(object sender, EventArgs e)
+        {
+            closed_eye1.Visible = false;
+            openeye_1.Visible = true;
+            txt_oldpass.PasswordChar = '*';
+        }
 
+        private void closedeye_2_Click(object sender, EventArgs e)
+        {
+            closedeye_2.Visible = false;
+            openeye_2.Visible = true;
+            txt_newpass.PasswordChar = '*';
+        }
 
+        private void closedeye_3_Click(object sender, EventArgs e)
+        {
+            closedeye_3.Visible = false;
+            openeye_3.Visible = true;
+            txt_newpass_confirm.PasswordChar = '*';
+        }
 
+        private void openeye_1_Click_1(object sender, EventArgs e)
+        {
+            openeye_1.Visible = false;
+            closed_eye1.Visible = true;
+            txt_oldpass.PasswordChar = '\0';
+        }
 
+        private void openeye_2_Click_1(object sender, EventArgs e)
+        {
+            openeye_2.Visible = false;
+            closedeye_2.Visible = true;
+            txt_newpass.PasswordChar = '\0';
+        }
+
+        private void openeye_3_Click_1(object sender, EventArgs e)
+        {
+            openeye_3.Visible = false;
+            closedeye_3.Visible = true;
+            txt_newpass_confirm.PasswordChar = '\0';
         }
     }
 }

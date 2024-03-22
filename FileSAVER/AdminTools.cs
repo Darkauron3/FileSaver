@@ -593,40 +593,11 @@ namespace FileSAVER
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            try
+            if (comboBox1.SelectedItem != null)
             {
-                string choosenUser = comboBox1.SelectedItem.ToString();
-                DialogResult dialogResult = MessageBox.Show("Are you sure you wanna delete this user?", "Deleting user", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes)
-                {
-                    int id = getUserIdByUsername(choosenUser);
-                    bool isDeletedUsers = changeDeletedToTrueForUsers(id);
-                    bool isDeletedUsersPasswords = changeDeletedToTrueForUsersPasswords(id);
-                    bool isCreatedLog = createLog(id, "Account deleted");
-                    if (isDeletedUsers && isDeletedUsersPasswords && isCreatedLog)
-                    {
-                        comboBox1.Items.Clear();
-                        List<string> logs = new List<string>();
-                        getLogs(logs);
-                        string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
-                        richtxt1.Text = allLogs;
-                        writeToComboAllUsernames(comboBox1);
-
-                        MessageBox.Show("Successfully deleted user -> " + choosenUser);
-
-                    }
-                }
-                else if (dialogResult == DialogResult.No)
-                {
-                    comboBox1.Items.Clear();
-                    writeToComboAllUsernames(comboBox1);
-                }
-
+                comboBox1.Text = comboBox1.SelectedItem.ToString();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
+
         }
 
         private void check_login_CheckedChanged(object sender, EventArgs e)
@@ -750,6 +721,46 @@ namespace FileSAVER
             txtEmail.Text = email;
             txtAge.Text = age;
             lbl_realtype.Text = type;
+        }
+
+        private void btn_deleteuser_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string choosenUser = comboBox1.SelectedItem.ToString();
+                comboBox1.Text = " ";
+                DialogResult dialogResult = MessageBox.Show("Are you sure you wanna delete this user?", "Deleting user", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    int id = getUserIdByUsername(choosenUser);
+                    bool isDeletedUsers = changeDeletedToTrueForUsers(id);
+                    bool isDeletedUsersPasswords = changeDeletedToTrueForUsersPasswords(id);
+                    bool isCreatedLog = createLog(id, "Account deleted");
+                    if (isDeletedUsers && isDeletedUsersPasswords && isCreatedLog)
+                    {
+                        comboBox1.Items.Clear();
+                        List<string> logs = new List<string>();
+                        getLogs(logs);
+                        string allLogs = string.Join(Environment.NewLine + Environment.NewLine, logs);
+                        richtxt1.Text = allLogs;
+                        writeToComboAllUsernames(comboBox1);
+
+                        MessageBox.Show("Successfully deleted user -> " + choosenUser);
+
+                    }
+                }
+                else if (dialogResult == DialogResult.No)
+                {
+                    comboBox1.Items.Clear();
+                    writeToComboAllUsernames(comboBox1);
+                }
+                combo1.Items.Clear();
+                writeToComboAllUsernames(combo1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
         }
     }
 }

@@ -92,13 +92,15 @@ public partial class Register : CustomForm
                     Console.WriteLine("Data updated for the existing user");
                     CurrentConnection.Close();
                     return true;
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Failed to update data for the existing user");
                     CurrentConnection.Close();
                     return false;
                 }
-            } else
+            }
+            else
             {
                 // If there are no deleted users, insert a new user
                 reader.Close();
@@ -118,14 +120,16 @@ public partial class Register : CustomForm
                     Console.WriteLine("Data inserted");
                     CurrentConnection.Close();
                     return true;
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Failed to insert data");
                     CurrentConnection.Close();
                     return false;
                 }
             }
-        } catch (MySqlException ex)
+        }
+        catch (MySqlException ex)
         {
             if (ex.Number == 1062) // Unique constraint violation error number
             {
@@ -148,10 +152,12 @@ public partial class Register : CustomForm
                     if (errorMessage.Contains("username"))
                     {
                         MessageBox.Show("Error: The username you're trying to use already exists. Please choose a different username.");
-                    } else if (errorMessage.Contains("email"))
+                    }
+                    else if (errorMessage.Contains("email"))
                     {
                         MessageBox.Show("Error: The email you're trying to use already exists. Please choose a different email.");
-                    } else
+                    }
+                    else
                     {
                         // Handle other constraint violations
                         MessageBox.Show("Error: The data you're trying to insert violates a unique constraint. Please check your data.");
@@ -159,13 +165,15 @@ public partial class Register : CustomForm
                     return false;
                 }
                 return false;
-            } else
+            }
+            else
             {
                 // Handle other SQL exceptions
                 MessageBox.Show("Error: " + ex.Message);
                 return false;
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             // Handle other exceptions
             MessageBox.Show("Error: " + ex.Message);
@@ -207,13 +215,15 @@ public partial class Register : CustomForm
                     Console.WriteLine("Data updated for the existing user password");
                     CurrentConnection.Close();
                     return true;
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Failed to update data for the existing user password");
                     CurrentConnection.Close();
                     return false;
                 }
-            } else
+            }
+            else
             {
                 // If there are no deleted users, insert a new user password
                 reader.Close();
@@ -231,14 +241,16 @@ public partial class Register : CustomForm
                     Console.WriteLine("Data inserted");
                     CurrentConnection.Close();
                     return true;
-                } else
+                }
+                else
                 {
                     MessageBox.Show("Failed to insert data");
                     CurrentConnection.Close();
                     return false;
                 }
             }
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             // Handle other exceptions
             Console.WriteLine("Error: " + ex.Message);
@@ -261,7 +273,8 @@ public partial class Register : CustomForm
         {
             CurrentConnection.Close();
             return true;
-        } else
+        }
+        else
         {
             CurrentConnection.Close();
             return false;
@@ -313,7 +326,8 @@ public partial class Register : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -350,19 +364,23 @@ public partial class Register : CustomForm
             {
                 MessageBox.Show("The username field only allow letters and numbers as input!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            } else if (isPasswordValid == false)
+            }
+            else if (isPasswordValid == false)
             {
                 MessageBox.Show("The password should contain at least 8 characters, at least one uppercase character and at least one special symbol!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            } else if (isRepeatPasswordValid == false)
+            }
+            else if (isRepeatPasswordValid == false)
             {
                 MessageBox.Show("The password and the repeated password are not the same!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            } else if (isEmailValid == false)
+            }
+            else if (isEmailValid == false)
             {
                 MessageBox.Show("The email is not valid!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
-            } else if (isAgeValid == false)
+            }
+            else if (isAgeValid == false)
             {
                 MessageBox.Show("The age should be in this range: 18-100", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -384,20 +402,23 @@ public partial class Register : CustomForm
                     if (isItInsertedUsers == false || isItInsertedUserpasswords == false)
                     {
                         return;
-                    } else if (isItInsertedUsers && isItInsertedUserpasswords)
+                    }
+                    else if (isItInsertedUsers && isItInsertedUserpasswords)
                     {
                         MessageBox.Show("Data inserted successfuly!");
                         string username = txt_username.Text;
                         int id = getUserIdByUsername(username);
                         createLog(id, "New account registered");
                     }
-                } catch (MySqlException ex)
+                }
+                catch (MySqlException ex)
                 {
                     Console.WriteLine("Error: " + ex.Message);
                 }
 
 
-            } else if (rdbtn2.Checked == true)//If the new user choose to be normal user
+            }
+            else if (rdbtn2.Checked == true)//If the new user choose to be normal user
             {
 
                 try
@@ -408,21 +429,25 @@ public partial class Register : CustomForm
                     if (isItInsertedUsers == false || isItInsertedUserpasswords == false)
                     {
                         return;
-                    } else if (isItInsertedUsers && isItInsertedUserpasswords)
+                    }
+                    else if (isItInsertedUsers && isItInsertedUserpasswords)
                     {
                         MessageBox.Show("Data inserted successfuly!");
                         string username = txt_username.Text;
                         int id = getUserIdByUsername(username);
                         createLog(id, "New account registered");
                     }
-                } catch (MySqlException ex)
+                }
+                catch (MySqlException ex)
                 {
                     Console.WriteLine("Error MySql: " + ex.Message);
-                } catch (System.FormatException ex1)
+                }
+                catch (System.FormatException ex1)
                 {
                     MessageBox.Show("Error invalid format: " + ex1.Message);
                     return;
-                } catch (System.OverflowException ex2)
+                }
+                catch (System.OverflowException ex2)
                 {
                     MessageBox.Show("Error - Too long input: " + ex2.Message);
                 }
@@ -432,12 +457,14 @@ public partial class Register : CustomForm
             Login formm1 = new Login();
             formm1.Show();
 
-        } catch (ArgumentNullException ex)
+        }
+        catch (ArgumentNullException ex)
         {
             Console.WriteLine("Exception Message: " + ex.Message);
             Console.WriteLine("Stack Trace:");
             Console.WriteLine(ex.StackTrace);
-        } catch (NullReferenceException ex)
+        }
+        catch (NullReferenceException ex)
         {
             Console.WriteLine("Exception Message: " + ex.Message);
             Console.WriteLine("Stack Trace:");

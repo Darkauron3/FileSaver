@@ -68,6 +68,7 @@
             label4 = new Label();
             label13 = new Label();
             label14 = new Label();
+            btn_deleteuser = new Button();
             nav_panel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -326,7 +327,7 @@
             clearLogs.Name = "clearLogs";
             clearLogs.Size = new Size(205, 51);
             clearLogs.TabIndex = 30;
-            clearLogs.Text = "Clear all logs";
+            clearLogs.Text = "Remove logs";
             clearLogs.TextAlign = ContentAlignment.MiddleRight;
             clearLogs.UseVisualStyleBackColor = false;
             clearLogs.Click += clearLogs_Click;
@@ -345,7 +346,7 @@
             // 
             comboBox1.Font = new Font("Century Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point);
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(402, 685);
+            comboBox1.Location = new Point(382, 643);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(221, 38);
             comboBox1.TabIndex = 21;
@@ -552,17 +553,37 @@
             label14.BackColor = Color.Transparent;
             label14.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             label14.ForeColor = Color.FromArgb(62, 120, 138);
-            label14.Location = new Point(259, 694);
+            label14.Location = new Point(240, 651);
             label14.Name = "label14";
             label14.Size = new Size(126, 24);
             label14.TabIndex = 80;
             label14.Text = "Select user:";
+            // 
+            // btn_deleteuser
+            // 
+            btn_deleteuser.Anchor = AnchorStyles.Left;
+            btn_deleteuser.BackColor = Color.FromArgb(62, 120, 138);
+            btn_deleteuser.BackgroundImageLayout = ImageLayout.Center;
+            btn_deleteuser.Font = new Font("Century Gothic", 18F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_deleteuser.ForeColor = Color.White;
+            btn_deleteuser.Image = (Image)resources.GetObject("btn_deleteuser.Image");
+            btn_deleteuser.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_deleteuser.Location = new Point(402, 706);
+            btn_deleteuser.Margin = new Padding(10);
+            btn_deleteuser.Name = "btn_deleteuser";
+            btn_deleteuser.Size = new Size(191, 46);
+            btn_deleteuser.TabIndex = 81;
+            btn_deleteuser.Text = "Delete user";
+            btn_deleteuser.TextAlign = ContentAlignment.MiddleRight;
+            btn_deleteuser.UseVisualStyleBackColor = false;
+            btn_deleteuser.Click += btn_deleteuser_Click;
             // 
             // AdminTools
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(1469, 797);
+            Controls.Add(btn_deleteuser);
             Controls.Add(label14);
             Controls.Add(label4);
             Controls.Add(label13);
@@ -654,5 +675,6 @@
         private Label label4;
         private Label label13;
         private Label label14;
+        private Button btn_deleteuser;
     }
 }

@@ -312,7 +312,7 @@ namespace FileSAVER
             // closed_eye2
             // 
             closed_eye2.Image = (Image)resources.GetObject("closed_eye2.Image");
-            closed_eye2.Location = new Point(515, 235);
+            closed_eye2.Location = new Point(509, 235);
             closed_eye2.Name = "closed_eye2";
             closed_eye2.Size = new Size(49, 42);
             closed_eye2.TabIndex = 38;
@@ -322,7 +322,7 @@ namespace FileSAVER
             // open_eye2
             // 
             open_eye2.Image = (Image)resources.GetObject("open_eye2.Image");
-            open_eye2.Location = new Point(515, 234);
+            open_eye2.Location = new Point(509, 234);
             open_eye2.Name = "open_eye2";
             open_eye2.Size = new Size(48, 43);
             open_eye2.TabIndex = 39;

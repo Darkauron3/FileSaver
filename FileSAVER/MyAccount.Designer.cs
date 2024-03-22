@@ -57,9 +57,23 @@
             label3 = new Label();
             label8 = new Label();
             label9 = new Label();
+            closed_eye1 = new PictureBox();
+            closedeye_2 = new PictureBox();
+            closedeye_3 = new PictureBox();
+            openeye_1 = new PictureBox();
+            openeye_2 = new PictureBox();
+            openeye_3 = new PictureBox();
+            richtxt_myfiles = new RichTextBox();
+            label10 = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closed_eye1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye_2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye_3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)openeye_1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)openeye_2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)openeye_3).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -179,7 +193,7 @@
             label5.BackColor = Color.Transparent;
             label5.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             label5.ForeColor = Color.FromArgb(62, 120, 138);
-            label5.Location = new Point(256, 399);
+            label5.Location = new Point(255, 355);
             label5.Name = "label5";
             label5.Size = new Size(157, 24);
             label5.TabIndex = 28;
@@ -191,7 +205,7 @@
             label7.BackColor = Color.Transparent;
             label7.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             label7.ForeColor = Color.FromArgb(62, 120, 138);
-            label7.Location = new Point(283, 205);
+            label7.Location = new Point(282, 161);
             label7.Name = "label7";
             label7.Size = new Size(118, 24);
             label7.TabIndex = 25;
@@ -203,7 +217,7 @@
             lbl_acc_type.BackColor = SystemColors.ActiveCaptionText;
             lbl_acc_type.Font = new Font("Times New Roman", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
             lbl_acc_type.ForeColor = Color.DarkOrange;
-            lbl_acc_type.Location = new Point(442, 399);
+            lbl_acc_type.Location = new Point(441, 355);
             lbl_acc_type.Name = "lbl_acc_type";
             lbl_acc_type.Size = new Size(69, 31);
             lbl_acc_type.TabIndex = 24;
@@ -215,7 +229,7 @@
             label6.BackColor = Color.Transparent;
             label6.Font = new Font("Century Gothic", 36F, FontStyle.Bold, GraphicsUnit.Point);
             label6.ForeColor = Color.FromArgb(62, 120, 138);
-            label6.Location = new Point(317, 53);
+            label6.Location = new Point(316, 9);
             label6.Name = "label6";
             label6.Size = new Size(339, 56);
             label6.TabIndex = 19;
@@ -230,7 +244,7 @@
             btn_savechanges.ForeColor = Color.White;
             btn_savechanges.Image = (Image)resources.GetObject("btn_savechanges.Image");
             btn_savechanges.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_savechanges.Location = new Point(409, 446);
+            btn_savechanges.Location = new Point(450, 408);
             btn_savechanges.Margin = new Padding(10);
             btn_savechanges.Name = "btn_savechanges";
             btn_savechanges.Size = new Size(232, 46);
@@ -243,7 +257,7 @@
             // txt_age
             // 
             txt_age.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_age.Location = new Point(418, 339);
+            txt_age.Location = new Point(417, 295);
             txt_age.Name = "txt_age";
             txt_age.Size = new Size(308, 39);
             txt_age.TabIndex = 22;
@@ -251,7 +265,7 @@
             // txt_username
             // 
             txt_username.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_username.Location = new Point(418, 196);
+            txt_username.Location = new Point(417, 152);
             txt_username.Name = "txt_username";
             txt_username.Size = new Size(308, 39);
             txt_username.TabIndex = 20;
@@ -259,7 +273,7 @@
             // txt_email
             // 
             txt_email.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_email.Location = new Point(418, 268);
+            txt_email.Location = new Point(417, 224);
             txt_email.Name = "txt_email";
             txt_email.Size = new Size(308, 39);
             txt_email.TabIndex = 21;
@@ -270,7 +284,7 @@
             label2.BackColor = Color.Transparent;
             label2.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             label2.ForeColor = Color.FromArgb(62, 120, 138);
-            label2.Location = new Point(332, 277);
+            label2.Location = new Point(331, 233);
             label2.Name = "label2";
             label2.Size = new Size(69, 24);
             label2.TabIndex = 29;
@@ -282,7 +296,7 @@
             label4.BackColor = Color.Transparent;
             label4.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             label4.ForeColor = Color.FromArgb(62, 120, 138);
-            label4.Location = new Point(343, 348);
+            label4.Location = new Point(342, 304);
             label4.Name = "label4";
             label4.Size = new Size(58, 24);
             label4.TabIndex = 30;
@@ -295,7 +309,7 @@
             btn_changepass.ForeColor = Color.White;
             btn_changepass.Image = (Image)resources.GetObject("btn_changepass.Image");
             btn_changepass.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_changepass.Location = new Point(1100, 446);
+            btn_changepass.Location = new Point(1035, 406);
             btn_changepass.Name = "btn_changepass";
             btn_changepass.Size = new Size(271, 48);
             btn_changepass.TabIndex = 37;
@@ -308,7 +322,7 @@
             // 
             label17.AutoSize = true;
             label17.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label17.Location = new Point(815, 348);
+            label17.Location = new Point(757, 306);
             label17.Name = "label17";
             label17.Size = new Size(245, 24);
             label17.TabIndex = 36;
@@ -318,7 +332,7 @@
             // 
             label16.AutoSize = true;
             label16.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label16.Location = new Point(867, 277);
+            label16.Location = new Point(809, 235);
             label16.Name = "label16";
             label16.Size = new Size(160, 24);
             label16.TabIndex = 35;
@@ -328,7 +342,7 @@
             // 
             label15.AutoSize = true;
             label15.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label15.Location = new Point(880, 221);
+            label15.Location = new Point(822, 179);
             label15.Name = "label15";
             label15.Size = new Size(147, 24);
             label15.TabIndex = 34;
@@ -337,24 +351,27 @@
             // txt_newpass_confirm
             // 
             txt_newpass_confirm.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_newpass_confirm.Location = new Point(1066, 339);
+            txt_newpass_confirm.Location = new Point(1008, 297);
             txt_newpass_confirm.Name = "txt_newpass_confirm";
+            txt_newpass_confirm.PasswordChar = '*';
             txt_newpass_confirm.Size = new Size(318, 39);
             txt_newpass_confirm.TabIndex = 33;
             // 
             // txt_newpass
             // 
             txt_newpass.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_newpass.Location = new Point(1066, 277);
+            txt_newpass.Location = new Point(1008, 235);
             txt_newpass.Name = "txt_newpass";
+            txt_newpass.PasswordChar = '*';
             txt_newpass.Size = new Size(318, 39);
             txt_newpass.TabIndex = 32;
             // 
             // txt_oldpass
             // 
             txt_oldpass.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_oldpass.Location = new Point(1066, 212);
+            txt_oldpass.Location = new Point(1008, 170);
             txt_oldpass.Name = "txt_oldpass";
+            txt_oldpass.PasswordChar = '*';
             txt_oldpass.Size = new Size(318, 39);
             txt_oldpass.TabIndex = 31;
             // 
@@ -364,7 +381,7 @@
             label3.BackColor = Color.Transparent;
             label3.Font = new Font("Century Gothic", 36F, FontStyle.Bold, GraphicsUnit.Point);
             label3.ForeColor = Color.FromArgb(62, 120, 138);
-            label3.Location = new Point(984, 53);
+            label3.Location = new Point(926, 11);
             label3.Name = "label3";
             label3.Size = new Size(449, 56);
             label3.TabIndex = 38;
@@ -375,7 +392,7 @@
             label8.AutoSize = true;
             label8.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
             label8.ForeColor = Color.DarkOrange;
-            label8.Location = new Point(957, 120);
+            label8.Location = new Point(899, 78);
             label8.Name = "label8";
             label8.Size = new Size(476, 32);
             label8.TabIndex = 39;
@@ -386,17 +403,105 @@
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
             label9.ForeColor = Color.DarkOrange;
-            label9.Location = new Point(341, 120);
+            label9.Location = new Point(340, 76);
             label9.Name = "label9";
             label9.Size = new Size(282, 32);
             label9.TabIndex = 40;
             label9.Text = "Change your current data";
+            // 
+            // closed_eye1
+            // 
+            closed_eye1.Image = (Image)resources.GetObject("closed_eye1.Image");
+            closed_eye1.Location = new Point(1332, 165);
+            closed_eye1.Name = "closed_eye1";
+            closed_eye1.Size = new Size(52, 44);
+            closed_eye1.TabIndex = 42;
+            closed_eye1.TabStop = false;
+            closed_eye1.Click += closed_eye1_Click;
+            // 
+            // closedeye_2
+            // 
+            closedeye_2.Image = (Image)resources.GetObject("closedeye_2.Image");
+            closedeye_2.Location = new Point(1332, 230);
+            closedeye_2.Name = "closedeye_2";
+            closedeye_2.Size = new Size(48, 44);
+            closedeye_2.TabIndex = 44;
+            closedeye_2.TabStop = false;
+            closedeye_2.Click += closedeye_2_Click;
+            // 
+            // closedeye_3
+            // 
+            closedeye_3.Image = (Image)resources.GetObject("closedeye_3.Image");
+            closedeye_3.Location = new Point(1332, 295);
+            closedeye_3.Name = "closedeye_3";
+            closedeye_3.Size = new Size(55, 47);
+            closedeye_3.TabIndex = 46;
+            closedeye_3.TabStop = false;
+            closedeye_3.Click += closedeye_3_Click;
+            // 
+            // openeye_1
+            // 
+            openeye_1.Image = (Image)resources.GetObject("openeye_1.Image");
+            openeye_1.Location = new Point(1332, 161);
+            openeye_1.Name = "openeye_1";
+            openeye_1.Size = new Size(47, 49);
+            openeye_1.TabIndex = 47;
+            openeye_1.TabStop = false;
+            openeye_1.Click += openeye_1_Click_1;
+            // 
+            // openeye_2
+            // 
+            openeye_2.Image = (Image)resources.GetObject("openeye_2.Image");
+            openeye_2.Location = new Point(1332, 230);
+            openeye_2.Name = "openeye_2";
+            openeye_2.Size = new Size(50, 45);
+            openeye_2.TabIndex = 48;
+            openeye_2.TabStop = false;
+            openeye_2.Click += openeye_2_Click_1;
+            // 
+            // openeye_3
+            // 
+            openeye_3.Image = (Image)resources.GetObject("openeye_3.Image");
+            openeye_3.Location = new Point(1332, 295);
+            openeye_3.Name = "openeye_3";
+            openeye_3.Size = new Size(52, 47);
+            openeye_3.TabIndex = 49;
+            openeye_3.TabStop = false;
+            openeye_3.Click += openeye_3_Click_1;
+            // 
+            // richtxt_myfiles
+            // 
+            richtxt_myfiles.BackColor = Color.FromArgb(68, 120, 138);
+            richtxt_myfiles.Location = new Point(269, 577);
+            richtxt_myfiles.Name = "richtxt_myfiles";
+            richtxt_myfiles.Size = new Size(1188, 208);
+            richtxt_myfiles.TabIndex = 50;
+            richtxt_myfiles.Text = "";
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Font = new Font("Segoe UI", 18F, FontStyle.Italic, GraphicsUnit.Point);
+            label10.ForeColor = Color.DarkOrange;
+            label10.Location = new Point(269, 528);
+            label10.Name = "label10";
+            label10.Size = new Size(324, 32);
+            label10.TabIndex = 51;
+            label10.Text = "These are your encrypted files";
             // 
             // MyAccount
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(1469, 797);
+            Controls.Add(label10);
+            Controls.Add(richtxt_myfiles);
+            Controls.Add(openeye_3);
+            Controls.Add(openeye_2);
+            Controls.Add(openeye_1);
+            Controls.Add(closedeye_3);
+            Controls.Add(closedeye_2);
+            Controls.Add(closed_eye1);
             Controls.Add(label9);
             Controls.Add(label8);
             Controls.Add(label3);
@@ -430,6 +535,12 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closed_eye1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye_2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye_3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)openeye_1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)openeye_2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)openeye_3).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -464,5 +575,13 @@
         private Label label8;
         private Label label9;
         private Button btn_mainpage;
+        private PictureBox closed_eye1;
+        private PictureBox closedeye_2;
+        private PictureBox closedeye_3;
+        private PictureBox openeye_1;
+        private PictureBox openeye_2;
+        private PictureBox openeye_3;
+        private RichTextBox richtxt_myfiles;
+        private Label label10;
     }
 }
