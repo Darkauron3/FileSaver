@@ -29,6 +29,7 @@ CREATE TABLE `user_files_info` (
   `File_size` varchar(45) NOT NULL,
   `File_type` varchar(45) NOT NULL,
   `Upload_date` datetime NOT NULL,
+  `deleted` tinyint NOT NULL,
   PRIMARY KEY (`File_id`),
   KEY `fk_user_files_info_users1_idx` (`User_id`),
   CONSTRAINT `fk_user_files_info_user_files1` FOREIGN KEY (`File_id`) REFERENCES `user_files` (`file_id`),
@@ -42,7 +43,7 @@ CREATE TABLE `user_files_info` (
 
 LOCK TABLES `user_files_info` WRITE;
 /*!40000 ALTER TABLE `user_files_info` DISABLE KEYS */;
-INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\workbench_Viktor_Vladinov_2_11a.mwb','18.7KB','.mwb','2024-03-13 17:06:48');
+INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\real.png','1.3MB','.png','2024-03-24 12:42:08',1);
 /*!40000 ALTER TABLE `user_files_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +56,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-15 18:26:31
+-- Dump completed on 2024-03-24 12:50:17

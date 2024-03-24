@@ -25,6 +25,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using BCrypt.Net;
 using System.Text.RegularExpressions;
 using System.IO;
+using Microsoft.VisualBasic.ApplicationServices;
 
 
 public partial class MainPage : CustomForm
@@ -391,11 +392,12 @@ public partial class MainPage : CustomForm
         string fileContent = string.Join(Environment.NewLine, file);
         string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
 
-        string query = "INSERT INTO user_files (User_id, key_value, Encrypted_file) VALUES (@User_id, @Pass, @File);";
+        string query = "INSERT INTO user_files (User_id, key_value, Encrypted_file, deleted) VALUES (@User_id, @Pass, @File, @deleted);";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@User_id", user_id);
         cmd.Parameters.AddWithValue("@Pass", hashedPass);
         cmd.Parameters.AddWithValue("@File", base64Encoded);
+        cmd.Parameters.AddWithValue("@deleted", 0);
 
 
         int rowsAffected = cmd.ExecuteNonQuery();
@@ -423,13 +425,14 @@ public partial class MainPage : CustomForm
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "INSERT INTO user_files_info (User_id, File_name, File_size, File_type, Upload_date) VALUES (@User_id, @filename, @filesize, @filetype, @uploaddate)";
+        string query = "INSERT INTO user_files_info (User_id, File_name, File_size, File_type, Upload_date, deleted) VALUES (@User_id, @filename, @filesize, @filetype, @uploaddate, @deleted)";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@User_id", user_id);
         cmd.Parameters.AddWithValue("@filename", filename);
         cmd.Parameters.AddWithValue("@filesize", filesize);
         cmd.Parameters.AddWithValue("@filetype", filetype);
-        cmd.Parameters.AddWithValue("uploaddate", uploadDate);
+        cmd.Parameters.AddWithValue("@uploaddate", uploadDate);
+        cmd.Parameters.AddWithValue("@deleted", 0);
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)
@@ -453,10 +456,11 @@ public partial class MainPage : CustomForm
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT Key_value FROM user_files WHERE User_id=@userid AND file_id=@fileid;";
+        string query = "SELECT Key_value FROM user_files WHERE User_id=@userid AND file_id=@fileid AND deleted=@deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@userid", user_id);
         cmd.Parameters.AddWithValue("@fileid", file_id);
+        cmd.Parameters.AddWithValue("@deleted", 0);
         MySqlDataReader reader = cmd.ExecuteReader();
         if (reader.Read())
         {
@@ -473,41 +477,16 @@ public partial class MainPage : CustomForm
         return null;
     }
 
-    private int getFileIdByForDecryption(string last8symbols)
-    {
-        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
-        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
-        CurrentConnection.Open();
-        string query = "SELECT file_id FROM user_files WHERE Encrypted_file_code=@file_code;";
-        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
-        cmd.Parameters.AddWithValue("@file_code", last8symbols);
-        MySqlDataReader reader = cmd.ExecuteReader();
-        if (reader.Read())
-        {
-            int file_id = Convert.ToInt32(reader["File_id"]);
-            reader.Close();
-            CurrentConnection.Close();
-            return file_id;
-
-        } else
-        {
-            reader.Close();
-            CurrentConnection.Close();
-            MessageBox.Show("Error gettin FileId!");
-            return 0;
-        }
-
-    }
-
     private string getEncodingType(int userid, int fileid)
     {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT Encoding FROM user_files_info WHERE User_id=@userid AND File_id=@fileid;";
+        string query = "SELECT Encoding FROM user_files_info WHERE User_id=@userid AND File_id=@fileid AND deleted=@deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@userid", userid);
         cmd.Parameters.AddWithValue("@fileid", fileid);
+        cmd.Parameters.AddWithValue("@deleted", 0);
         MySqlDataReader reader = cmd.ExecuteReader();
         if (reader.Read())
         {
@@ -866,8 +845,9 @@ public partial class MainPage : CustomForm
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT file_id FROM user_files ORDER BY file_id DESC LIMIT 1;";
+        string query = "SELECT file_id FROM user_files WHERE deleted = @deleted ORDER BY file_id DESC LIMIT 1;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@deleted", 0);
         MySqlDataReader reader = cmd.ExecuteReader();
 
         if (reader.Read())
@@ -892,10 +872,11 @@ public partial class MainPage : CustomForm
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
-        string query = "SELECT File_type FROM user_files_info WHERE User_id=@userid AND File_Id=@fileid;";
+        string query = "SELECT File_type FROM user_files_info WHERE User_id=@userid AND File_Id=@fileid AND deleted=@deleted;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@userid", userid);
         cmd.Parameters.AddWithValue("@fileid", fileid);
+        cmd.Parameters.AddWithValue("@deleted", 0);
 
         MySqlDataReader reader = cmd.ExecuteReader();
 
@@ -1033,6 +1014,98 @@ public partial class MainPage : CustomForm
         Logout();
     }
 
+    private List<int> checkForDeltedFile()
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "SELECT file_id, user_id FROM user_files WHERE deleted=@deleted ORDER BY file_id ASC LIMIT 1;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@deleted", 1);
+        MySqlDataReader reader = cmd.ExecuteReader();
+        if(reader.Read())
+        {
+            int fileid = Convert.ToInt32(reader["file_id"]);
+            int userid = Convert.ToInt32(reader["User_Id"]);
+            List<int> ids = new List<int>();
+            ids.Clear();
+            ids.Add(fileid);
+            ids.Add(userid);
+            return ids;
+        } else
+        {
+            List<int> ids = new List<int>();
+            ids.Clear();
+            ids.Add(0);
+            return ids;
+        }
+    }
+
+    private bool writeNewFileOverDeletedFileUserFiles(int fileid, int userid, string key_value, string encryptedfile) {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "UPDATE user_files SET Key_value=@key,Encrypted_file=@encryptedfile, deleted=@deleted WHERE file_id=@fileid AND User_id=@userid;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@key", key_value);
+        cmd.Parameters.AddWithValue("@encryptedfile", encryptedfile);
+        cmd.Parameters.AddWithValue("@deleted", 0);
+        cmd.Parameters.AddWithValue("@fileid", fileid);
+        cmd.Parameters.AddWithValue("@userid", userid);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Insert successful");
+
+            CurrentConnection.Close();
+            return true;
+
+        }
+        else
+        {
+            Console.WriteLine("Insert failed");
+            CurrentConnection.Close();
+            return false;
+        }
+    }
+
+
+    private bool writeNewFileOverDeletedFileUserFilesInfo(int fileid, int userid, string filename, string filesize, string filetype, string uploaddate)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "UPDATE user_files_info SET File_name=@filename, File_size=@filesize, File_type=@filetype, Upload_date=@uploaddate,deleted=@deleted WHERE file_id=@fileid AND User_id=@userid;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@filename", filename);
+        cmd.Parameters.AddWithValue("@filesize", filesize);
+        cmd.Parameters.AddWithValue("@filetype", filetype);
+        cmd.Parameters.AddWithValue("@uploaddate", uploaddate);
+        cmd.Parameters.AddWithValue("@deleted", 0);
+        cmd.Parameters.AddWithValue("@fileid", fileid);
+        cmd.Parameters.AddWithValue("@userid", userid);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Insert successful");
+
+            CurrentConnection.Close();
+            return true;
+
+        }
+        else
+        {
+            Console.WriteLine("Insert failed");
+            CurrentConnection.Close();
+            return false;
+        }
+    }
+
     //Encrypt button
     private void btn_encrypt_Click(object sender, EventArgs e)
     {
@@ -1067,37 +1140,90 @@ public partial class MainPage : CustomForm
             string username = CurrenltyLoggedUser.username;
             string key_Value = txt_key_encryption.Text;
             int userId = getUserIdByUsername(username);
-            bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
+            
 
-            string name = lbl_choosen_en_file.Text;
-            //gets the file size and format it into MB/GB..
-            long fileSizeBytes = new FileInfo(lbl_choosen_en_file.Text).Length;
-            string fileSizeString = GetFileSizeString(fileSizeBytes);
-            //Gets the filetyoe if the imported file
-            string fileType = System.IO.Path.GetExtension(lbl_choosen_en_file.Text);
-            // Format the date and time according to MySQL DATETIME format
-            DateTime currentTime = DateTime.Now;
-            string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
-
-            //Import information about the ecnrypted file in the user_files_info table
-            bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, lbl_choosen_en_file.Text, fileSizeString, fileType, uploadDate);
-            if (isItImportedKeys && isItImportedKeysInfo)
+            //If there is file with column deleted=1, th enew file will take the place of the deletedfile
+            List<int> ids = checkForDeltedFile();
+            if(ids.Count > 1)//if there is deleted file this new file takes the place of the deleted file
             {
-                //Telling the user to don't change file extension because there is the fileid which is needed in the decryption process
-                MessageBox.Show("IMPORTANT! Don't change the file extension, this program after encrypting your file will change the file extension with a new one called .filesaver_(number) its important, because the extension holds the id of your file in the database and if you change this extension you may never decrypt your file back!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                MessageBox.Show("File encrypted successfully!");
-            }
+                int fileeid = ids[0];
+                int useerid = ids[1];
 
-            byte[] encryptedBytes = hexListToByteArray(file_hexlist);
+                string hashedPass = BCrypt.HashPassword(key_Value);
+                string fileContent = string.Join(Environment.NewLine, file_hexlist);
+                string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
+                bool isItImported = writeNewFileOverDeletedFileUserFiles(fileeid, useerid, hashedPass, base64Encoded);
 
-            // Now, you can save the encryptedBytes array back to the file, replacing the original content
-            File.WriteAllBytes(filePath, encryptedBytes);
 
-            int fileid = getFileIdForEncryptionBtn();
-            string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
-            File.Move(filePath, newFilePath);
+                string namee = lbl_choosen_en_file.Text;
+                //gets the file size and format it into MB/GB..
+                long fileSizeBytess = new FileInfo(lbl_choosen_en_file.Text).Length;
+                string fileSizeStringg = GetFileSizeString(fileSizeBytess);
+                //Gets the filetyoe if the imported file
+                string fileTypee = System.IO.Path.GetExtension(lbl_choosen_en_file.Text);
+                // Format the date and time according to MySQL DATETIME format
+                DateTime currentTimee = DateTime.Now;
+                string uploadDatee = currentTimee.ToString("yyyy-MM-dd HH:mm:ss");
 
-            createEncryptedFileLog(userId, filePath);
+                bool isItImportedInfo = writeNewFileOverDeletedFileUserFilesInfo(fileeid, useerid, namee, fileSizeStringg, fileTypee, uploadDatee);
+
+                byte[] encryptedBytes = hexListToByteArray(file_hexlist);
+
+                // Now, you can save the encryptedBytes array back to the file, replacing the original content
+                File.WriteAllBytes(filePath, encryptedBytes);
+
+                if(isItImported && isItImportedInfo)
+                {
+                    //Telling the user to don't change file extension because there is the fileid which is needed in the decryption process
+                    MessageBox.Show("IMPORTANT! Don't change the file extension, this program after encrypting your file will change the file extension with a new one called .filesaver_(number) its important, because the extension holds the id of your file in the database and if you change this extension you may never decrypt your file back!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("File encrypted successfully!");
+                }
+
+
+                string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileeid);
+                File.Move(filePath, newFilePath);
+
+                createEncryptedFileLog(useerid, filePath);
+
+                lbl_choosen_en_file.Text = null;
+                txt_key_encryption.Text = null;
+
+            } else if(ids.Count == 1)// if there isn't a decrpyted file, is created a new insert in the table
+            {
+                bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
+
+                string name = lbl_choosen_en_file.Text;
+                //gets the file size and format it into MB/GB..
+                long fileSizeBytes = new FileInfo(lbl_choosen_en_file.Text).Length;
+                string fileSizeString = GetFileSizeString(fileSizeBytes);
+                //Gets the filetyoe if the imported file
+                string fileType = System.IO.Path.GetExtension(lbl_choosen_en_file.Text);
+                // Format the date and time according to MySQL DATETIME format
+                DateTime currentTime = DateTime.Now;
+                string uploadDate = currentTime.ToString("yyyy-MM-dd HH:mm:ss");
+
+                //Import information about the ecnrypted file in the user_files_info table
+                bool isItImportedKeysInfo = importEncryptionKeysInfo(userId, lbl_choosen_en_file.Text, fileSizeString, fileType, uploadDate);
+                if (isItImportedKeys && isItImportedKeysInfo)
+                {
+                    //Telling the user to don't change file extension because there is the fileid which is needed in the decryption process
+                    MessageBox.Show("IMPORTANT! Don't change the file extension, this program after encrypting your file will change the file extension with a new one called .filesaver_(number) its important, because the extension holds the id of your file in the database and if you change this extension you may never decrypt your file back!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("File encrypted successfully!");
+                }
+
+                byte[] encryptedBytes = hexListToByteArray(file_hexlist);
+
+                // Now, you can save the encryptedBytes array back to the file, replacing the original content
+                File.WriteAllBytes(filePath, encryptedBytes);
+
+                int fileid = getFileIdForEncryptionBtn();
+                string newFilePath = Path.ChangeExtension(filePath, ".filesaver_" + fileid);
+                File.Move(filePath, newFilePath);
+
+                createEncryptedFileLog(userId, filePath);
+                lbl_choosen_en_file.Text = null;
+                txt_key_encryption.Text = null;
+            }       
 
         } catch (Exception ex)
         {
@@ -1105,6 +1231,67 @@ public partial class MainPage : CustomForm
         }
 
     }
+
+    //Method changing the deleted column to 1, so after decryption files can be removed form the databased in the table user_files
+    private bool setDeleteToTrueUserFiles(int fileid, int userid)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "UPDATE user_files SET deleted=@deleted WHERE file_id=@fileid AND User_id=@userid;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@deleted", 1);
+        cmd.Parameters.AddWithValue("@fileid", fileid);
+        cmd.Parameters.AddWithValue("@userid", userid);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Insert successful");
+
+            CurrentConnection.Close();
+            return true;
+
+        }
+        else
+        {
+            Console.WriteLine("Insert failed");
+            CurrentConnection.Close();
+            return false;
+        }
+    }
+
+    //Method changing the deleted column to 1, so after decryption files can be removed form the databased in the table user_files_info
+    private bool setDeleteToTrueUserFilesInfo(int fileid, int userid)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+
+        string query = "UPDATE user_files_info SET deleted=@deleted WHERE file_id=@fileid AND User_id=@userid;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@deleted", 1);
+        cmd.Parameters.AddWithValue("@fileid", fileid);
+        cmd.Parameters.AddWithValue("@userid", userid);
+
+        int rowsAffected = cmd.ExecuteNonQuery();
+        if (rowsAffected > 0)
+        {
+            Console.WriteLine("Insert successful");
+
+            CurrentConnection.Close();
+            return true;
+
+        }
+        else
+        {
+            Console.WriteLine("Insert failed");
+            CurrentConnection.Close();
+            return false;
+        }
+    }
+
 
     //Decryption button
     private void btn_decrypto_Click(object sender, EventArgs e)
@@ -1132,7 +1319,9 @@ public partial class MainPage : CustomForm
                 string database_pass_hash = getUserPassHash(id, file_id);
                 string pass = txt_key_decryption.Text;
 
-                if (BCrypt.Verify(pass, database_pass_hash))
+                
+
+            if (BCrypt.Verify(pass, database_pass_hash))
                 {
                     int fileId = ExtractFileId(lbl_decryption_choosen.Text);
 
@@ -1153,7 +1342,9 @@ public partial class MainPage : CustomForm
                     File.Move(filePath, newFilePath);
 
                     createDecryptedFileLog(id, filePath);
-                } else
+                    setDeleteToTrueUserFiles(file_id, id);
+                    setDeleteToTrueUserFilesInfo(file_id, id);
+            } else
                 {
                     MessageBox.Show("Wrong password for decryption!");
                     return;
@@ -1163,6 +1354,8 @@ public partial class MainPage : CustomForm
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
+        lbl_decryption_choosen = null;
+        txt_key_decryption = null;
     }
 
     private void Choose_encryption_file_Click(object sender, EventArgs e)
