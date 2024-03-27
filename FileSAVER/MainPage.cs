@@ -744,8 +744,6 @@ public partial class MainPage : CustomForm
                 file[i - 1] = newLeftValues;
 
             }
-
-
         }
     }
 
@@ -1109,8 +1107,15 @@ public partial class MainPage : CustomForm
     //Encrypt button
     private void btn_encrypt_Click(object sender, EventArgs e)
     {
-
         string key = txt_key_encryption.Text;
+        string pattern = @"^(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{16,}$";
+        if(!Regex.IsMatch(key,pattern))
+        {
+            // Password does not meet the criteria
+            MessageBox.Show("Password must have at least 1 uppercase character, 1 number, 1 special character, and be at least 16 characters long.");
+            return;
+        }
+
         if (String.IsNullOrEmpty(key))
         {
             MessageBox.Show("Please first enter password for the file, then select the file!");
@@ -1297,6 +1302,15 @@ public partial class MainPage : CustomForm
     private void btn_decrypto_Click(object sender, EventArgs e)
     {
         string key = txt_key_decryption.Text;
+
+        string pattern = @"^(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{16,}$";
+        if (!Regex.IsMatch(key, pattern))
+        {
+            // Password does not meet the criteria
+            MessageBox.Show("Password must have at least 1 uppercase character, 1 number, 1 special character, and be at least 16 characters long.");
+            return;
+        }
+
         if (String.IsNullOrEmpty(key))
         {
             MessageBox.Show("Please first enter password for the file, then select the file!");
@@ -1324,8 +1338,6 @@ public partial class MainPage : CustomForm
             if (BCrypt.Verify(pass, database_pass_hash))
                 {
                     int fileId = ExtractFileId(lbl_decryption_choosen.Text);
-
-                //1 2 3 3 2 3 3 2 2 4
 
                     firstStepOfDecryption(file_hexlist);
                     secondStepOfDecryption(file_hexlist);

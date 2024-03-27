@@ -34,6 +34,8 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             bot_panel = new Panel();
+            lbl_decryption_choosen = new Label();
+            label17 = new Label();
             btn_decrypto = new Button();
             label14 = new Label();
             label15 = new Label();
@@ -58,8 +60,6 @@
             btn_encrypt = new Button();
             lbl_choosen_en_file = new Label();
             label16 = new Label();
-            label17 = new Label();
-            lbl_decryption_choosen = new Label();
             nav_panel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -238,6 +238,27 @@
             bot_panel.Size = new Size(1244, 401);
             bot_panel.TabIndex = 12;
             // 
+            // lbl_decryption_choosen
+            // 
+            lbl_decryption_choosen.AutoSize = true;
+            lbl_decryption_choosen.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_decryption_choosen.ForeColor = Color.White;
+            lbl_decryption_choosen.Location = new Point(531, 314);
+            lbl_decryption_choosen.Name = "lbl_decryption_choosen";
+            lbl_decryption_choosen.Size = new Size(0, 24);
+            lbl_decryption_choosen.TabIndex = 27;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
+            label17.ForeColor = Color.White;
+            label17.Location = new Point(531, 272);
+            label17.Name = "label17";
+            label17.Size = new Size(143, 24);
+            label17.TabIndex = 26;
+            label17.Text = "Choosen file:";
+            // 
             // btn_decrypto
             // 
             btn_decrypto.BackColor = Color.FromArgb(62, 120, 138);
@@ -345,6 +366,7 @@
             txt_key_decryption.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             txt_key_decryption.Location = new Point(52, 228);
             txt_key_decryption.Name = "txt_key_decryption";
+            txt_key_decryption.PasswordChar = '*';
             txt_key_decryption.Size = new Size(318, 41);
             txt_key_decryption.TabIndex = 20;
             // 
@@ -427,6 +449,7 @@
             txt_key_encryption.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             txt_key_encryption.Location = new Point(277, 214);
             txt_key_encryption.Name = "txt_key_encryption";
+            txt_key_encryption.PasswordChar = '*';
             txt_key_encryption.Size = new Size(318, 41);
             txt_key_encryption.TabIndex = 19;
             // 
@@ -496,27 +519,6 @@
             label16.Size = new Size(143, 24);
             label16.TabIndex = 25;
             label16.Text = "Choosen file:";
-            // 
-            // label17
-            // 
-            label17.AutoSize = true;
-            label17.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label17.ForeColor = Color.White;
-            label17.Location = new Point(531, 272);
-            label17.Name = "label17";
-            label17.Size = new Size(143, 24);
-            label17.TabIndex = 26;
-            label17.Text = "Choosen file:";
-            // 
-            // lbl_decryption_choosen
-            // 
-            lbl_decryption_choosen.AutoSize = true;
-            lbl_decryption_choosen.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            lbl_decryption_choosen.ForeColor = Color.White;
-            lbl_decryption_choosen.Location = new Point(531, 314);
-            lbl_decryption_choosen.Name = "lbl_decryption_choosen";
-            lbl_decryption_choosen.Size = new Size(0, 24);
-            lbl_decryption_choosen.TabIndex = 27;
             // 
             // MainPage
             // 

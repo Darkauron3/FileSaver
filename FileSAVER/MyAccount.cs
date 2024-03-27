@@ -56,14 +56,16 @@ namespace FileSAVER
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
-            string query = "SELECT * FROM user_files_info WHERE User_id=@userid;";
+            string query = "SELECT * FROM user_files_info WHERE User_id=@userid AND deleted=@deleted;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
             cmd.Parameters.AddWithValue("@userid", userId);
+            cmd.Parameters.AddWithValue("@deleted", 0);
             MySqlDataReader reader = cmd.ExecuteReader();
 
             int counter = 1;
             richtxt_myfiles.Clear();
-            if (reader.Read())
+
+            while (reader.Read()) // Use a loop to read all rows
             {
                 string fileName = reader.GetString("File_name");
                 string fileSize = reader.GetString("File_size");
@@ -71,19 +73,20 @@ namespace FileSAVER
                 DateTime uploadDate = reader.GetDateTime("Upload_date");
 
                 string fileDetails = $"{counter}. " +
-                             $"File Name: {fileName} " +
-                             $"\nSize: {fileSize} bytes " +
-                             $"\nType: {fileType} " +
-                             $"\nUploaded: {uploadDate.ToString()}";
+                                     $"File Name: {fileName} " +
+                                     $"\nSize: {fileSize} bytes " +
+                                     $"\nType: {fileType} " +
+                                     $"\nUploaded: {uploadDate.ToString()}";
                 richtxt_myfiles.AppendText(fileDetails + Environment.NewLine);
                 counter++;
             }
-            else
+
+            if (counter == 1) // No files found
             {
-                richtxt_myfiles.AppendText("Your account don't have any encrypted file yet. Encryped files will show up here.");
-                return;
+                richtxt_myfiles.AppendText("Your account doesn't have any encrypted files yet. Encrypted files will show up here.");
             }
 
+            CurrentConnection.Close(); // Close the connection
         }
 
 
@@ -226,8 +229,7 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            }
-            else
+            } else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -253,8 +255,7 @@ namespace FileSAVER
             if (rowsAffected > 0)
             {
                 Console.WriteLine("Data inserted");
-            }
-            else
+            } else
             {
                 Console.WriteLine("Failed to insert data");
                 return false;
@@ -292,14 +293,12 @@ namespace FileSAVER
                     updateUserPassByUserId(id, new_hash);
                     createLog(id, "Changed password");
                     MessageBox.Show("Passord changed successfuly!");
-                }
-                else
+                } else
                 {
                     MessageBox.Show("New password and confirm new password are not the same!");
                     return;
                 }
-            }
-            else
+            } else
             {
                 MessageBox.Show("Wrong pasword!");
                 return;
@@ -372,8 +371,7 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            }
-            else
+            } else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -399,8 +397,7 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            }
-            else
+            } else
             {
                 CurrentConnection.Close();
                 return false;
@@ -425,8 +422,7 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            }
-            else
+            } else
             {
                 CurrentConnection.Close();
                 return false;
@@ -471,54 +467,47 @@ namespace FileSAVER
                             {
                                 MessageBox.Show("This username you choose has already been registered");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 bool isUpdated = updateData(currentUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                }
-                                else
+                                } else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
 
-                        }
-                        else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
+                        } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
                         {
                             if (checkForExistingEmail(txt_email.Text))
                             {
                                 MessageBox.Show("This email you choose has already been registered");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 bool isUpdated = updateData(currentUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                }
-                                else
+                                } else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
-                        }
-                        else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
+                        } else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
                         {
                             bool isUpdated = updateData(currentUser);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            }
-                            else
+                            } else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
@@ -530,8 +519,7 @@ namespace FileSAVER
 
 
 
-            }
-            catch (MySqlException e1)
+            } catch (MySqlException e1)
             {
                 MessageBox.Show("Error: " + e1.Message);
             }

@@ -472,6 +472,7 @@
             // richtxt_myfiles
             // 
             richtxt_myfiles.BackColor = Color.FromArgb(68, 120, 138);
+            richtxt_myfiles.Font = new Font("Century Gothic", 14.25F, FontStyle.Bold, GraphicsUnit.Point);
             richtxt_myfiles.Location = new Point(269, 577);
             richtxt_myfiles.Name = "richtxt_myfiles";
             richtxt_myfiles.Size = new Size(1188, 208);

@@ -19,7 +19,7 @@ namespace FileSAVER
             InitializeComponent();
         }
 
-
+        //Methods allowing user to move freely the form around his screen
         private bool isDragging = false;
         private int mouseX, mouseY;
         private void AdminTools_MouseDown(object sender, MouseEventArgs e)
@@ -48,9 +48,6 @@ namespace FileSAVER
                 isDragging = false;
             }
         }
-
-
-
 
         //Constructor for the metod for recieving user data
         public class UserData
@@ -160,7 +157,6 @@ namespace FileSAVER
 
         }
 
-
         //Method for getting username by provided id
         private string getUsernameById(int id)
         {
@@ -190,8 +186,6 @@ namespace FileSAVER
             return username;
 
         }
-
-
 
         //Method for checking if the user is admin
         private bool checkIfUserIsAdmin(int userId)
@@ -244,8 +238,6 @@ namespace FileSAVER
             return logs;
         }
 
-
-
         //Method for writing all usernames to the ComboBox from the database
         private void writeToComboAllUsernames(ComboBox combo)
         {
@@ -265,6 +257,7 @@ namespace FileSAVER
             CurrentConnection.Close();
         }
 
+        //
         private void combo1_MouseClicked(object sender, MouseEventArgs e)
         {
             combo1.Items.Clear();
@@ -349,7 +342,7 @@ namespace FileSAVER
 
         private void clearAllLogs()
         {
-            string connstring = "Server=localhost;Database=mydb;User=adminuser;Password=adminuseradminuser;";
+            string connstring = "Server=localhost;Database=mydb;User=adminuser;Password=adminuser1234!;";
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 

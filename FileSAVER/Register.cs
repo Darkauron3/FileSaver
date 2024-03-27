@@ -405,7 +405,7 @@ public partial class Register : CustomForm
                     }
                     else if (isItInsertedUsers && isItInsertedUserpasswords)
                     {
-                        MessageBox.Show("Data inserted successfuly!");
+                        MessageBox.Show("Account registered successfuly!");
                         string username = txt_username.Text;
                         int id = getUserIdByUsername(username);
                         createLog(id, "New account registered");
@@ -481,6 +481,7 @@ public partial class Register : CustomForm
         l.Visible = true;
     }
 
+    //Buttons for reviewing the password in the password fields by clicking the image of eye
     private void open_eye_Click(object sender, EventArgs e)
     {
         open_eye.Visible = false;
