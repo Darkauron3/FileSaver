@@ -622,7 +622,7 @@
             Text = "Form6";
             Load += Form6_Load;
             MouseDown += AdminTools_MouseDown;
-            MouseMove += AdminTools_MouseMove;
+            MouseMove += AdminTools_MouseDown;
             MouseUp += AdminTools_MouseUp;
             nav_panel.ResumeLayout(false);
             panel1.ResumeLayout(false);

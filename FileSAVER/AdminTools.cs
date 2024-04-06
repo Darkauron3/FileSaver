@@ -14,10 +14,25 @@ namespace FileSAVER
 {
     public partial class AdminTools : CustomForm
     {
+        System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
         public AdminTools()
         {
             InitializeComponent();
+            SetupTimer();
+        }
 
+        //Log out the user due to inactivity
+        private void InactivityTimer_Tick(object sender, EventArgs e)
+        {
+            Logout();
+            MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
+        }
+
+        private void SetupTimer()
+        {
+            inactivityTimer.Interval = 120000; // 2 minutes
+            inactivityTimer.Tick += InactivityTimer_Tick;
+            inactivityTimer.Enabled = true;
         }
 
         //Methods allowing user to move freely the form around his screen
@@ -40,6 +55,9 @@ namespace FileSAVER
                 this.Left += e.X - mouseX;
                 this.Top += e.Y - mouseY;
             }
+            // Reset the timer when the mouse is moved
+            inactivityTimer.Enabled = false;
+            inactivityTimer.Enabled = true;
         }
 
         private void AdminTools_MouseUp(object sender, MouseEventArgs e)

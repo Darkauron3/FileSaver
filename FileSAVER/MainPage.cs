@@ -37,7 +37,7 @@ public partial class MainPage : CustomForm
     public MainPage()
     {
         InitializeComponent();
-        //SetupTimer();
+        SetupTimer();
     }
 
     private void InactivityTimer_Tick(object sender, EventArgs e)
@@ -46,16 +46,9 @@ public partial class MainPage : CustomForm
         MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
     }
 
-    private void MainForm_MouseMove(object sender, MouseEventArgs e)
-    {
-        // Reset the timer when the mouse is moved
-        inactivityTimer.Enabled = false;
-        inactivityTimer.Enabled = true;
-    }
-
     private void SetupTimer()
     {
-        
+
         inactivityTimer.Interval = 120000; // 2 minutes
         inactivityTimer.Tick += InactivityTimer_Tick;
         inactivityTimer.Enabled = true;
@@ -82,6 +75,9 @@ public partial class MainPage : CustomForm
             this.Left += e.X - mouseX;
             this.Top += e.Y - mouseY;
         }
+        // Reset the timer when the mouse is moved
+        inactivityTimer.Enabled = false;
+        inactivityTimer.Enabled = true;
     }
 
     private void MainPage_MouseUp(object sender, MouseEventArgs e)
@@ -1118,7 +1114,7 @@ public partial class MainPage : CustomForm
         cmd.Parameters.AddWithValue("@encryptedfile", encryptedfile);
         cmd.Parameters.AddWithValue("@deleted", 0);
         cmd.Parameters.AddWithValue("@fileid", fileid);
-       
+
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)
@@ -1153,7 +1149,7 @@ public partial class MainPage : CustomForm
         cmd.Parameters.AddWithValue("@uploaddate", uploaddate);
         cmd.Parameters.AddWithValue("@deleted", 0);
         cmd.Parameters.AddWithValue("@fileid", fileid);
-        
+
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)

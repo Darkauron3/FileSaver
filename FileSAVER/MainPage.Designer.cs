@@ -34,6 +34,7 @@
             label1 = new Label();
             pictureBox1 = new PictureBox();
             bot_panel = new Panel();
+            label19 = new Label();
             lbl_decryption_choosen = new Label();
             label17 = new Label();
             btn_decrypto = new Button();
@@ -61,7 +62,6 @@
             lbl_choosen_en_file = new Label();
             label16 = new Label();
             label18 = new Label();
-            label19 = new Label();
             nav_panel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -240,6 +240,17 @@
             bot_panel.Name = "bot_panel";
             bot_panel.Size = new Size(1244, 401);
             bot_panel.TabIndex = 12;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Font = new Font("Century Gothic", 15.75F, FontStyle.Italic, GraphicsUnit.Point);
+            label19.ForeColor = Color.White;
+            label19.Location = new Point(52, 290);
+            label19.Name = "label19";
+            label19.Size = new Size(308, 48);
+            label19.TabIndex = 27;
+            label19.Text = "The minimum length must be \r\nat least 16 characters!";
             // 
             // lbl_decryption_choosen
             // 
@@ -533,17 +544,6 @@
             label18.Size = new Size(308, 48);
             label18.TabIndex = 26;
             label18.Text = "The minimum length must be \r\nat least 16 characters!";
-            // 
-            // label19
-            // 
-            label19.AutoSize = true;
-            label19.Font = new Font("Century Gothic", 15.75F, FontStyle.Italic, GraphicsUnit.Point);
-            label19.ForeColor = Color.White;
-            label19.Location = new Point(52, 290);
-            label19.Name = "label19";
-            label19.Size = new Size(308, 48);
-            label19.TabIndex = 27;
-            label19.Text = "The minimum length must be \r\nat least 16 characters!";
             // 
             // MainPage
             // 

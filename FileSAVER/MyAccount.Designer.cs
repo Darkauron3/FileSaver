@@ -170,6 +170,7 @@
             btn_admintools.TextAlign = ContentAlignment.BottomCenter;
             btn_admintools.UseVisualStyleBackColor = true;
             btn_admintools.Click += btn_admintools_Click;
+            btn_admintools.MouseMove += MyAccount_MouseMove;
             // 
             // btn_acc
             // 

@@ -38,7 +38,7 @@ namespace FileSAVER
             lbl_acc_type.Text = type;
 
             getmyEncryptedFiles(id);
-           // SetupTimer();
+            SetupTimer();
         }
 
         //Log out the user due to inactivity
@@ -48,15 +48,8 @@ namespace FileSAVER
             MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
         }
 
-        private void MainForm_MouseMove(object sender, MouseEventArgs e)
-        {
-            // Reset the timer when the mouse is moved
-            inactivityTimer.Enabled = false;
-            inactivityTimer.Enabled = true;
-        }
-
         private void SetupTimer()
-        { 
+        {
             inactivityTimer.Interval = 120000; // 2 minutes
             inactivityTimer.Tick += InactivityTimer_Tick;
             inactivityTimer.Enabled = true;
@@ -81,6 +74,9 @@ namespace FileSAVER
                 this.Left += e.X - mouseX;
                 this.Top += e.Y - mouseY;
             }
+            // Reset the timer when the mouse is moved
+            inactivityTimer.Enabled = false;
+            inactivityTimer.Enabled = true;
         }
 
         private void MyAccount_MouseUp(object sender, MouseEventArgs e)
@@ -130,7 +126,7 @@ namespace FileSAVER
         }
 
 
-       
+
 
 
         public class UserData
@@ -251,7 +247,8 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            } else
+            }
+            else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -277,7 +274,8 @@ namespace FileSAVER
             if (rowsAffected > 0)
             {
                 Console.WriteLine("Data inserted");
-            } else
+            }
+            else
             {
                 Console.WriteLine("Failed to insert data");
                 return false;
@@ -315,12 +313,14 @@ namespace FileSAVER
                     updateUserPassByUserId(id, new_hash);
                     createLog(id, "Changed password");
                     MessageBox.Show("Passord changed successfuly!");
-                } else
+                }
+                else
                 {
                     MessageBox.Show("New password and confirm new password are not the same!");
                     return;
                 }
-            } else
+            }
+            else
             {
                 MessageBox.Show("Wrong pasword!");
                 return;
@@ -435,7 +435,8 @@ namespace FileSAVER
                 CurrentConnection.Close();
                 return true;
 
-            } else
+            }
+            else
             {
                 Console.WriteLine("Insert failed");
                 CurrentConnection.Close();
@@ -461,7 +462,8 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            } else
+            }
+            else
             {
                 CurrentConnection.Close();
                 return false;
@@ -486,7 +488,8 @@ namespace FileSAVER
             {
                 CurrentConnection.Close();
                 return true;
-            } else
+            }
+            else
             {
                 CurrentConnection.Close();
                 return false;
@@ -531,47 +534,54 @@ namespace FileSAVER
                             {
                                 MessageBox.Show("This username you choose has already been registered");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 bool isUpdated = updateData(currentUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                } else
+                                }
+                                else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
 
-                        } else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
+                        }
+                        else if (txt_username.Text == username && txt_email.Text != email && txt_age.Text == age)
                         {
                             if (checkForExistingEmail(txt_email.Text))
                             {
                                 MessageBox.Show("This email you choose has already been registered");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 bool isUpdated = updateData(currentUser);
                                 if (isUpdated == false)
                                 {
                                     MessageBox.Show("Error occured, new user data wasn't inserted!");
                                     return;
-                                } else
+                                }
+                                else
                                 {
                                     MessageBox.Show("User edited successfully!");
                                     return;
                                 }
                             }
-                        } else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
+                        }
+                        else if (txt_username.Text == username && txt_email.Text == email && txt_age.Text != age)
                         {
                             bool isUpdated = updateData(currentUser);
                             if (isUpdated == false)
                             {
                                 MessageBox.Show("Error occured, new user data wasn't inserted!");
                                 return;
-                            } else
+                            }
+                            else
                             {
                                 MessageBox.Show("User edited successfully!");
                                 return;
@@ -583,7 +593,8 @@ namespace FileSAVER
 
 
 
-            } catch (MySqlException e1)
+            }
+            catch (MySqlException e1)
             {
                 MessageBox.Show("Error: " + e1.Message);
             }
