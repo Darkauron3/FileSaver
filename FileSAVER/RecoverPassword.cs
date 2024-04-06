@@ -171,6 +171,9 @@ namespace FileSAVER
             string new_pass = GenerateRandomPassword();
             SendEmail(email, new_pass, username);
             changeUserPassByUserId(userid, new_pass);
+            Hide();
+            Login l = new Login();
+                l.Visible = true;
         }
 
         private void return_btn_Click_1(object sender, EventArgs e)

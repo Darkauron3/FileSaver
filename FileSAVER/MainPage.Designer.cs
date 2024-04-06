@@ -60,6 +60,8 @@
             btn_encrypt = new Button();
             lbl_choosen_en_file = new Label();
             label16 = new Label();
+            label18 = new Label();
+            label19 = new Label();
             nav_panel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -100,7 +102,7 @@
             label7.AutoSize = true;
             label7.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             label7.ForeColor = Color.DarkOrange;
-            label7.Location = new Point(321, 133);
+            label7.Location = new Point(358, 139);
             label7.Name = "label7";
             label7.Size = new Size(245, 66);
             label7.TabIndex = 6;
@@ -218,6 +220,7 @@
             // 
             // bot_panel
             // 
+            bot_panel.Controls.Add(label19);
             bot_panel.Controls.Add(lbl_decryption_choosen);
             bot_panel.Controls.Add(label17);
             bot_panel.Controls.Add(btn_decrypto);
@@ -416,7 +419,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Century Gothic", 48F, FontStyle.Bold, GraphicsUnit.Point);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(243, 122);
+            label3.Location = new Point(277, 132);
             label3.Name = "label3";
             label3.Size = new Size(87, 77);
             label3.TabIndex = 16;
@@ -520,11 +523,34 @@
             label16.TabIndex = 25;
             label16.Text = "Choosen file:";
             // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Font = new Font("Century Gothic", 15.75F, FontStyle.Italic, GraphicsUnit.Point);
+            label18.ForeColor = Color.White;
+            label18.Location = new Point(277, 264);
+            label18.Name = "label18";
+            label18.Size = new Size(308, 48);
+            label18.TabIndex = 26;
+            label18.Text = "The minimum length must be \r\nat least 16 characters!";
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Font = new Font("Century Gothic", 15.75F, FontStyle.Italic, GraphicsUnit.Point);
+            label19.ForeColor = Color.White;
+            label19.Location = new Point(52, 290);
+            label19.Name = "label19";
+            label19.Size = new Size(308, 48);
+            label19.TabIndex = 27;
+            label19.Text = "The minimum length must be \r\nat least 16 characters!";
+            // 
             // MainPage
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(1469, 797);
+            Controls.Add(label18);
             Controls.Add(label16);
             Controls.Add(lbl_choosen_en_file);
             Controls.Add(btn_encrypt);
@@ -603,5 +629,7 @@
         private Label label16;
         private Label lbl_decryption_choosen;
         private Label label17;
+        private Label label18;
+        private Label label19;
     }
 }

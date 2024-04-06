@@ -17,6 +17,7 @@ namespace FileSAVER
         public AdminTools()
         {
             InitializeComponent();
+
         }
 
         //Methods allowing user to move freely the form around his screen

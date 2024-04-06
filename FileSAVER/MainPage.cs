@@ -26,17 +26,41 @@ using BCrypt.Net;
 using System.Text.RegularExpressions;
 using System.IO;
 using Microsoft.VisualBasic.ApplicationServices;
+using System.Threading;
+using System.Timers;
 
 
 public partial class MainPage : CustomForm
 {
+    System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
 
-
-    //Setting the window to take up the entire screen 
     public MainPage()
     {
         InitializeComponent();
+        //SetupTimer();
     }
+
+    private void InactivityTimer_Tick(object sender, EventArgs e)
+    {
+        Logout();
+        MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
+    }
+
+    private void MainForm_MouseMove(object sender, MouseEventArgs e)
+    {
+        // Reset the timer when the mouse is moved
+        inactivityTimer.Enabled = false;
+        inactivityTimer.Enabled = true;
+    }
+
+    private void SetupTimer()
+    {
+        
+        inactivityTimer.Interval = 120000; // 2 minutes
+        inactivityTimer.Tick += InactivityTimer_Tick;
+        inactivityTimer.Enabled = true;
+    }
+
 
     //3 method for mouse movement, so the user can drag the windows around his screen
     private bool isDragging = false;
@@ -157,7 +181,8 @@ public partial class MainPage : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -184,7 +209,8 @@ public partial class MainPage : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -211,7 +237,8 @@ public partial class MainPage : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -240,7 +267,8 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -265,7 +293,8 @@ public partial class MainPage : CustomForm
         if (reader.Read())
         {
             username = reader[0].ToString();
-        } else
+        }
+        else
         {
             MessageBox.Show("User with this id doesn't exist!");
             return null;
@@ -297,7 +326,7 @@ public partial class MainPage : CustomForm
         CurrentConnection.Close();
         return logs;
     }
-   
+
 
     //Method which is called whenever the user log out of the account
     private void Logout()
@@ -371,7 +400,8 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -406,7 +436,8 @@ public partial class MainPage : CustomForm
             Console.WriteLine("Data inserted");
             CurrentConnection.Close();
             return true;
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             MessageBox.Show("Failed to insert the data!");
@@ -440,14 +471,15 @@ public partial class MainPage : CustomForm
             Console.WriteLine("Data inserted");
             CurrentConnection.Close();
             return true;
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             MessageBox.Show("Failed to insert the data!");
             CurrentConnection.Close();
             return false;
         }
-        
+
 
     }
 
@@ -495,7 +527,8 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return encoding;
 
-        } else
+        }
+        else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -524,7 +557,8 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -591,7 +625,8 @@ public partial class MainPage : CustomForm
         }
     }
 
-    //3rd step of encryption is shuffle the symbols for every hexidecimal pair if the sum between 2 of the hex is odd or even they trade some of them values
+    //3rd step of encryption is shuffle the symbols for every hexidecimal pair
+    //if the sum between 2 of the hex is odd or even they trade some of them values
     private void thirdStepOfEncryption(List<string> file)
     {
         for (int i = 0; i < file.Count - 1; i++)
@@ -611,7 +646,8 @@ public partial class MainPage : CustomForm
             int sumFirstHex = firstValueFromFirstNumber + secondValueFromFirstNumber;//for example if the first hex is 16 sum = 1 + 6 = 7
             int sumSecondHex = firstValueFromNextNumber + secondValueFromNextNumber;//for example if the second hex is 13 sum = 1 + 3 = 4
             int sum = sumFirstHex + sumSecondHex;//Makes the sum of the sums of the hex symbols - > 7 + 4 = 11
-            //If the sum is even we change the symbols from the hex -> we change frist symbol from the first hex with the second symbol from the second hex
+            //If the sum is even we change the symbols from the hex -> we change frist symbol
+            //from the first hex with the second symbol from the second hex
             //like this "16" "13" - > "36" "11"
             if (sum % 2 == 0)
             {
@@ -620,9 +656,11 @@ public partial class MainPage : CustomForm
                 file[i] = newValueFori;
                 file[i + 1] = newValueForiplusone;
 
-                //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
+                //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the
+                //first symbol from the second hex
                 //like this "16" "13" - > "13" "63"
-            } else
+            }
+            else
             {
                 string newValueFori = firstValueFromFirstNumber.ToString("X") + firstValueFromNextNumber.ToString("X");
                 string newValueForiplusone = secondValueFromFirstNumber.ToString("X") + secondValueFromNextNumber.ToString("X");
@@ -634,7 +672,8 @@ public partial class MainPage : CustomForm
         }
     }
 
-    //fourth step changes every element with even index to change the position of his hex symbols (e5 -> 5e) and position with the element on the right(index+1)
+    //fourth step changes every element with even index to change the position of his hex symbols (e5 -> 5e)
+    //and position with the element on the right(index+1)
     private void fourthStepOfEncryption(List<string> file)
     {
         for (int i = 0; i < file.Count; i += 2)
@@ -659,8 +698,10 @@ public partial class MainPage : CustomForm
             file[i + 1] = file[i];
             file[i] = element;
         }
-        //When the file count is odd number the last hex number can't change position with number, because is the last number, so the
-        //last hex number after encryption stays the same and in the same position, that's why we change it with the first element
+        //When the file count is odd number the last hex number can't change position with number,
+        //because is the last number, so the
+        //last hex number after encryption stays the same and in the same position, that's why we
+        //change it with the first element
         if (file.Count % 2 != 0)
         {
             string firstEl = file[0];
@@ -672,9 +713,12 @@ public partial class MainPage : CustomForm
     //Method for decryption the fourth step of decryption
     private void firstStepOfDecryption(List<string> file)
     {
-
-        //In the encryption step when the count of all of the hex numbers are odd, the last number can change its position because its the last, so the encryption 
-        //changes the last element with the first so here first before other reverse decryption we need to change the first with the last element
+        //In the encryption step when the count of all of the
+        //hex numbers are odd, the last number can change its
+        //position because its the last, so the encryption 
+        //changes the last element with the first so here first
+        //before other reverse decryption we need to change the
+        //first with the last element
         // !(THIS IS ONLY FOR ODD file.Count)!
         if (file.Count % 2 != 0)
         {
@@ -682,10 +726,12 @@ public partial class MainPage : CustomForm
             file[0] = file[file.Count - 1];
             file[file.Count - 1] = firstEl;
         }
-        //First reverse the shuffle make the elements in the right order
+        //First reverse the shuffle and make the elements in
+        //the right order
         for (int i = 0; i < file.Count; i += 2)
         {
-            if (i + 1 >= file.Count) break;//When the file.Count is odd it has to break so the last elemnt doesn't change or edit 
+            if (i + 1 >= file.Count) break;//When the file.Count
+                                           //is odd it has to break so the last elemnt doesn't change or edit 
                                            //in some way because its changed with the first element look the if above
             string element = file[i + 1];
             file[i + 1] = file[i];
@@ -694,7 +740,8 @@ public partial class MainPage : CustomForm
         //Change the rotated symbols on every second element
         for (int i = 0; i < file.Count; i += 2)
         {
-            if (i + 1 >= file.Count) break; //When the file.Count is odd it has to break so the last elemnt doesn't change or edit 
+            if (i + 1 >= file.Count) break; //When the file.Count is odd it has
+                                            //to break so the last elemnt doesn't change or edit 
                                             //in some way because its changed with the first element look the if above
             char[] hex_value = file[i].ToCharArray();
             char first_hex_value = hex_value[0];
@@ -715,17 +762,21 @@ public partial class MainPage : CustomForm
             char[] rightNumberValues = file[i].ToCharArray();
             int firstValueFromRightNumber = int.Parse(rightNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
             int secondValueFromRightNumber = int.Parse(rightNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
-            //Takes the hex number before the last hex number for example "13" and separate the symbols -> "1" and "3" and converts them to int
+            //Takes the hex number before the last hex number for example "13" and separate the symbols -> "1" and "3" and
+            //converts them to int
             char[] leftNumberValues = file[i - 1].ToCharArray();
             int firstValueFromLeftNumber = int.Parse(leftNumberValues[0].ToString(), System.Globalization.NumberStyles.HexNumber);
             int secondValueFromLeftNumber = int.Parse(leftNumberValues[1].ToString(), System.Globalization.NumberStyles.HexNumber);
 
             //Makes the summary of numbers in the hex
-            int sumRightHex = firstValueFromRightNumber + secondValueFromRightNumber;//for example if the first hex is 16 sum = 1 + 6 = 7
-            int sumLeftHex = firstValueFromLeftNumber + secondValueFromLeftNumber;//for example if the second hex is 13 sum = 1 + 3 = 4
+            int sumRightHex = firstValueFromRightNumber + secondValueFromRightNumber;//for example if the first hex
+                                                                                     //is 16 sum = 1 + 6 = 7
+            int sumLeftHex = firstValueFromLeftNumber + secondValueFromLeftNumber;//for example if the second hex
+                                                                                  //is 13 sum = 1 + 3 = 4
             int sum = sumLeftHex + sumRightHex;//Makes the sum of the sums of the hex symbols - > 7 + 4 = 11
 
-            //If the sum is even we change the symbols from the hex -> we change frist symbol from the first hex with the second symbol from the second hex
+            //If the sum is even we change the symbols from the hex -> we change frist symbol from the first hex with the
+            //second symbol from the second hex
             //like this "16" "13" - > "36" "11"
             if (sum % 2 == 0)
             {
@@ -734,9 +785,11 @@ public partial class MainPage : CustomForm
                 file[i] = newRightValues;
                 file[i - 1] = newLeftValues;
 
-                //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with the first symbol from the second hex
+                //If the sum is odd we change the symbols from the hex -> we change second symbol from the first hex with
+                //the first symbol from the second hex
                 //like this "16" "13" - > "13" "63"
-            } else
+            }
+            else
             {
                 string newRightValues = secondValueFromLeftNumber.ToString("X") + secondValueFromRightNumber.ToString("X");
                 string newLeftValues = firstValueFromLeftNumber.ToString("X") + firstValueFromRightNumber.ToString("X");
@@ -754,11 +807,13 @@ public partial class MainPage : CustomForm
         int index = 0;
         for (int i = 1; i < file.Count; i += 3)
         {
-            index = i;
+            index = i;//Here we find the index of the last element which participated in the shuffle so next for cycle we
+                      //can know from which element to start reversing 
         }
         for (int i = index; i >= 0; i -= 3)
         {
-            if (i == 1 || i == 0 || i == 2)
+            if (i == 1 || i == 0 || i == 2) //if the index is below 3 we break, because this
+                                            //means that the last two elements have changed and there are no other elements to change 
             {
                 break;
             }
@@ -778,7 +833,8 @@ public partial class MainPage : CustomForm
     //Removes all the symbols from the key so only the original file will be left
     private void fourthStepOfDeryption(List<string> file, List<string> key)
     {
-        //so we remove the last symbols which represent the key from the file so only the file content to stay
+        //so we remove the last symbols which represent the key from the
+        //file so only the file content to stay
         int br = 0;
         for (int i = file.Count - 1; i >= 0; i--)
         {
@@ -786,7 +842,8 @@ public partial class MainPage : CustomForm
             {
                 file.RemoveAt(i);
                 br++;
-            } else
+            }
+            else
             {
                 return;
             }
@@ -854,7 +911,8 @@ public partial class MainPage : CustomForm
             reader.Close();
             CurrentConnection.Close();
             return fileId;
-        } else
+        }
+        else
         {
             reader.Close();
             CurrentConnection.Close();
@@ -953,7 +1011,8 @@ public partial class MainPage : CustomForm
             CurrentConnection.Close();
             return true;
 
-        } else
+        }
+        else
         {
             Console.WriteLine("Insert failed");
             CurrentConnection.Close();
@@ -974,14 +1033,15 @@ public partial class MainPage : CustomForm
         {
             // Convert the matched value to an integer and return
             return int.Parse(match.Value);
-        } else
+        }
+        else
         {
             // Return -1 or throw an exception indicating that no numbers were found
             throw new InvalidOperationException("No numbers found in the filename.");
         }
     }
 
-        private void btn_acc_Click(object sender, EventArgs e)
+    private void btn_acc_Click(object sender, EventArgs e)
     {
         MyAccount m = new MyAccount();
         Hide();
@@ -993,18 +1053,22 @@ public partial class MainPage : CustomForm
     {
         string username = getCurrentlyLoggedUser().username;
         int id = getUserIdByUsername(username);
-        if(checkIfUserIsAdmin(id))
+        if (checkIfUserIsAdmin(id))
         {
-           AdminTools a = new AdminTools();
-           Hide();
-           a.StartPosition = FormStartPosition.CenterScreen;
-           a.Visible = true;
-        } else
+            AdminTools a = new AdminTools();
+            Hide();
+            a.StartPosition = FormStartPosition.CenterScreen;
+            a.Visible = true;
+        }
+        else
         {
             MessageBox.Show("You are not admin, so you can't use admin tools!");
+            this.Close();
+            MainPage m = new MainPage();
+            m.Show();
             return;
         }
-        
+
     }
     //Logout from navigiotion bar
     private void btn_logout_Click(object sender, EventArgs e)
@@ -1022,7 +1086,7 @@ public partial class MainPage : CustomForm
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
         cmd.Parameters.AddWithValue("@deleted", 1);
         MySqlDataReader reader = cmd.ExecuteReader();
-        if(reader.Read())
+        if (reader.Read())
         {
             int fileid = Convert.ToInt32(reader["file_id"]);
             int userid = Convert.ToInt32(reader["User_Id"]);
@@ -1031,7 +1095,8 @@ public partial class MainPage : CustomForm
             ids.Add(fileid);
             ids.Add(userid);
             return ids;
-        } else
+        }
+        else
         {
             List<int> ids = new List<int>();
             ids.Clear();
@@ -1040,18 +1105,20 @@ public partial class MainPage : CustomForm
         }
     }
 
-    private bool writeNewFileOverDeletedFileUserFiles(int fileid, int userid, string key_value, string encryptedfile) {
+    private bool writeNewFileOverDeletedFileUserFiles(int fileid, int userid, string key_value, string encryptedfile)
+    {
         string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "UPDATE user_files SET Key_value=@key,Encrypted_file=@encryptedfile, deleted=@deleted WHERE file_id=@fileid AND User_id=@userid;";
+        string query = "UPDATE user_files SET User_id=@userid, Key_value=@key,Encrypted_file=@encryptedfile, deleted=@deleted WHERE file_id=@fileid;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@userid", userid);
         cmd.Parameters.AddWithValue("@key", key_value);
         cmd.Parameters.AddWithValue("@encryptedfile", encryptedfile);
         cmd.Parameters.AddWithValue("@deleted", 0);
         cmd.Parameters.AddWithValue("@fileid", fileid);
-        cmd.Parameters.AddWithValue("@userid", userid);
+       
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)
@@ -1077,15 +1144,16 @@ public partial class MainPage : CustomForm
         MySqlConnection CurrentConnection = new MySqlConnection(connstring);
         CurrentConnection.Open();
 
-        string query = "UPDATE user_files_info SET File_name=@filename, File_size=@filesize, File_type=@filetype, Upload_date=@uploaddate,deleted=@deleted WHERE file_id=@fileid AND User_id=@userid;";
+        string query = "UPDATE user_files_info SET User_id=@userid, File_name=@filename, File_size=@filesize, File_type=@filetype, Upload_date=@uploaddate,deleted=@deleted WHERE file_id=@fileid;";
         MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@userid", userid);
         cmd.Parameters.AddWithValue("@filename", filename);
         cmd.Parameters.AddWithValue("@filesize", filesize);
         cmd.Parameters.AddWithValue("@filetype", filetype);
         cmd.Parameters.AddWithValue("@uploaddate", uploaddate);
         cmd.Parameters.AddWithValue("@deleted", 0);
         cmd.Parameters.AddWithValue("@fileid", fileid);
-        cmd.Parameters.AddWithValue("@userid", userid);
+        
 
         int rowsAffected = cmd.ExecuteNonQuery();
         if (rowsAffected > 0)
@@ -1109,7 +1177,7 @@ public partial class MainPage : CustomForm
     {
         string key = txt_key_encryption.Text;
         string pattern = @"^(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{16,}$";
-        if(!Regex.IsMatch(key,pattern))
+        if (!Regex.IsMatch(key, pattern))
         {
             // Password does not meet the criteria
             MessageBox.Show("Password must have at least 1 uppercase character, 1 number, 1 special character, and be at least 16 characters long.");
@@ -1130,13 +1198,13 @@ public partial class MainPage : CustomForm
             byte[] fileBytes = File.ReadAllBytes(filePath);
             List<string> file_hexlist = byteArrayToHexList(fileBytes);
 
-            firstStepOfEncryption(key_hexlist, file_hexlist); 
+            firstStepOfEncryption(key_hexlist, file_hexlist);
             secondStepOfEncryption(file_hexlist);
             secondStepOfEncryption(file_hexlist);
             thirdStepOfEncryption(file_hexlist);
             thirdStepOfEncryption(file_hexlist);
             fourthStepOfEncryption(file_hexlist);
-            
+
 
 
             //After all the encryption the List will be encoded to base 64 and stored in a string and then saved in the database
@@ -1145,11 +1213,11 @@ public partial class MainPage : CustomForm
             string username = CurrenltyLoggedUser.username;
             string key_Value = txt_key_encryption.Text;
             int userId = getUserIdByUsername(username);
-            
+
 
             //If there is file with column deleted=1, th enew file will take the place of the deletedfile
             List<int> ids = checkForDeltedFile();
-            if(ids.Count > 1)//if there is deleted file this new file takes the place of the deleted file
+            if (ids.Count > 1)//if there is deleted file this new file takes the place of the deleted file
             {
                 int fileeid = ids[0];
                 int useerid = ids[1];
@@ -1157,7 +1225,7 @@ public partial class MainPage : CustomForm
                 string hashedPass = BCrypt.HashPassword(key_Value);
                 string fileContent = string.Join(Environment.NewLine, file_hexlist);
                 string base64Encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(fileContent));
-                bool isItImported = writeNewFileOverDeletedFileUserFiles(fileeid, useerid, hashedPass, base64Encoded);
+                bool isItImported = writeNewFileOverDeletedFileUserFiles(fileeid, userId, hashedPass, base64Encoded);
 
 
                 string namee = lbl_choosen_en_file.Text;
@@ -1170,14 +1238,14 @@ public partial class MainPage : CustomForm
                 DateTime currentTimee = DateTime.Now;
                 string uploadDatee = currentTimee.ToString("yyyy-MM-dd HH:mm:ss");
 
-                bool isItImportedInfo = writeNewFileOverDeletedFileUserFilesInfo(fileeid, useerid, namee, fileSizeStringg, fileTypee, uploadDatee);
+                bool isItImportedInfo = writeNewFileOverDeletedFileUserFilesInfo(fileeid, userId, namee, fileSizeStringg, fileTypee, uploadDatee);
 
                 byte[] encryptedBytes = hexListToByteArray(file_hexlist);
 
                 // Now, you can save the encryptedBytes array back to the file, replacing the original content
                 File.WriteAllBytes(filePath, encryptedBytes);
 
-                if(isItImported && isItImportedInfo)
+                if (isItImported && isItImportedInfo)
                 {
                     //Telling the user to don't change file extension because there is the fileid which is needed in the decryption process
                     MessageBox.Show("IMPORTANT! Don't change the file extension, this program after encrypting your file will change the file extension with a new one called .filesaver_(number) its important, because the extension holds the id of your file in the database and if you change this extension you may never decrypt your file back!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1193,7 +1261,8 @@ public partial class MainPage : CustomForm
                 lbl_choosen_en_file.Text = null;
                 txt_key_encryption.Text = null;
 
-            } else if(ids.Count == 1)// if there isn't a decrpyted file, is created a new insert in the table
+            }
+            else if (ids.Count == 1)// if there isn't a decrpyted file, is created a new insert in the table
             {
                 bool isItImportedKeys = importEncryptionKeys(userId, key_Value, file_hexlist);
 
@@ -1228,9 +1297,10 @@ public partial class MainPage : CustomForm
                 createEncryptedFileLog(userId, filePath);
                 lbl_choosen_en_file.Text = null;
                 txt_key_encryption.Text = null;
-            }       
+            }
 
-        } catch (Exception ex)
+        }
+        catch (Exception ex)
         {
             MessageBox.Show("error " + ex.Message);
         }
@@ -1320,52 +1390,56 @@ public partial class MainPage : CustomForm
 
         string filePath = lbl_decryption_choosen.Text;
 
-            try
-            {
-                byte[] fileBytes = File.ReadAllBytes(filePath);
-                List<string> file_hexlist = byteArrayToHexList(fileBytes);
+        try
+        {
+            byte[] fileBytes = File.ReadAllBytes(filePath);
+            List<string> file_hexlist = byteArrayToHexList(fileBytes);
 
-                string username = getCurrentlyLoggedUser().username;
-                int id = getUserIdByUsername(username);
+            string username = getCurrentlyLoggedUser().username;
+            int id = getUserIdByUsername(username);
 
-                int file_id = ExtractFileId(lbl_decryption_choosen.Text);
+            int file_id = ExtractFileId(lbl_decryption_choosen.Text);
 
-                string database_pass_hash = getUserPassHash(id, file_id);
-                string pass = txt_key_decryption.Text;
+            string database_pass_hash = getUserPassHash(id, file_id);
+            string pass = txt_key_decryption.Text;
 
-                
+
 
             if (BCrypt.Verify(pass, database_pass_hash))
-                {
-                    int fileId = ExtractFileId(lbl_decryption_choosen.Text);
-
-                    firstStepOfDecryption(file_hexlist);
-                    secondStepOfDecryption(file_hexlist);
-                    secondStepOfDecryption(file_hexlist);
-                    thirdStepOfDecryption(file_hexlist);
-                    thirdStepOfDecryption(file_hexlist);
-                    fourthStepOfDeryption(file_hexlist, key_hexlist);                
-    
-                byte[] decryptedBytes = hexListToByteArray(file_hexlist);
-                    File.WriteAllBytes(lbl_decryption_choosen.Text, decryptedBytes);
-
-                    string oldFiletype = getOldFileType(id, fileId);
-                    string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
-                    File.Move(filePath, newFilePath);
-
-                    createDecryptedFileLog(id, filePath);
-                    setDeleteToTrueUserFiles(file_id, id);
-                    setDeleteToTrueUserFilesInfo(file_id, id);
-            } else
-                {
-                    MessageBox.Show("Wrong password for decryption!");
-                    return;
-                }
-            MessageBox.Show("File decrypted successfully!");
-            } catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                int fileId = ExtractFileId(lbl_decryption_choosen.Text);
+
+                firstStepOfDecryption(file_hexlist);
+                secondStepOfDecryption(file_hexlist);
+                secondStepOfDecryption(file_hexlist);
+                thirdStepOfDecryption(file_hexlist);
+                thirdStepOfDecryption(file_hexlist);
+                fourthStepOfDeryption(file_hexlist, key_hexlist);
+
+                byte[] decryptedBytes = hexListToByteArray(file_hexlist);
+                File.WriteAllBytes(lbl_decryption_choosen.Text, decryptedBytes);
+
+                string oldFiletype = getOldFileType(id, fileId);
+                string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
+                File.Move(filePath, newFilePath);
+
+                createDecryptedFileLog(id, filePath);
+                setDeleteToTrueUserFiles(file_id, id);
+                setDeleteToTrueUserFilesInfo(file_id, id);
             }
+            else
+            {
+                MessageBox.Show("Wrong password for decryption!");
+                return;
+            }
+            MessageBox.Show("File decrypted successfully!");
+            txt_key_decryption.Text = null;
+            lbl_decryption_choosen.Text = null;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show("Error: " + ex.Message);
+        }
         lbl_decryption_choosen = null;
         txt_key_decryption = null;
     }
@@ -1385,7 +1459,8 @@ public partial class MainPage : CustomForm
             try
             {
                 lbl_choosen_en_file.Text = filePath;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }
@@ -1407,7 +1482,8 @@ public partial class MainPage : CustomForm
             try
             {
                 lbl_decryption_choosen.Text = filePath;
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
             }

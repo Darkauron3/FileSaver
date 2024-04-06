@@ -19,8 +19,48 @@ namespace FileSAVER
 
     public partial class MyAccount : CustomForm
     {
+        System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
 
+        public MyAccount()
+        {
+            InitializeComponent();
+            string usernmae = getCurrentlyLoggedUser().username;
+            int id = getUserIdByUsername(usernmae);
+            UserData userdata = GetUserData(id);
+            string username = userdata.Username;
+            string email = userdata.Email;
+            string age = userdata.Age.ToString();
+            string type = userdata.Type;
 
+            txt_username.Text = username;
+            txt_email.Text = email;
+            txt_age.Text = age;
+            lbl_acc_type.Text = type;
+
+            getmyEncryptedFiles(id);
+           // SetupTimer();
+        }
+
+        //Log out the user due to inactivity
+        private void InactivityTimer_Tick(object sender, EventArgs e)
+        {
+            Logout();
+            MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
+        }
+
+        private void MainForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            // Reset the timer when the mouse is moved
+            inactivityTimer.Enabled = false;
+            inactivityTimer.Enabled = true;
+        }
+
+        private void SetupTimer()
+        { 
+            inactivityTimer.Interval = 120000; // 2 minutes
+            inactivityTimer.Tick += InactivityTimer_Tick;
+            inactivityTimer.Enabled = true;
+        }
 
         private bool isDragging = false;
         private int mouseX, mouseY;
@@ -90,25 +130,7 @@ namespace FileSAVER
         }
 
 
-        public MyAccount()
-        {
-            InitializeComponent();
-            string usernmae = getCurrentlyLoggedUser().username;
-            int id = getUserIdByUsername(usernmae);
-            UserData userdata = GetUserData(id);
-            string username = userdata.Username;
-            string email = userdata.Email;
-            string age = userdata.Age.ToString();
-            string type = userdata.Type;
-
-            txt_username.Text = username;
-            txt_email.Text = email;
-            txt_age.Text = age;
-            lbl_acc_type.Text = type;
-
-            getmyEncryptedFiles(id);
-
-        }
+       
 
 
         public class UserData
@@ -332,12 +354,54 @@ namespace FileSAVER
             m.Visible = true;
         }
 
+        //Method for checking if the user is admin
+        private bool checkIfUserIsAdmin(int userId)
+        {
+            string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+            MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+            CurrentConnection.Open();
+
+            string query = "SELECT type FROM users WHERE User_id=@userId AND deleted=@Deleted;";
+            MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+            cmd.Parameters.AddWithValue("@userId", userId);
+            cmd.Parameters.AddWithValue("@Deleted", 0);
+            MySqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read() && reader[0].Equals("admin"))
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                return true;
+
+            }
+            else
+            {
+                reader.Close();
+                CurrentConnection.Close();
+                return false;
+            }
+
+        }
+
         private void btn_admintools_Click(object sender, EventArgs e)
         {
-            AdminTools a = new AdminTools();
-            Hide();
-            a.StartPosition = FormStartPosition.CenterScreen;
-            a.Visible = true;
+            string username = getCurrentlyLoggedUser().username;
+            int id = getUserIdByUsername(username);
+            if (checkIfUserIsAdmin(id))
+            {
+                AdminTools a = new AdminTools();
+                Hide();
+                a.StartPosition = FormStartPosition.CenterScreen;
+                a.Visible = true;
+            }
+            else
+            {
+                MessageBox.Show("You are not admin, so you can't use admin tools!");
+                this.Close();
+                MainPage m = new MainPage();
+                m.Show();
+                return;
+            }
         }
 
         private void btn_logout_Click(object sender, EventArgs e)
