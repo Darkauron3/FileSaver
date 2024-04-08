@@ -1436,8 +1436,8 @@ public partial class MainPage : CustomForm
         {
             MessageBox.Show("Error: " + ex.Message);
         }
-        lbl_decryption_choosen = null;
-        txt_key_decryption = null;
+        lbl_decryption_choosen.Text = null;
+        txt_key_decryption.Text = null;
     }
 
     private void Choose_encryption_file_Click(object sender, EventArgs e)
