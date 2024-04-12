@@ -44,8 +44,10 @@ namespace FileSAVER
         //Log out the user due to inactivity
         private void InactivityTimer_Tick(object sender, EventArgs e)
         {
+            Dispose();
             Logout();
             MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
+            return;
         }
 
         private void SetupTimer()
@@ -312,7 +314,7 @@ namespace FileSAVER
                     string new_hash = BCrypt.HashPassword(newpass);
                     updateUserPassByUserId(id, new_hash);
                     createLog(id, "Changed password");
-                    MessageBox.Show("Passord changed successfuly!");
+                    MessageBox.Show("Password changed successfuly!");
                 }
                 else
                 {
@@ -522,6 +524,28 @@ namespace FileSAVER
                     if (txt_username.Text == username && txt_email.Text == email && txt_age.Text == age)
                     {
                         MessageBox.Show("There are not changes to the user. If you want to edit your account change some value of the following input fields!");
+                        return;
+                    }
+
+                    string validUsernamePattern = @"^[a-zA-Z0-9_]+$";
+                    string validEmailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+
+                    if (!Regex.IsMatch((txt_email.Text), validEmailPattern))
+                    {
+                        MessageBox.Show("Email is not valid.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (!Regex.IsMatch(txt_username.Text, validUsernamePattern))
+                    {
+                        MessageBox.Show("Username contains invalid characters.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+
+                    if (Convert.ToInt32(txt_age.Text) < 18 || Convert.ToInt32(txt_age.Text) > 120)
+                    {
+                        MessageBox.Show("Age must be over 18 and not more than 120.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 

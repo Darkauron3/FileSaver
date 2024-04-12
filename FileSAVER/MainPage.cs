@@ -42,8 +42,10 @@ public partial class MainPage : CustomForm
 
     private void InactivityTimer_Tick(object sender, EventArgs e)
     {
+        Dispose();
         Logout();
         MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
+        return;
     }
 
     private void SetupTimer()
