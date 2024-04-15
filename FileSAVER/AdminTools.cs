@@ -16,26 +16,33 @@ namespace FileSAVER
     public partial class AdminTools : CustomForm
     {
         System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
+        private bool isLoggedOut = false;
         public AdminTools()
         {
             InitializeComponent();
             SetupTimer();
+
+
         }
 
         //Log out the user due to inactivity
         private void InactivityTimer_Tick(object sender, EventArgs e)
         {
-            Dispose();
             Logout();
             MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
-            return;
         }
 
         private void SetupTimer()
         {
-            inactivityTimer.Interval = 120000; // 2 minutes
+            inactivityTimer.Interval = 120000; //2 minutes
             inactivityTimer.Tick += InactivityTimer_Tick;
-            inactivityTimer.Enabled = true;
+            inactivityTimer.Start();
+        }
+
+        private void resetTimer()
+        {
+            inactivityTimer.Stop();
+            inactivityTimer.Start();
         }
 
         //Methods allowing user to move freely the form around his screen
@@ -53,14 +60,17 @@ namespace FileSAVER
 
         private void AdminTools_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isDragging)
+            if (!isLoggedOut)
             {
-                this.Left += e.X - mouseX;
-                this.Top += e.Y - mouseY;
+                if (isDragging)
+                {
+                    this.Left += e.X - mouseX;
+                    this.Top += e.Y - mouseY;
+                }
+                // Reset the timer when the mouse is moved
+                resetTimer();
             }
-            // Reset the timer when the mouse is moved
-            inactivityTimer.Enabled = false;
-            inactivityTimer.Enabled = true;
+
         }
 
         private void AdminTools_MouseUp(object sender, MouseEventArgs e)
@@ -368,7 +378,7 @@ namespace FileSAVER
             MySqlConnection CurrentConnection = new MySqlConnection(connstring);
             CurrentConnection.Open();
 
-            string query = "TRUNCATE TABLE login_logs;";
+            string query = "DELETE FROM login_logs;";
             MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
 
             int rowsAffected = cmd.ExecuteNonQuery();
@@ -475,7 +485,7 @@ namespace FileSAVER
                     }
 
                     string validUsernamePattern = @"^[a-zA-Z0-9_]+$";
-                    string validEmailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"; 
+                    string validEmailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
 
                     if (!Regex.IsMatch((txtEmail.Text), validEmailPattern))
                     {
@@ -695,6 +705,9 @@ namespace FileSAVER
             Dispose();
             Login form1 = new Login();
             form1.Show();
+
+            inactivityTimer.Enabled = false;
+            inactivityTimer.Stop();
 
             //Making a log that the user has logged out of his account
             bool isitlogged = createLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");

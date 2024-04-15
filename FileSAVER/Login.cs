@@ -68,7 +68,8 @@ public partial class Login : CustomForm
         if (rowsAffected > 0)
         {
             Console.WriteLine("Data inserted");
-        } else
+        }
+        else
         {
             Console.WriteLine("Failed to insert data");
             return false;
@@ -216,7 +217,9 @@ public partial class Login : CustomForm
                     Hide();
                     form3.StartPosition = FormStartPosition.CenterScreen;
                     form3.Show();
-                } else
+
+                }
+                else
                 {
                     MessageBox.Show("Wrong username or password!");
 
@@ -229,14 +232,16 @@ public partial class Login : CustomForm
 
                     return;
                 }
-            } else
+            }
+            else
             {
                 MessageBox.Show("Wrong username or password!");
                 return;
             }
 
 
-        } catch (MySqlException ex)
+        }
+        catch (MySqlException ex)
         {
             MessageBox.Show(ex.ToString());
         }

@@ -34,6 +34,7 @@ public partial class MainPage : CustomForm
 {
     System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
 
+
     public MainPage()
     {
         InitializeComponent();
@@ -42,18 +43,24 @@ public partial class MainPage : CustomForm
 
     private void InactivityTimer_Tick(object sender, EventArgs e)
     {
-        Dispose();
+
         Logout();
         MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
-        return;
+
     }
 
     private void SetupTimer()
     {
 
-        inactivityTimer.Interval = 120000; // 2 minutes
+        inactivityTimer.Interval = 120000; //2 minutes
         inactivityTimer.Tick += InactivityTimer_Tick;
-        inactivityTimer.Enabled = true;
+        inactivityTimer.Start();
+    }
+
+    private void resetTimer()
+    {
+        inactivityTimer.Stop();
+        inactivityTimer.Start();
     }
 
 
@@ -72,14 +79,14 @@ public partial class MainPage : CustomForm
 
     private void MainPage_MouseMove(object sender, MouseEventArgs e)
     {
+
         if (isDragging)
         {
             this.Left += e.X - mouseX;
             this.Top += e.Y - mouseY;
         }
         // Reset the timer when the mouse is moved
-        inactivityTimer.Enabled = false;
-        inactivityTimer.Enabled = true;
+        resetTimer();
     }
 
     private void MainPage_MouseUp(object sender, MouseEventArgs e)
@@ -332,6 +339,10 @@ public partial class MainPage : CustomForm
         Dispose();
         Login form1 = new Login();
         form1.Show();
+
+        inactivityTimer.Enabled = false;
+        inactivityTimer.Stop();
+
 
         //Making a log that the user has logged out of his account
         bool isitlogged = createLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");
@@ -1042,7 +1053,7 @@ public partial class MainPage : CustomForm
     private void btn_acc_Click(object sender, EventArgs e)
     {
         MyAccount m = new MyAccount();
-        Hide();
+        Dispose();
         m.StartPosition = FormStartPosition.CenterScreen;
         m.Visible = true;
     }

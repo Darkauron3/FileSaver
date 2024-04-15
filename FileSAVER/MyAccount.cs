@@ -20,10 +20,12 @@ namespace FileSAVER
     public partial class MyAccount : CustomForm
     {
         System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
+        private bool isLoggedOut = false;
 
         public MyAccount()
         {
             InitializeComponent();
+
             string usernmae = getCurrentlyLoggedUser().username;
             int id = getUserIdByUsername(usernmae);
             UserData userdata = GetUserData(id);
@@ -42,19 +44,23 @@ namespace FileSAVER
         }
 
         //Log out the user due to inactivity
-        private void InactivityTimer_Tick(object sender, EventArgs e)
+        private void inactivityTimer_Tick(object sender, EventArgs e)
         {
-            Dispose();
             Logout();
             MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
-            return;
         }
 
         private void SetupTimer()
         {
-            inactivityTimer.Interval = 120000; // 2 minutes
-            inactivityTimer.Tick += InactivityTimer_Tick;
-            inactivityTimer.Enabled = true;
+            inactivityTimer.Interval = 120000; //2 minutes
+            inactivityTimer.Tick += inactivityTimer_Tick;
+            inactivityTimer.Start();
+        }
+
+        private void resetTimer()
+        {
+            inactivityTimer.Stop();
+            inactivityTimer.Start();
         }
 
         private bool isDragging = false;
@@ -71,14 +77,16 @@ namespace FileSAVER
 
         private void MyAccount_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isDragging)
+            if (!isLoggedOut)
             {
-                this.Left += e.X - mouseX;
-                this.Top += e.Y - mouseY;
+                if (isDragging)
+                {
+                    this.Left += e.X - mouseX;
+                    this.Top += e.Y - mouseY;
+                }
+                // Reset the timer when the mouse is moved
+                resetTimer();
             }
-            // Reset the timer when the mouse is moved
-            inactivityTimer.Enabled = false;
-            inactivityTimer.Enabled = true;
         }
 
         private void MyAccount_MouseUp(object sender, MouseEventArgs e)
@@ -228,7 +236,7 @@ namespace FileSAVER
 
         }
 
-
+        //Method for chaning the password 
         private bool updateUserPassByUserId(int id, string pass_hash)
         {
             string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
@@ -252,7 +260,7 @@ namespace FileSAVER
             }
             else
             {
-                Console.WriteLine("Insert failed");
+                MessageBox.Show("Insert failed");
                 CurrentConnection.Close();
                 return false;
             }
@@ -333,10 +341,12 @@ namespace FileSAVER
         private void Logout()
         {
 
-
             Dispose();
             Login form1 = new Login();
             form1.Show();
+
+            inactivityTimer.Enabled = false;
+            inactivityTimer.Stop();
 
             //Making a log that the user has logged out of his account
             bool isitlogged = createLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");

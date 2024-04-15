@@ -329,7 +329,7 @@ public partial class Register : CustomForm
         }
         else
         {
-            Console.WriteLine("Failed to insert data");
+            MessageBox.Show("Failed to insert data");
             return false;
         }
         CurrentConnection.Close();
