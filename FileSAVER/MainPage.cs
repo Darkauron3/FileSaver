@@ -47,6 +47,7 @@ public partial class MainPage : CustomForm
 
         Logout();
         MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
+        
     }
 
     private void SetupTimer()
@@ -341,12 +342,13 @@ public partial class MainPage : CustomForm
     //Method which is called whenever the user log out of the account
     private void Logout()
     {
+
+        inactivityTimer.Stop();
+
         Dispose();
         Login form1 = new Login();
         form1.Show();
 
-        inactivityTimer.Enabled = false;
-        inactivityTimer.Stop();
 
 
         //Making a log that the user has logged out of his account
@@ -1061,6 +1063,7 @@ public partial class MainPage : CustomForm
         Dispose();
         m.StartPosition = FormStartPosition.CenterScreen;
         m.Visible = true;
+        inactivityTimer.Dispose();
     }
 
     private void btn_admintools_Click(object sender, EventArgs e)
@@ -1083,6 +1086,7 @@ public partial class MainPage : CustomForm
             m.Show();
             return;
         }
+        inactivityTimer.Dispose();
 
     }
     //Logout from navigiotion bar

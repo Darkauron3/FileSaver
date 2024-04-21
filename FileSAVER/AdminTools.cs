@@ -703,14 +703,12 @@ namespace FileSAVER
         //Method which is called whenever the user log out of the account
         private void Logout()
         {
-
+            inactivityTimer.Stop();
 
             Dispose();
             Login form1 = new Login();
             form1.Show();
 
-            inactivityTimer.Enabled = false;
-            inactivityTimer.Stop();
 
             //Making a log that the user has logged out of his account
             bool isitlogged = createLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");
@@ -729,6 +727,7 @@ namespace FileSAVER
             Hide();
             m.StartPosition = FormStartPosition.CenterScreen;
             m.Visible = true;
+            inactivityTimer.Dispose();
         }
 
         private void btn_acc_Click(object sender, EventArgs e)
@@ -737,6 +736,7 @@ namespace FileSAVER
             Hide();
             m.StartPosition = FormStartPosition.CenterScreen;
             m.Visible = true;
+            inactivityTimer.Dispose();
         }
 
         private void btn_logout_Click(object sender, EventArgs e)

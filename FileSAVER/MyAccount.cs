@@ -44,7 +44,7 @@ namespace FileSAVER
         }
 
         //Log out the user due to inactivity
-        private void inactivityTimer_Tick(object sender, EventArgs e)
+        private void InactivityTimer_Tick(object? sender, EventArgs e)
         {
             Logout();
             MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
@@ -53,7 +53,7 @@ namespace FileSAVER
         private void SetupTimer()
         {
             inactivityTimer.Interval = 120000; //2 minutes
-            inactivityTimer.Tick += inactivityTimer_Tick;
+            inactivityTimer.Tick += new EventHandler(InactivityTimer_Tick);
             inactivityTimer.Start();
         }
 
@@ -346,13 +346,13 @@ namespace FileSAVER
         //Method which is called whenever the user log out of the account
         private void Logout()
         {
+            inactivityTimer.Stop();
 
             Dispose();
             Login form1 = new Login();
             form1.Show();
 
-            inactivityTimer.Enabled = false;
-            inactivityTimer.Stop();
+            
 
             //Making a log that the user has logged out of his account
             bool isitlogged = createLog(getUserIdByUsername(getCurrentlyLoggedUser().username), "Log out");
@@ -370,6 +370,7 @@ namespace FileSAVER
             Hide();
             m.StartPosition = FormStartPosition.CenterScreen;
             m.Visible = true;
+            inactivityTimer.Dispose();
         }
 
         //Method for checking if the user is admin
@@ -420,6 +421,7 @@ namespace FileSAVER
                 m.Show();
                 return;
             }
+            inactivityTimer.Dispose();
         }
 
         private void btn_logout_Click(object sender, EventArgs e)
