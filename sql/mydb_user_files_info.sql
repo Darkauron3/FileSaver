@@ -34,7 +34,7 @@ CREATE TABLE `user_files_info` (
   KEY `fk_user_files_info_users1_idx` (`User_id`),
   CONSTRAINT `fk_user_files_info_user_files1` FOREIGN KEY (`File_id`) REFERENCES `user_files` (`file_id`),
   CONSTRAINT `fk_user_files_info_users1` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -43,7 +43,6 @@ CREATE TABLE `user_files_info` (
 
 LOCK TABLES `user_files_info` WRITE;
 /*!40000 ALTER TABLE `user_files_info` DISABLE KEYS */;
-INSERT INTO `user_files_info` VALUES (1,1,'C:\\Users\\robot\\Desktop\\real.png','1.3MB','.png','2024-03-24 12:42:08',1);
 /*!40000 ALTER TABLE `user_files_info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +55,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-24 12:50:17
+-- Dump completed on 2024-04-21 18:36:43

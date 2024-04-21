@@ -24,11 +24,11 @@ DROP TABLE IF EXISTS `users_passwords`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users_passwords` (
   `User_id` int NOT NULL AUTO_INCREMENT,
-  `pass_hash` varchar(64) NOT NULL,
+  `pass_hash` varchar(255) NOT NULL,
   `deleted` tinyint NOT NULL,
   PRIMARY KEY (`User_id`),
   CONSTRAINT `fk_users_passwords_users1` FOREIGN KEY (`User_id`) REFERENCES `users` (`User_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,6 @@ CREATE TABLE `users_passwords` (
 
 LOCK TABLES `users_passwords` WRITE;
 /*!40000 ALTER TABLE `users_passwords` DISABLE KEYS */;
-INSERT INTO `users_passwords` VALUES (1,'$2a$11$t3ttGn31dApzvYFgsj7R.eoV6Y5vEV91fJ8MnjKtXZLS5vYpMD3cq',0),(2,'$2a$11$IfpUFSEBTuTH75yzKXf6QufIa8iWaoGUbrL8Ehw15.NPabYbDFnhS',1);
 /*!40000 ALTER TABLE `users_passwords` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +49,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-03-24 12:50:16
+-- Dump completed on 2024-04-21 18:36:42
