@@ -20,7 +20,7 @@ namespace FileSAVER
     public partial class MyAccount : CustomForm
     {
         System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
-        private bool isLoggedOut = false;
+        private Point lastMousePosition;
 
         public MyAccount()
         {
@@ -77,16 +77,19 @@ namespace FileSAVER
 
         private void MyAccount_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!isLoggedOut)
+
+            if (isDragging)
             {
-                if (isDragging)
-                {
-                    this.Left += e.X - mouseX;
-                    this.Top += e.Y - mouseY;
-                }
-                // Reset the timer when the mouse is moved
-                resetTimer();
+                this.Left += e.X - mouseX;
+                this.Top += e.Y - mouseY;
             }
+            // Check if the mouse has moved to a new position
+            if (lastMousePosition != e.Location)
+            {
+                lastMousePosition = e.Location;
+                resetTimer();// Reset the timer when the mouse is moved
+            }
+
         }
 
         private void MyAccount_MouseUp(object sender, MouseEventArgs e)
@@ -323,6 +326,9 @@ namespace FileSAVER
                     updateUserPassByUserId(id, new_hash);
                     createLog(id, "Changed password");
                     MessageBox.Show("Password changed successfuly!");
+                    txt_oldpass.Text = null;
+                    txt_newpass.Text = null;
+                    txt_newpass_confirm.Text = null;
                 }
                 else
                 {

@@ -310,7 +310,7 @@
             btn_changepass.ForeColor = Color.White;
             btn_changepass.Image = (Image)resources.GetObject("btn_changepass.Image");
             btn_changepass.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_changepass.Location = new Point(1035, 406);
+            btn_changepass.Location = new Point(1031, 408);
             btn_changepass.Name = "btn_changepass";
             btn_changepass.Size = new Size(271, 48);
             btn_changepass.TabIndex = 37;
@@ -325,29 +325,29 @@
             label17.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
             label17.Location = new Point(757, 306);
             label17.Name = "label17";
-            label17.Size = new Size(245, 24);
+            label17.Size = new Size(250, 24);
             label17.TabIndex = 36;
-            label17.Text = "Confirm New Password";
+            label17.Text = "Confirm New Password:";
             // 
             // label16
             // 
             label16.AutoSize = true;
             label16.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label16.Location = new Point(809, 235);
+            label16.Location = new Point(840, 242);
             label16.Name = "label16";
-            label16.Size = new Size(160, 24);
+            label16.Size = new Size(165, 24);
             label16.TabIndex = 35;
-            label16.Text = "New password";
+            label16.Text = "New password:";
             // 
             // label15
             // 
             label15.AutoSize = true;
             label15.Font = new Font("Century Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point);
-            label15.Location = new Point(822, 179);
+            label15.Location = new Point(850, 179);
             label15.Name = "label15";
-            label15.Size = new Size(147, 24);
+            label15.Size = new Size(152, 24);
             label15.TabIndex = 34;
-            label15.Text = "Old Password";
+            label15.Text = "Old Password:";
             // 
             // txt_newpass_confirm
             // 

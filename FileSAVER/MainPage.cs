@@ -33,6 +33,7 @@ using System.Timers;
 public partial class MainPage : CustomForm
 {
     System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
+    private Point lastMousePosition;//logic for logout of inactivity
 
 
     public MainPage()
@@ -41,19 +42,18 @@ public partial class MainPage : CustomForm
         SetupTimer();
     }
 
-    private void InactivityTimer_Tick(object sender, EventArgs e)
+    private void InactivityTimer_Tick(object? sender, EventArgs e)
     {
 
         Logout();
         MessageBox.Show("You have been logged out due to inactivity. This is a security measure to protect your account.");
-
     }
 
     private void SetupTimer()
     {
 
-        inactivityTimer.Interval = 120000; //2 minutes
-        inactivityTimer.Tick += InactivityTimer_Tick;
+        inactivityTimer.Interval = 120000; //2 minutes 
+        inactivityTimer.Tick += new EventHandler(InactivityTimer_Tick);
         inactivityTimer.Start();
     }
 
@@ -85,8 +85,13 @@ public partial class MainPage : CustomForm
             this.Left += e.X - mouseX;
             this.Top += e.Y - mouseY;
         }
-        // Reset the timer when the mouse is moved
-        resetTimer();
+
+        // Check if the mouse has moved to a new position
+        if (lastMousePosition != e.Location)
+        {
+            lastMousePosition = e.Location;
+            resetTimer();// Reset the timer when the mouse is moved
+        }
     }
 
     private void MainPage_MouseUp(object sender, MouseEventArgs e)
@@ -1045,8 +1050,8 @@ public partial class MainPage : CustomForm
         }
         else
         {
-            // Return -1 or throw an exception indicating that no numbers were found
-            throw new InvalidOperationException("No numbers found in the filename.");
+            MessageBox.Show("Please decrypt only encrypted files which are with extension .filesaver_(numeber)!");
+            return -1;
         }
     }
 
@@ -1074,6 +1079,7 @@ public partial class MainPage : CustomForm
             MessageBox.Show("You are not admin, so you can't use admin tools!");
             this.Close();
             MainPage m = new MainPage();
+            m.StartPosition = FormStartPosition.CenterScreen;
             m.Show();
             return;
         }
@@ -1201,6 +1207,14 @@ public partial class MainPage : CustomForm
         List<string> key_hexlist = stringToHexArrayList(key);
 
         string filePath = lbl_choosen_en_file.Text;
+
+        long fileSizeByte = new FileInfo(lbl_choosen_en_file.Text).Length;
+        long fileSizeGB = fileSizeByte / (1024 * 1024 * 1024);
+        if (fileSizeGB > 2)
+        {
+            MessageBox.Show("The selected file exceeds 2 GB.", "File Size Limit Exceeded", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
 
         try
         {
@@ -1375,11 +1389,51 @@ public partial class MainPage : CustomForm
             return false;
         }
     }
+    //Method for getting userid by providing fileid in the table user_files
+    private int getUserIdByFileId(int fileid)
+    {
+        string connstring = "Server=localhost;Database=mydb;User=normaluser;Password=normalusernormaluser;";
+        MySqlConnection CurrentConnection = new MySqlConnection(connstring);
+        CurrentConnection.Open();
+        string query = "SELECT User_id FROM user_files WHERE file_id=@fileid AND deleted=@deleted;";
+        MySqlCommand cmd = new MySqlCommand(query, CurrentConnection);
+        cmd.Parameters.AddWithValue("@fileid", fileid);
+        cmd.Parameters.AddWithValue("@deleted", 0);
+        MySqlDataReader reader = cmd.ExecuteReader();
+
+        if (reader.Read())
+        {
+            int userid = Convert.ToInt32(reader["User_id"]);
+            reader.Close();
+            CurrentConnection.Close();
+
+            return userid;
+        }
+        reader.Close();
+        CurrentConnection.Close();
+
+        return 0;
+    }
 
 
     //Decryption button
     private void btn_decrypto_Click(object sender, EventArgs e)
     {
+        string usernam = getCurrentlyLoggedUser().username;
+        int idd = getUserIdByUsername(usernam);
+
+        int fileid = ExtractFileId(lbl_decryption_choosen.Text);
+        if (fileid == -1)
+        {
+            return;
+        }
+        int usid = getUserIdByFileId(fileid);
+        if (usid != idd)
+        {
+            MessageBox.Show("You can't decrypt files that you don't encrypt. Please decrypt only your own files!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
         string key = txt_key_decryption.Text;
 
         string pattern = @"^(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{16,}$";
@@ -1417,7 +1471,6 @@ public partial class MainPage : CustomForm
             if (BCrypt.Verify(pass, database_pass_hash))
             {
                 int fileId = ExtractFileId(lbl_decryption_choosen.Text);
-
                 firstStepOfDecryption(file_hexlist);
                 secondStepOfDecryption(file_hexlist);
                 secondStepOfDecryption(file_hexlist);
@@ -1430,6 +1483,12 @@ public partial class MainPage : CustomForm
 
                 string oldFiletype = getOldFileType(id, fileId);
                 string newFilePath = Path.ChangeExtension(filePath, oldFiletype);
+                // Check if the destination file already exists
+                if (File.Exists(newFilePath))
+                {
+                    // If it does, delete it
+                    File.Delete(newFilePath);
+                }
                 File.Move(filePath, newFilePath);
 
                 createDecryptedFileLog(id, filePath);
@@ -1455,6 +1514,7 @@ public partial class MainPage : CustomForm
 
     private void Choose_encryption_file_Click(object sender, EventArgs e)
     {
+        inactivityTimer.Stop();
         OpenFileDialog fd = new OpenFileDialog();
 
 
@@ -1474,11 +1534,12 @@ public partial class MainPage : CustomForm
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+        resetTimer();
     }
 
     private void Choose_decryption_file_Click(object sender, EventArgs e)
     {
-
+        inactivityTimer.Stop();
         OpenFileDialog fd = new OpenFileDialog();
 
         fd.Filter = "All Files (*.*)|*.*";
@@ -1498,6 +1559,35 @@ public partial class MainPage : CustomForm
             }
 
         }
+        resetTimer();
+    }
+
+    private void closedeye_Click(object sender, EventArgs e)
+    {
+        closedeye.Visible = false;
+        openeye.Visible = true;
+        txt_key_encryption.PasswordChar = '*';
+    }
+
+    private void openeye_Click(object sender, EventArgs e)
+    {
+        openeye.Visible = false;
+        closedeye.Visible = true;
+        txt_key_encryption.PasswordChar = '\0';
+    }
+
+    private void closedeye1_Click(object sender, EventArgs e)
+    {
+        closedeye1.Visible = false;
+        openeye1.Visible = true;
+        txt_key_decryption.PasswordChar = '*';
+    }
+
+    private void openeye1_Click(object sender, EventArgs e)
+    {
+        openeye1.Visible = false;
+        closedeye1.Visible = true;
+        txt_key_decryption.PasswordChar = '\0';
     }
 }
 

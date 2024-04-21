@@ -16,7 +16,7 @@ namespace FileSAVER
     public partial class AdminTools : CustomForm
     {
         System.Windows.Forms.Timer inactivityTimer = new System.Windows.Forms.Timer();
-        private bool isLoggedOut = false;
+        private Point lastMousePosition;
         public AdminTools()
         {
             InitializeComponent();
@@ -60,16 +60,19 @@ namespace FileSAVER
 
         private void AdminTools_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!isLoggedOut)
+
+            if (isDragging)
             {
-                if (isDragging)
-                {
-                    this.Left += e.X - mouseX;
-                    this.Top += e.Y - mouseY;
-                }
-                // Reset the timer when the mouse is moved
-                resetTimer();
+                this.Left += e.X - mouseX;
+                this.Top += e.Y - mouseY;
             }
+            // Check if the mouse has moved to a new position
+            if (lastMousePosition != e.Location)
+            {
+                lastMousePosition = e.Location;
+                resetTimer();// Reset the timer when the mouse is moved
+            }
+
 
         }
 

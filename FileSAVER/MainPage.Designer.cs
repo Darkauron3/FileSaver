@@ -62,6 +62,10 @@
             lbl_choosen_en_file = new Label();
             label16 = new Label();
             label18 = new Label();
+            openeye = new PictureBox();
+            closedeye = new PictureBox();
+            openeye1 = new PictureBox();
+            closedeye1 = new PictureBox();
             nav_panel.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -70,6 +74,10 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)openeye).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)openeye1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye1).BeginInit();
             SuspendLayout();
             // 
             // button1
@@ -102,7 +110,7 @@
             label7.AutoSize = true;
             label7.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
             label7.ForeColor = Color.DarkOrange;
-            label7.Location = new Point(358, 139);
+            label7.Location = new Point(309, 139);
             label7.Name = "label7";
             label7.Size = new Size(245, 66);
             label7.TabIndex = 6;
@@ -220,6 +228,8 @@
             // 
             // bot_panel
             // 
+            bot_panel.Controls.Add(openeye1);
+            bot_panel.Controls.Add(closedeye1);
             bot_panel.Controls.Add(label19);
             bot_panel.Controls.Add(lbl_decryption_choosen);
             bot_panel.Controls.Add(label17);
@@ -246,7 +256,7 @@
             label19.AutoSize = true;
             label19.Font = new Font("Century Gothic", 15.75F, FontStyle.Italic, GraphicsUnit.Point);
             label19.ForeColor = Color.White;
-            label19.Location = new Point(52, 290);
+            label19.Location = new Point(19, 287);
             label19.Name = "label19";
             label19.Size = new Size(308, 48);
             label19.TabIndex = 27;
@@ -378,10 +388,10 @@
             // txt_key_decryption
             // 
             txt_key_decryption.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_key_decryption.Location = new Point(52, 228);
+            txt_key_decryption.Location = new Point(6, 228);
             txt_key_decryption.Name = "txt_key_decryption";
             txt_key_decryption.PasswordChar = '*';
-            txt_key_decryption.Size = new Size(318, 41);
+            txt_key_decryption.Size = new Size(335, 41);
             txt_key_decryption.TabIndex = 20;
             // 
             // label6
@@ -419,7 +429,7 @@
             // pictureBox3
             // 
             pictureBox3.Image = (Image)resources.GetObject("pictureBox3.Image");
-            pictureBox3.Location = new Point(644, 178);
+            pictureBox3.Location = new Point(663, 178);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(68, 66);
             pictureBox3.TabIndex = 15;
@@ -430,7 +440,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Century Gothic", 48F, FontStyle.Bold, GraphicsUnit.Point);
             label3.ForeColor = Color.White;
-            label3.Location = new Point(277, 132);
+            label3.Location = new Point(227, 132);
             label3.Name = "label3";
             label3.Size = new Size(87, 77);
             label3.TabIndex = 16;
@@ -461,10 +471,10 @@
             // txt_key_encryption
             // 
             txt_key_encryption.Font = new Font("Century Gothic", 20.25F, FontStyle.Regular, GraphicsUnit.Point);
-            txt_key_encryption.Location = new Point(277, 214);
+            txt_key_encryption.Location = new Point(231, 216);
             txt_key_encryption.Name = "txt_key_encryption";
             txt_key_encryption.PasswordChar = '*';
-            txt_key_encryption.Size = new Size(318, 41);
+            txt_key_encryption.Size = new Size(335, 41);
             txt_key_encryption.TabIndex = 19;
             // 
             // pictureBox4
@@ -505,7 +515,7 @@
             btn_encrypt.ForeColor = Color.Black;
             btn_encrypt.Image = (Image)resources.GetObject("btn_encrypt.Image");
             btn_encrypt.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_encrypt.Location = new Point(1223, 200);
+            btn_encrypt.Location = new Point(1223, 215);
             btn_encrypt.Name = "btn_encrypt";
             btn_encrypt.Size = new Size(168, 46);
             btn_encrypt.TabIndex = 23;
@@ -539,17 +549,59 @@
             label18.AutoSize = true;
             label18.Font = new Font("Century Gothic", 15.75F, FontStyle.Italic, GraphicsUnit.Point);
             label18.ForeColor = Color.White;
-            label18.Location = new Point(277, 264);
+            label18.Location = new Point(237, 273);
             label18.Name = "label18";
             label18.Size = new Size(308, 48);
             label18.TabIndex = 26;
             label18.Text = "The minimum length must be \r\nat least 16 characters!";
+            // 
+            // openeye
+            // 
+            openeye.Image = (Image)resources.GetObject("openeye.Image");
+            openeye.Location = new Point(573, 212);
+            openeye.Name = "openeye";
+            openeye.Size = new Size(48, 47);
+            openeye.TabIndex = 27;
+            openeye.TabStop = false;
+            openeye.Click += openeye_Click;
+            // 
+            // closedeye
+            // 
+            closedeye.Image = (Image)resources.GetObject("closedeye.Image");
+            closedeye.Location = new Point(572, 208);
+            closedeye.Name = "closedeye";
+            closedeye.Size = new Size(51, 50);
+            closedeye.TabIndex = 28;
+            closedeye.TabStop = false;
+            closedeye.Click += closedeye_Click;
+            // 
+            // openeye1
+            // 
+            openeye1.Image = (Image)resources.GetObject("openeye1.Image");
+            openeye1.Location = new Point(347, 228);
+            openeye1.Name = "openeye1";
+            openeye1.Size = new Size(48, 43);
+            openeye1.TabIndex = 28;
+            openeye1.TabStop = false;
+            openeye1.Click += openeye1_Click;
+            // 
+            // closedeye1
+            // 
+            closedeye1.Image = (Image)resources.GetObject("closedeye1.Image");
+            closedeye1.Location = new Point(347, 225);
+            closedeye1.Name = "closedeye1";
+            closedeye1.Size = new Size(49, 48);
+            closedeye1.TabIndex = 29;
+            closedeye1.TabStop = false;
+            closedeye1.Click += closedeye1_Click;
             // 
             // MainPage
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.FromArgb(41, 44, 51);
             ClientSize = new Size(1469, 797);
+            Controls.Add(openeye);
+            Controls.Add(closedeye);
             Controls.Add(label18);
             Controls.Add(label16);
             Controls.Add(lbl_choosen_en_file);
@@ -586,6 +638,10 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)openeye).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye).EndInit();
+            ((System.ComponentModel.ISupportInitialize)openeye1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)closedeye1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -631,5 +687,9 @@
         private Label label17;
         private Label label18;
         private Label label19;
+        private PictureBox openeye;
+        private PictureBox closedeye;
+        private PictureBox openeye1;
+        private PictureBox closedeye1;
     }
 }

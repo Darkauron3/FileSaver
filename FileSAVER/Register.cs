@@ -432,7 +432,7 @@ public partial class Register : CustomForm
                     }
                     else if (isItInsertedUsers && isItInsertedUserpasswords)
                     {
-                        MessageBox.Show("Data inserted successfuly!");
+                        MessageBox.Show("Account registered successfuly");
                         string username = txt_username.Text;
                         int id = getUserIdByUsername(username);
                         createLog(id, "New account registered");
