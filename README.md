@@ -1,4 +1,6 @@
 # FileSaver project 
+FileSaver is a project written in C# made especially for Windows operating systems. FileSaver lets users to encrypt and decrypt their personal files of all types with 16 character long password and made by me encryption algorithm. The purpose of this project is making all files containing personal information to be secured in a easy way, so the non so technical users to use it. 
+
 
 ![image](https://github.com/Darkauron3/FileSaver/assets/75143508/d8772831-39a4-4991-8e51-8dde784571f9)
 Login Page
@@ -12,9 +14,6 @@ My Account Page
 ![image](https://github.com/user-attachments/assets/cbb39980-57d4-4098-9a4e-fa8834ea3fe3)
 Admin Tools Page
 
-
-
-FileSaver is a project written in C# made especially for Windows operating systems. FileSaver lets users to encrypt and decrypt their personal files of all types with 16 character long password and made by me encryption algorithm. The purpose of this project is making all files containing personal information to be secured in a easy way, so the non so technical users to use it. 
 
 # How to use it
 1. Git clone the repository and open the folder in Visual Studio (it may require installing c# libraries)
